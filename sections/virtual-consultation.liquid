@@ -1,0 +1,276 @@
+<div class="vc">
+	<div class="vc__header" {% if section.settings.header_image %}style="background-image: url('{{ section.settings.header_image | img_url: '1000x'}}');"{% endif %}>
+		<div class="vc__header-inner">
+			<h1 {% if section.settings.header_color %}style="color: {{ section.settings.header_color }}"{% endif %} class="vc__header-title">{{ section.settings.header_title }}</h1>
+			<p {% if section.settings.header_color %}style="color: {{ section.settings.header_color }}"{% endif %}  class="vc__header-text">{{ section.settings.header_text }}</p>
+		</div>
+	</div>
+
+  {% if section.settings.intro_text != blank %}
+	<div class="vc__content-container">
+		<div class="vc__content-section">
+			<h2 class="vc__title">{{ section.settings.intro_title }}</h2>
+			<p class="vc__text">{{ section.settings.intro_text }}</p>
+		</div>
+	</div>
+  {% endif %}
+
+	<div class="vc__profiles">
+			{% for block in section.blocks %}
+				<div class="vc__profile">
+					{% if block.settings.profile_image %}
+					<img class="vc__image" src="{{ block.settings.profile_image | img_url: '500x' }}" alt="{{ block.settings.profile_title }}">
+					{% endif %}
+					<h2 class="vc__title">{{ block.settings.profile_title }}</h2>
+					<p class="vc__text">{{ block.settings.profile_text }}</p>
+					{% if block.settings.profile_button %}<a class="Button Button--primary" href="{{ block.settings.profile_link }}">{{ block.settings.profile_button }}</a>{% endif %}
+				</div>
+			{% endfor %}
+	</div>
+
+	<div class="vc__image-text">
+		<div class="vc__image-half" {% if section.settings.text_image_image %}style="background-image: url('{{ section.settings.text_image_image | img_url: '500x' }}');" {% endif %}>
+		</div>
+		<div class="vc__text-half">
+			<h3 class="vc__title">{{ section.settings.text_image_title }}</h3>
+			<div class="vc__text-container">
+				<div class="vc__text-block">
+					<p class="vc__text-number">{{ section.settings.text_title_one }}</p>
+					<p class="vc__icons-intro-text">{{ section.settings.text_text_one }}</p>
+				</div>
+				<div class="vc__text-block">
+					<p class="vc__text-number">{{ section.settings.text_title_two }}</p>
+					<p class="vc__icons-intro-text">{{ section.settings.text_text_two }}</p>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="vc__icons">
+		<div class="vc__content-section">
+			<h3 class="vc__title">{{ section.settings.icon_title }}</h3>
+			<p class="vc__icons-intro-text">{{ section.settings.icon_intro }}</p>
+		</div>
+		<div class="vc__icons-grid">
+			<div class="vc__icons-grid-item">
+				{% if section.settings.icon_image_one %}
+          <img class="vc__icons-image" src="{{ section.settings.icon_image_one | img_url: '500x' }}" alt="{{ section.settings.icon_title_one }}">
+        {% endif %}
+				<h4 class="vc__icons-title">{{ section.settings.icon_title_one }}</h4>
+				<p class="vc__icons-intro-text">{{ section.settings.icon_text_one }}</p>
+			</div>
+			<div class="vc__icons-grid-item">
+        {% if section.settings.icon_image_two %}
+          <img class="vc__icons-image" src="{{ section.settings.icon_image_two | img_url: '500x' }}" alt="{{ section.settings.icon_title_two }}">
+        {% endif %}
+				<h4 class="vc__icons-title">{{ section.settings.icon_title_two }}</h4>
+				<p class="vc__icons-intro-text">{{ section.settings.icon_text_two }}</p>
+			</div>
+			<div class="vc__icons-grid-item">
+				{% if section.settings.icon_image_three %}
+          <img class="vc__icons-image" src="{{ section.settings.icon_image_three | img_url: '500x' }}" alt="{{ section.settings.icon_title_three }}">
+        {% endif %}
+				<h4 class="vc__icons-title">{{ section.settings.icon_title_three }}</h4>
+				<p class="vc__icons-intro-text">{{ section.settings.icon_text_three }}</p>
+			</div>
+			<div class="vc__icons-grid-item">
+				{% if section.settings.icon_image_four %}
+          <img class="vc__icons-image" src="{{ section.settings.icon_image_four | img_url: '500x' }}" alt="{{ section.settings.icon_title_four }}">
+        {% endif %}
+				<h4 class="vc__icons-title">{{ section.settings.icon_title_four }}</h4>
+				<p class="vc__icons-intro-text">{{ section.settings.icon_text_four }}</p>
+			</div>
+		</div>
+		
+	</div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Virtual Consultation",
+    "blocks": [
+      {
+        "type": "profile",
+        "name": "Profile",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "profile_image",
+            "label": "Profile Image",
+            "info": "Use 1:1 ratio image"
+          },
+          {
+            "type": "text",
+            "id": "profile_title",
+            "label": "Profile Title"
+          },
+          {
+            "type": "textarea",
+            "id": "profile_text",
+            "label": "Profile Text"
+          },
+          {
+            "type": "text",
+            "id": "profile_button",
+            "label": "Profile Button Text"
+          },
+          {
+            "type": "url",
+            "id": "profile_link",
+            "label": "Profile Button Link"
+          }
+        ]
+      }
+    ],
+    "settings": [
+      {
+      	"type": "header",
+      	"content": "Header & Intro"
+      },
+      {
+        "type": "image_picker",
+        "id": "header_image",
+        "label": "Header Image"
+      },
+      {
+        "type": "text",
+        "id": "header_title",
+        "label": "Header Title",
+        "default": "Your Virtual Consultation"
+      },
+      {
+        "type": "textarea",
+        "id": "header_text",
+        "label": "Header Text"
+      },
+      {
+        "type": "color",
+        "id": "header_color",
+        "label": "Header Text Colour",
+        "default": "#000000"
+      },
+      {
+        "type": "text",
+        "id": "intro_title",
+        "label": "Intro Title",
+        "default": "Your Virtual Consultation"
+      },
+      {
+        "type": "textarea",
+        "id": "intro_text",
+        "label": "Intro Text"
+      },
+      {
+      	"type": "header",
+      	"content": "How Does It Work?"
+      },
+      {
+        "type": "image_picker",
+        "id": "text_image_image",
+        "label": "Image",
+        "info": "Use 1:1 ratio image"
+      },
+      {
+        "type": "text",
+        "id": "text_image_title",
+        "label": "Section Title"
+      },
+      {
+        "type": "text",
+        "id": "text_title_one",
+        "label": "Text Point One Title"
+      },
+      {
+        "type": "textarea",
+        "id": "text_text_one",
+        "label": "Text Point One Text"
+      },
+      {
+        "type": "text",
+        "id": "text_title_two",
+        "label": "Text Point Two Title"
+      },
+      {
+        "type": "textarea",
+        "id": "text_text_two",
+        "label": "Text Point Two Text"
+      },
+      {
+      	"type": "header",
+      	"content": "Icon Section"
+      },
+      {
+        "type": "text",
+        "id": "icon_title",
+        "label": "Section Title"
+      },
+      {
+        "type": "textarea",
+        "id": "icon_intro",
+        "label": "Section Intro"
+      },
+      {
+        "type": "text",
+        "id": "icon_title_one",
+        "label": "Icon Title One"
+      },
+      {
+        "type": "image_picker",
+        "id": "icon_image_one",
+        "label": "Icon Image One"
+      },
+      {
+        "type": "textarea",
+        "id": "icon_text_one",
+        "label": "Icon Text One"
+      },
+      {
+        "type": "text",
+        "id": "icon_title_two",
+        "label": "Icon Title Two"
+      },
+      {
+        "type": "image_picker",
+        "id": "icon_image_two",
+        "label": "Icon Image Two"
+      },
+      {
+        "type": "textarea",
+        "id": "icon_text_two",
+        "label": "Icon Text Two"
+      },
+      {
+        "type": "text",
+        "id": "icon_title_three",
+        "label": "Icon Title Three"
+      },
+      {
+        "type": "image_picker",
+        "id": "icon_image_three",
+        "label": "Icon Image Three"
+      },
+      {
+        "type": "textarea",
+        "id": "icon_text_three",
+        "label": "Icon Text Three"
+      },
+      {
+        "type": "text",
+        "id": "icon_title_four",
+        "label": "Icon Title Four"
+      },
+      {
+        "type": "textarea",
+        "id": "icon_text_four",
+        "label": "Icon Text Four"
+      },
+      {
+        "type": "image_picker",
+        "id": "icon_image_four",
+        "label": "Icon Image Four"
+      }
+    ]
+  }
+{% endschema %}

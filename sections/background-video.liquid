@@ -1,0 +1,74 @@
+{%- capture section_settings -%}
+  {
+    "videoType": {{ section.settings.video_url.type | json }},
+    "videoId": {{ section.settings.video_url.id | json }},
+    "requestHost": {{ request.host | json }}
+  }
+{%- endcapture -%}
+
+<section class="Section" id="section-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="background-video" data-section-settings='{{ section_settings }}'>
+  <div class="ImageHero {% if section.settings.section_size != 'normal' %}ImageHero--{{ section.settings.section_size }}{% endif %}">
+    <div class="ImageHero__VideoHolder"></div>
+  </div>
+</section>
+
+<style>
+  #section-1586943269319 .ImageHero {display:block; max-width: 1200px; margin-left:auto; margin-right:auto;}
+  #section-1586943269319 .ImageHero iframe {height:100%}
+  /*
+  $phone:            "screen and (max-width: 640px)";
+  $tablet:           "screen and (min-width: 641px) and (max-width: 1007px)";
+  $tablet-and-up:    "screen and (min-width: 641px)";
+  $pocket:           "screen and (max-width: 1007px)";
+  $lap:              "screen and (min-width: 1008px) and (max-width: 1139px)";
+  $lap-and-up:       "screen and (min-width: 1008px)";
+  $desk:             "screen and (min-width: 1140px)";
+  $widescreen:       "screen and (min-width: 1500px)";
+    */
+</style>
+
+{% schema %}
+  {
+    "name": "Background video",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Background videos are automatically muted to allow autoplay. If you require audio, use the \"Featured Video\" section."
+      },
+      {
+        "type": "select",
+        "id": "section_size",
+        "label": "Section size",
+        "options": [
+          {
+            "value": "small",
+            "label": "Small"
+          },
+          {
+            "value": "normal",
+            "label": "Normal"
+          },
+          {
+            "value": "large",
+            "label": "Large"
+          }
+        ],
+        "default": "large"
+      },
+      {
+        "type": "video_url",
+        "accept": ["youtube", "vimeo"],
+        "id": "video_url",
+        "label": "Video URL",
+        "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+      }
+    ],
+    "presets": [
+      {
+        "category": "Video",
+        "name": "Background video",
+        "settings": {}
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,106 @@
+.tab-accordion-slideshow {
+  background: #02384B;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.tab-accordion-slideshow h1 {
+  font-family: 'Quicksand';
+  font-size: 18px;
+  color: #fff;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 5px;
+  padding-bottom:5px;
+  padding-left: 10px;
+  padding-right:10px;
+}
+
+.productContainerHolder{
+  display:flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+ 
+}
+#addPrd {
+  padding: 5px;
+  border: 1px solid;
+  color: #5c5c5c;
+  border-color:#5c5c5c;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-transform: uppercase;
+  font-family: 'Quicksand';
+  font-weight: 400;
+  cursor: pointer;
+}
+.productContainerHolder p {
+  height: 50px;
+
+    height: 50px;
+    font-family: 'Quicksand';
+    font-size: 12px;
+    font-weight: 500;
+    width: 200px;
+    margin-top: 15px;
+
+}
+.option-holder {
+  display: flex;
+}
+
+.slideShowSample ul.slick-dots {
+  display: flex!important;
+  justify-content: center;
+  flex-direction: row!important;
+  align-items: center;
+}
+.slideShowSample ul.slick-dots li button {
+display: none !important;
+}
+.slideShowSampleOne ul.slick-dots {
+  display: flex!important;
+  justify-content: center;
+  flex-direction: row!important;
+  align-items: center;
+}
+.slideShowSampleOne ul.slick-dots li button {
+display: none !important;
+}
+.customSample{
+  border: 1px solid #000 !important;
+  width: 150px;
+  padding: 10px !important;
+}
+
+div#slideSample button.slick-prev.slick-arrow {
+  position: absolute !important;
+  top: 25% !important;
+}
+div#slideSample button.slick-next.slick-arrow {
+  position: absolute !important;
+  top: 25% !important;
+  right: 0;
+}
+div#slideSample .slick-list.draggable{
+margin-top: 50px;
+margin-bottom: 30px;
+}
+h2.vdName {
+  font-weight: bold;
+  margin: unset;
+  line-height: unset;
+  height: 15px;
+  margin-top: 15px;
+}
+
+.option-holder span {
+  color: #02384b;
+  font-weight: bold;
+}
+.option-holder p {
+  font-weight: bold;
+}

@@ -1,0 +1,477 @@
+<!-- 
+$phone:            "screen and (max-width: 640px)";
+$tablet:           "screen and (min-width: 641px) and (max-width: 1007px)";
+$tablet-and-up:    "screen and (min-width: 641px)";
+$pocket:           "screen and (max-width: 1007px)";
+$lap:              "screen and (min-width: 1008px) and (max-width: 1139px)";
+$lap-and-up:       "screen and (min-width: 1008px)";
+$desk:             "screen and (min-width: 1140px)";
+$widescreen:       "screen and (min-width: 1500px)"; 
+-->
+<style>
+    .images-workshop {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .horitzontal-link {
+        display: none;
+        margin-top: 3em;
+        margin-bottom: 3em;
+        width: 100%;
+        font-size: 28px;
+        font-weight: bold;
+        color: brown;
+        text-align: center;
+        text-decoration: underline;
+    }
+
+    .centered-video {
+        margin-top: 4em;
+        margin-bottom: 4em;
+        display: flex;
+        justify-content: center;
+    }
+
+    .centered-video video {
+        flex: 1;
+        max-width: 100%;
+        min-width: 50%;
+    }
+
+    .centered-video video:focus {
+        outline: none !important;
+    }
+
+    .splith-text-image {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .splith-text {
+        flex-basis: 65%;
+        font-size: 18px;
+        padding: 4em;
+    }
+
+    .splith-text h2 {
+        color: #e38a8c;
+        font-size: 20px;
+        margin-bottom: 0px;
+        text-transform: uppercase;
+    }
+
+    .splith-text h3 {
+        color: #e38a8c;
+        font-size: 18px;
+    }
+
+    .splith-image {
+        display: flex;
+        flex-basis: 35%;
+        justify-content: flex-end;
+    }
+
+    .splith-image-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        text-align: right;
+    }
+
+    @media screen and (max-width: 1007px) {
+        .splith-text {
+            flex-basis: 100%;
+            padding: 2.5em;
+            font-size: 14px;
+        }
+
+        .images-workshop img {
+            max-width: 220px;
+            padding: 1em;
+        }
+    }
+
+    .under-schedule-text {
+        margin: auto;
+        font-size: 18px;
+        max-width: 80em;
+        margin-bottom: 3em;
+        margin-top: 3em;
+    }
+
+    /*---- NUMBER OF SLIDE CONFIGURATION ----*/
+    .wrapper {
+        max-width: 60em;
+        margin: 1em auto;
+        position: relative;
+    }
+
+    input {
+        display: none;
+    }
+
+    .inner {
+        width: 400%;
+    }
+
+    article {
+        padding: 25px;
+        width: 25%;
+        float: left;
+        position: relative;
+    }
+
+    article img {
+        width: 100%;
+    }
+
+    /*---- SET UP CONTROL ----*/
+    .slider-prev-next-control {
+        height: 50px;
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        -o-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+
+    .slider-prev-next-control label {
+        display: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #fff;
+        opacity: 0.7;
+    }
+
+    .slider-prev-next-control label:hover {
+        opacity: 1;
+    }
+
+    .slider-dot-control {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        text-align: center;
+    }
+
+    .slider-dot-control label {
+        cursor: pointer;
+        border-radius: 5px;
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: #bbb;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+
+    .slider-dot-control label:hover {
+        background: #ccc;
+        border-color: #777;
+    }
+
+    /* Info Box */
+    .info {
+        position: absolute;
+        font-style: italic;
+        line-height: 20px;
+        opacity: 0;
+        color: #000;
+        text-align: left;
+        -webkit-transition: all 1000ms ease-out 600ms;
+        -moz-transition: all 1000ms ease-out 600ms;
+        transition: all 1000ms ease-out 600ms;
+    }
+
+    .info h3 {
+        margin: 0 0 5px;
+        font-weight: normal;
+        font-size: 1.5em;
+        font-style: normal;
+    }
+
+    .info.top-left {
+        top: 30px;
+        left: 30px;
+    }
+
+    .info.top-right {
+        top: 30px;
+        right: 30px;
+    }
+
+    .info.bottom-left {
+        bottom: 30px;
+        left: 30px;
+    }
+
+    .info.bottom-right {
+        bottom: 30px;
+        right: 30px;
+    }
+
+    /* Slider Styling */
+    .slider-wrapper {
+        width: 100%;
+        overflow: hidden;
+        border-radius: 5px;
+        box-shadow: 1px 1px 4px #666;
+        -webkit-transform: translateZ(0);
+        -moz-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        -o-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-transition: all 500ms ease-out;
+        -moz-transition: all 500ms ease-out;
+        transition: all 500ms ease-out;
+    }
+
+    .slider-wrapper .inner {
+        -webkit-transform: translateZ(0);
+        -moz-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        -o-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-transition: all 800ms cubic-bezier(0.77, 0, 0.175, 1);
+        -moz-transition: all 800ms cubic-bezier(0.77, 0, 0.175, 1);
+        transition: all 800ms cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    /*---- SET POSITION FOR SLIDE ----*/
+    #slide1:checked~.slider-prev-next-control label:nth-child(2)::after,
+    #slide2:checked~.slider-prev-next-control label:nth-child(3)::after,
+    #slide3:checked~.slider-prev-next-control label:nth-child(4)::after,
+    #slide4:checked~.slider-prev-next-control label:nth-child(1)::after,
+    #slide2:checked~.slider-prev-next-control label:nth-child(1)::after,
+    #slide3:checked~.slider-prev-next-control label:nth-child(2)::after,
+    #slide4:checked~.slider-prev-next-control label:nth-child(3)::after,
+    #slide1:checked~.slider-prev-next-control label:nth-child(4)::after {
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        margin: 0;
+        line-height: 38px;
+        font-size: 3em;
+        display: block;
+        color: #777;
+    }
+
+    #slide1:checked~.slider-prev-next-control label:nth-child(2)::after,
+    #slide2:checked~.slider-prev-next-control label:nth-child(3)::after,
+    #slide3:checked~.slider-prev-next-control label:nth-child(4)::after,
+    #slide4:checked~.slider-prev-next-control label:nth-child(1)::after {
+        content: "\f105";
+        padding-left: 15px;
+    }
+
+    #slide1:checked~.slider-prev-next-control label:nth-child(2),
+    #slide2:checked~.slider-prev-next-control label:nth-child(3),
+    #slide3:checked~.slider-prev-next-control label:nth-child(4),
+    #slide4:checked~.slider-prev-next-control label:nth-child(1) {
+        display: block;
+        float: right;
+        margin-right: 5px;
+    }
+
+    #slide2:checked~.slider-prev-next-control label:nth-child(1),
+    #slide3:checked~.slider-prev-next-control label:nth-child(2),
+    #slide4:checked~.slider-prev-next-control label:nth-child(3),
+    #slide1:checked~.slider-prev-next-control label:nth-child(4) {
+        display: block;
+        float: left;
+        margin-left: 5px;
+    }
+
+    #slide2:checked~.slider-prev-next-control label:nth-child(1)::after,
+    #slide3:checked~.slider-prev-next-control label:nth-child(2)::after,
+    #slide4:checked~.slider-prev-next-control label:nth-child(3)::after,
+    #slide1:checked~.slider-prev-next-control label:nth-child(4)::after {
+        content: "\f104";
+        padding-left: 8px;
+    }
+
+    #slide1:checked~.slider-dot-control label:nth-child(1),
+    #slide2:checked~.slider-dot-control label:nth-child(2),
+    #slide3:checked~.slider-dot-control label:nth-child(3),
+    #slide4:checked~.slider-dot-control label:nth-child(4) {
+        background: #333;
+    }
+
+    #slide1:checked~.slider-wrapper article:nth-child(1) .info,
+    #slide2:checked~.slider-wrapper article:nth-child(2) .info,
+    #slide3:checked~.slider-wrapper article:nth-child(3) .info,
+    #slide4:checked~.slider-wrapper article:nth-child(4) .info {
+        opacity: 1;
+    }
+
+    #slide1:checked~.slider-wrapper .inner {
+        margin-left: 0%;
+    }
+
+    #slide2:checked~.slider-wrapper .inner {
+        margin-left: -100%;
+    }
+
+    #slide3:checked~.slider-wrapper .inner {
+        margin-left: -200%;
+    }
+
+    #slide4:checked~.slider-wrapper .inner {
+        margin-left: -300%;
+    }
+
+    /*---- TABLET ----*/
+    @media only screen and (max-width: 850px) and (min-width: 450px) {
+        .slider-wrapper {
+            border-radius: 0;
+        }
+    }
+
+    /*---- MOBILE----*/
+    @media only screen and (max-width: 450px) {
+        .slider-wrapper {
+            border-radius: 0;
+        }
+
+        .slider-wrapper .info {
+            opacity: 0;
+        }
+    }
+
+    @media only screen and (min-width: 850px) {
+        body {
+            padding: 0 80px;
+        }
+    }
+</style>
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<div class="Container">
+    <header class="PageHeader">
+        <div class="SectionHeader SectionHeader--center">
+            <h1 class="SectionHeader__Heading Heading u-h1">{{ page.title }}</h1>
+        </div>
+    </header>
+    <div class="under-schedule-text">
+        On Thursday 16th Embrace Your Skin kicks-off with lectures for medical professionals run by specialists and
+        opinion leaders in dermatology.<br>
+        <br>Dr Sahota will give a lecture about unusual presentations of common skin conditions. <br>Dr Chan will share
+        information about eczema, hand dermatitis and mask related peri-oral dermatitis. <br>Dr Merika will dive into acne
+        and Dr Borysiewicz will discuss cancer patient management during COVID-19 outbreak.<br><br> Each lecture will be
+        followed by Q&A session.
+
+      Event attendance will grant you up to 3CPD points. To book your place, <strong><a style="color: blue;" href="https://www.naos-store.co.uk/pages/cpd-points-embrace-your-skin-online-lectures">fill this registration form</a></strong>. Limited
+        spaces available. <br><br>If you have any questions, please get in touch with Bioderma Medical Ambassador Peter
+      Wachowicz at <strong><a href="mailto:peter.wachowicz@uk.naos.com">peter.wachowicz@uk.naos.com</a></strong>.
+    </div>
+    <div>
+        <div class="hidden-pocket images-workshop">
+            <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_LECTURES_DESKTOP.jpg?v=1592585934"
+                alt="Embrace your skin" />
+        </div>
+
+        <div class="hidden-lap-and-up">
+            <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_LECTURES_MOBILE_6fa51327-7d03-4405-a8b7-3de4464b7fe6.jpg?v=1593068323"
+                alt="Embrace your skin" />
+        </div>
+        <div class="horitzontal-link">
+            <a href="" target="blank">See full schedule here</a>
+        </div>
+        <div class="wrapper">
+            <input checked type=radio name="slider" id="slide1" />
+            <input type=radio name="slider" id="slide2" />
+            <input type=radio name="slider" id="slide3" />
+            <input type=radio name="slider" id="slide4" />
+
+            <div class="slider-wrapper">
+                <div class=inner>
+                    <article>
+                        <h2><strong>Dr Borysiewicz</strong></h3>
+                            <p>studied medicine at Cambridge University achieving an MA in immunology and virology. She
+                                studied clinical medicine at University College London and graduated with distincon. She
+                                completed her specialist dermatology training at a number of prestigious central London
+                                teaching hospitals. Dr Borysiewicz is an experienced consultant working within the NHS
+                                as clinical lead for skin cancer at Hammersmith Hospital, Imperial College Healthcare
+                                NHS Trust and was recently appointed to chair of the RM Partners skin pathway group. She
+                                consults privately in central London where she specialises in inflammatory skin diseases
+                                including eczema, acne and psoriasis and sun damage and skin cancers. Additional areas
+                                of clinical interest include skin surveillance strategies and the early detection of
+                                skin cancer using mole mapping. She runs the highly specialised adult Langerhan’s Cell
+                                Histiocytosis service at Hammersmith hospital. Friendly and approachable she is
+                                frequently called on for her dermatology expertise when skin is misbehaving.
+                            </p>
+                    </article>
+                    <article>
+                        <h2><strong>Dr Sahota</strong></h3>
+                            <p>Dr Sahota did his undergraduate medical training at King College London where his
+                                love of dermatology started as a medical student. His dermatology training was at
+                                the Royal London Hospital, the Royal Free Hospital and St Thomas Hospital including
+                                training in Mohs surgery. Dr Sahota is a Consultant Dermatologist at Barts Health
+                                NHS Trust. He is an Associate Course Director for the Diploma in Clinical
+                                Dermatology (London) and is the past Treasurer of the British Association of
+                                Dermatologists. He currently works at Whipps Cross Hospital and the Royal London
+                                Hospital. His clinical interests include general dermatology, skin and nail surgery,
+                                skin cancer treatment, phototherapy and treatment of hyperhidrosis. In his capacity
+                                as an Officer of the BAD since 2013 he has helped to formulate policy on issues
+                                including workforce and training. In his spare time he enjoys cooking, woodcarving
+                                and is learning to play the piano.</p>
+                    </article>
+                    <article>
+                        <h2><strong>Dr Merika</strong></h3>
+                            <p>Dr Merika is a fully licenced Consultant Dermatologist who specialises in adult and
+                                paediatric dermatology. She is a graduate of University College London and a fellow of
+                                the Royal College of Physicians. She is on the General Medical Council's specialist
+                                register for Dermatology and a member of the British Association of Dermatologists and
+                                Royal Society of Medicine. She works for Chelsea & Westminster Hospital NHS Trust, where
+                                is the Clinical Lead for the acne service and local training lead for Dermatology. She
+                                is the principle investigator for a JAK inhibitor trial in atopical dermatitis and
+                                regularly teaches junior trainees, medical students and GPs.</p>
+                    </article>
+                    <article>
+                        <h2><strong>Dr Chan</strong></h3>
+                            <p>Dr Chan qualified in July 2010 from the University of Aberdeen with the Lockhart Bequest
+                                Prize and subsequently obtained her Membership of Royal Colleges of Physicians (MRCP,UK)
+                                in 2012. Dr Chan completed her Higher Specialist Training in Dermatology in the West
+                                Midlands as a Specialist Registrar looking after adults and children with skin
+                                conditions; and obtained her Certificate of Completion of Training (CCT) in 2018. Dr
+                                Chan is currently a substantive Consultant Dermatologist at the King’s College Hospital
+                                NHS Trust based at Beckenham Beacon and the Princess Royal University Hospitals. During
+                                her training, she has developed a keen interest in Skin Oncology and is a team member of
+                                the Skin Cancer Cochrane Reviews on Diagnostic Tests Accuracy for Skin Cancers. In 2016,
+                                Dr Chan won the European Organisation for Research and Treatment of Cancer (EORTC)
+                                European Young Investigator Award for her research work in Skin Lymphoma. Other awards
+                                include BAD Best SpR Oral Presentation (Cutaneous Allergy Section 2017) and Midlands
+                                Dermatology Society Awards.</p>
+                    </article>
+                </div>
+                <!-- .inner -->
+            </div>
+            <!-- .slider-wrapper -->
+
+            <div class="slider-prev-next-control">
+                <label for=slide1></label>
+                <label for=slide2></label>
+                <label for=slide3></label>
+                <label for=slide4></label>
+            </div>
+            <!-- .slider-prev-next-control -->
+
+            <div class="slider-dot-control">
+                <label for=slide1></label>
+                <label for=slide2></label>
+                <label for=slide3></label>
+                <label for=slide4></label>
+            </div>
+            <!-- .slider-dot-control -->
+        </div>
+    </div>
+</div>
+<script></script>

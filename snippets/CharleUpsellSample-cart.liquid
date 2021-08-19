@@ -1,0 +1,122 @@
+
+          <div id="tabOneClose" class="tab-accordion-slideshow">
+            <h1  class="tabSample">MY SAMPLES (Select up to 3 free samples) {% include 'arrow-ac-down' %} </h1>
+          </div>
+          <div class="option-holderSample"> 
+          <p><span class="incrementSample">0</span> of 3 samples selected</p>
+        
+            </div>
+            <!-- Three Samples -->
+            <div id="slideSample" class="slideShowSample toggleTwo toggleOneSlides">
+            {% for product in collections['sample-test-collection'].products %}        
+            <div class="productContainer">
+            <div class="productContainerHolder">
+            <img src="{{ product | img_url }}"> 
+            <h2 class="vdName">{{product.vendor}}</h2>
+            <p>{{product.title}}</p>
+            <input type="hidden" name="id" value="{{ product.variants.first.id }}">       
+            <!-- <button id="addNewItemslide" type="submit" name="add" class="i{{product.id}}"> Add to cart</button> -->
+            <div  id="addPrd" data="{{ product.variants.first.id }}" class="ItemAdSample i{{product.id}}"> ADD</div>
+            <div  id="addPrd"  class="b{{product.id}}" style="display: none;">SELECTED</div>
+  
+             </div>
+            </div>
+  {%endfor%}
+  </div>
+          <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>       
+          <style>
+            .activeSample{display:none !important;}
+            .rotateArrow{transform: rotate(180deg) !important };
+            .sectedPr{color:red;}
+            .btnHiddenSe{display: none !important;}
+            button.ProductForm__AddToCart.Button.Select.sectedPr {color: red;}
+            .sectedPr{background:#5c5c5c !important; border-color: #5c5c5c !important; color : #fff  !important; display: block !important;}
+            .slide1{display:block !important;}
+            .togglleOneBiodermaDisplay{display:block !important;}
+            </style>
+        
+         <script>
+
+$( window ).on( "load", function(){             
+      setTimeout(function(){
+        jQuery.getJSON('/cart.js', function(cart) {
+        var itemsInCartforSamples = cart.items;
+        var productsSample = [{%for product in collections['sample-test-collection'].products%}{{product|json}}{%if forloop.last == false%},{%endif%}{%endfor%}];
+    
+         
+        // Get CART ITEMS AND PRODUCTS FROM COLLECTION + CHECK IF PRODUCT ID FROM COLLECTION MATCHES THE ID PRODUCT IN CART
+        console.log('Three Samples COLLECTIONS ITEM ID BELOW')
+        console.log(productsSample)
+        console.log(itemsInCartforSamples)
+        let entrySample
+        let entry2Sample
+        let count = 0;
+    //  CHECK IF ITEM IS IN THE CART
+    for(let entrySample of itemsInCartforSamples){
+    for(let entry2Sample of productsSample){
+    if(entrySample.product_id == entry2Sample.id){ 
+    console.log(entry2Sample++)
+      count++
+      setInterval(function(){
+      if(count == 0){
+        $(".incrementSample").text('0')
+      }
+      if(count == 1){
+        $(".incrementSample").text('1')
+      }
+      if(count == 2){
+        $(".incrementSample").text('2')
+      }
+      if(count == 3){
+        $(".incrementSample").text('3')
+  $(".i"+entrySample.product_id).addClass("btnHiddenSe")
+     $('.ItemAdSample').addClass("btnHiddenSe")
+  console.log('includes', entrySample.product_id);   
+  console.log(cart.items.length)
+      }
+    }, 500);  
+      $(".i"+entrySample.product_id).addClass("btnHiddenSe")
+      $('.BtnDisabled').addClass("sectedPr")
+      $(".b"+entrySample.product_id).addClass("sectedPr")
+      // console.log(entry2Sample[number]);
+}
+}
+}
+$(".ItemAdSample").click(function(e){
+    ProductIdPlanSamples = (this.getAttribute('data'));
+    console.log(ProductIdPlanSamples)
+    debugger
+    e.preventDefault();
+    data = {
+    "id": ProductIdPlanSamples,
+    "quantity": 1,
+    };
+
+    jQuery.ajax({
+    type: 'POST',
+    url: '/cart/add.js',
+    data: data,
+    dataType: 'json',
+    success: function() { 
+      window.location.href = '/cart'; 
+    }
+  }); 
+}); 
+
+$("#tabOneClose").click(function(){  
+      $(".toggleOneOption").toggleClass("activeSample")
+     $(".toggleOneSlides").toggleClass("activeSample");
+     $(".toggleOneSlidesOne").toggleClass("activeSample");
+     $(".toggleOneSlidesTwo").toggleClass("activeSample");
+      $(".accordionDrop").toggleClass("rotateArrow");
+      $("#slick-slide-control10").click();
+      $("#slick-slide-control20").click();
+      $("#slick-slide-control00").click();
+
+      }); 
+       });
+
+                  }, 2500);
+                  
+                    });
+          </script>

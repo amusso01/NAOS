@@ -1,0 +1,284 @@
+<!-- 
+$phone:            "screen and (max-width: 640px)";
+$tablet:           "screen and (min-width: 641px) and (max-width: 1007px)";
+$tablet-and-up:    "screen and (min-width: 641px)";
+$pocket:           "screen and (max-width: 1007px)";
+$lap:              "screen and (min-width: 1008px) and (max-width: 1139px)";
+$lap-and-up:       "screen and (min-width: 1008px)";
+$desk:             "screen and (min-width: 1140px)";
+$widescreen:       "screen and (min-width: 1500px)"; 
+-->
+<style>
+    .eys-main {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .splith-text-image {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 3em;
+    }
+
+    .splith-text {
+        flex-basis: 60%;
+        font-size: 26px;
+        padding-right: 1em;
+    }
+
+    .splith-image {
+        display: flex;
+        flex-basis: 45%;
+        justify-content: flex-end;
+    }
+
+    .splith-image-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        text-align: right;
+    }
+
+    .splith-image-img img {
+        flex: 1;
+        max-width: 100%;
+        min-width: 55%;
+    }
+
+    .splith-text-video {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 3em;
+        background-color: #ff8e90;
+    }
+
+    .splith-video-text {
+        flex-basis: 40%;
+        font-size: 18px;
+        display: flex;
+        align-items: top;
+        padding: 2em;
+    }
+
+    .splith-video {
+        display: flex;
+        flex-basis: 60%;
+        justify-content: flex-end;
+        padding: 2em;
+    }
+
+    .splith-video video {
+        flex: 1;
+        max-width: 100%;
+        min-width: 50%;
+    }
+
+    .splith-video video:focus {
+        outline: none !important;
+    }
+
+    .horitzontal-message {
+        margin-top: 3em;
+        width: 100%;
+        font-size: 36px;
+        font-weight: bold;
+        color: white;
+        background-color: #ff8e90;
+        text-align: center;
+    }
+
+    .video-responsive {
+        height: 0;
+        overflow: hidden;
+        padding-bottom: 56.25%;
+        padding-top: 30px;
+        position: relative;
+        margin-top: 2em;
+        margin-bottom: 2em;
+    }
+
+    .video-responsive iframe,
+    .video-responsive object,
+    .video-responsive embed {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+
+    .pink-text-block {
+        margin-top: 2em;
+        margin-bottom: 2em;
+        padding: 2em 1em 2em 1em;
+        width: 100%;
+        font-size: 20px;        
+        color: black;
+        background-color: #ff8e90;
+        text-align: justify;
+    }
+
+
+    @media screen and (max-width: 1007px) {
+        .splith-text-video {
+            flex-direction: column-reverse;
+            font-size: medium;
+        }
+
+        .splith-text {
+            font-size: medium;
+            flex-basis: 100%;
+        }
+
+        .splith-text h3{
+            font-size: 18px;
+        }
+
+        .splith-video-text p {
+            font-size: medium;
+        }
+
+        .horitzontal-message {
+            font-size: 20px !important;
+        }
+
+        .splith-text-image {
+            margin-bottom: 1em;
+        }
+
+        .splith-video {
+            padding: 0px !important;
+        }
+
+        .splith-video-text {
+            padding: 1em;
+        }
+    }
+</style>
+<div class="Container">
+    <header class="PageHeader">
+        <div class="SectionHeader SectionHeader--center">
+            <h1 class="SectionHeader__Heading Heading u-h1">{{ page.title }}</h1>
+        </div>
+    </header>
+
+    <div class="eys-main">
+        <div class="hidden-pocket">
+            <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_MAINPAGE_DESKTOP_TOP.jpg?v=1592579580"
+                alt="Embrace your skin" />
+        </div>
+        <div class="hidden-lap-and-up">
+            <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_MAINPAGE_MOBILE_TOP-BANNER.jpg?v=1592408028"
+                alt="Embrace your skin" />
+        </div>
+        <div class="hidden-lap-and-up">
+            <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_MAINPAGE_MOBILE_TOP2.jpg?v=1592581446"
+                alt="Embrace your skin" />
+        </div>
+        <div class="hidden-lap-and-up">
+            <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_MAINPAGE_MOBILE_TOP-BANNER-3.jpg?v=1592408383"
+                alt="Embrace your skin" />
+        </div>
+        <div class="splith-text-image">
+            <div class="splith-text" style="font-size:21px">
+                <h3><strong>WE ARE STRONGER TOGETHER.</strong></h3>
+                <p>Skin lovers, positivity seekers, patients, dermatologists & influencers, we are stronger together.
+                    This July, we have you covered with a full schedule of inspiring online workshops. By sharing
+                    experiences, personal stories, asking questions as well as getting professional advice, you will
+                    gain a better understanding of your skin, its natural mechanisms and its dysfunctions thus becoming
+                    aware that skin imperfections are part of our own unique beauty. At NAOS, we believe that
+                    self-awareness is at the basis of every change. JOIN THE MOVEMENT & promote skin positivity.
+                </p>
+            </div>
+            <div class="splith-image hidden-pocket">
+                <div class="splith-image-img">
+                    <a href="https://www.naos-store.co.uk/pages/inspiring-workshops-schedule">
+                        <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_MAINPAGE_DESKTOP_BLOCK1.jpg?v=1592579166"
+                            alt="Workshops" /></p>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="hidden-lap-and-up">
+            <a href="https://www.naos-store.co.uk/pages/inspiring-workshops-schedule">
+                <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_MAINPAGE_MOBILE_BLOCK1.jpg?v=1592579184"
+                    alt="Embrace your skin" />
+            </a>
+        </div>
+        <div class="video-responsive">
+            <iframe src="https://www.youtube.com/embed/2eNdYBu11Yk" frameborder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+        <div class="hidden-pocket">
+            <a href="https://www.naos-store.co.uk/pages/lectures-schedule">
+                <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_MAINPAGE_DESK_BLOCK2_dc60af9b-397c-45c7-9c84-2f15c705db12.jpg?v=1592581522"
+                    alt="Embrace your skin" />
+            </a>
+        </div>
+        <div class="hidden-lap-and-up">
+            <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_MAINPAGE_MOBILE_6.jpg?v=1592127079"
+                alt="Embrace your skin" />
+        </div>
+        <div class="hidden-lap-and-up">
+            <a href="https://www.naos-store.co.uk/pages/lectures-schedule">
+                <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_MAINPAGE_MOBILE_BLOCK2_7c2ce0e3-ce74-479c-9717-b7cc2b06e29f.jpg?v=1592581520"
+                    alt="Embrace your skin" />
+            </a>
+        </div>
+        <div class="hidden-lap-and-up">
+            <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS__MAINPAGE_MOBILE_8.jpg?v=1592127079"
+                alt="Embrace your skin" />
+        </div>
+        <div class="splith-text-image">
+            <div class="splith-text">
+                <p><strong>NAOS, A MEDICAL SPONSOR:</strong> for the very first time, during #EMBRACE YOUR SKIN, NAOS UK
+                    will sponsor medical online lectures for healthcare professionals. The first day of the event is
+                    dedicated for them solely and their continuous professional development. The following days will
+                    include live and on-line private events tailored to engage everyone together.
+                </p>
+            </div>
+            <div class="splith-image hidden-pocket">
+                <div class="splith-image-img">
+                    <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_MAINPAGE_DESK_GROUPEDPIC2.jpg?v=1592203534"
+                        alt="Workshops" /></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="pink-text-block">
+            <strong>INSPIRING SKIN STORIES:</strong><br>
+            Meet Hamda, Helen, Anna & Anita, four inspiring women who want to make a difference for those who suffer in
+            silence.<br>
+            Because Sharing is caring, join the movement & write us your skin journey at : <strong><a href="mailto:info@naos-store.co.uk?subject=CPD%20POINT%20>%20Registration%20Request&body=Dear%20Peter,%20I%20would%20like%20to%20register%20to%20Embrace%20your%20skin%20lectures...">info@naos-store.co.uk</a></strong><br> Soon we
+            will create a blog to feature all the inspiring skin stories received.
+        </div>
+
+        <div class="video-responsive">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/NDSk2BKAgk4" frameborder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+
+        <div class="video-responsive">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/YijZNF98bTE" frameborder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+        <div class="video-responsive">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/amYePQ_7-oE" frameborder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+        <div class="video-responsive">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/6RHJpke2Ib0" frameborder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
+</div>
+<div class="horitzontal-message">
+    Self-awareness is at the basis of every change.
+</div>

@@ -1,0 +1,749 @@
+<!-- 
+$phone:            "screen and (max-width: 640px)";
+$tablet:           "screen and (min-width: 641px) and (max-width: 1007px)";
+$tablet-and-up:    "screen and (min-width: 641px)";
+$pocket:           "screen and (max-width: 1007px)";
+$lap:              "screen and (min-width: 1008px) and (max-width: 1139px)";
+$lap-and-up:       "screen and (min-width: 1008px)";
+$desk:             "screen and (min-width: 1140px)";
+$widescreen:       "screen and (min-width: 1500px)"; 
+-->
+<style>
+    .under-schedule-text {
+        margin: auto;
+        font-size: 18px;
+        max-width: 80em;
+        margin-bottom: 3em;
+        margin-top: 3em;
+    }
+
+    .eys-main {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .images-workshop {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .images-workshop img {
+        max-width: 350px;
+    }
+
+    .horitzontal-link {
+        display: none;
+        margin-top: 3em;
+        width: 100%;
+        font-size: 28px;
+        font-weight: bold;
+        color: brown;
+        text-align: center;
+        text-decoration: underline;
+    }
+
+    .centered-video {
+        margin-top: 4em;
+        margin-bottom: 4em;
+        display: flex;
+        justify-content: center;
+    }
+
+    .centered-video video {
+        flex: 1;
+        max-width: 100%;
+        min-width: 50%;
+    }
+
+    .centered-video video:focus {
+        outline: none !important;
+    }
+
+    .splith-text-image {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .splith-text {
+        flex-basis: 65%;
+        font-size: 18px;
+        padding: 4em;
+    }
+
+    .splith-text h2 {
+        color: #e38a8c;
+        font-size: 20px;
+        margin-bottom: 0px;
+        text-transform: uppercase;
+    }
+
+    .splith-text h3 {
+        color: #e38a8c;
+        font-size: 18px;
+    }
+
+    .splith-image {
+        display: flex;
+        flex-basis: 35%;
+        justify-content: flex-end;
+    }
+
+    .splith-image-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        text-align: right;
+    }
+
+    .eys-main {
+        max-width: 1200px;
+    }
+
+    @media screen and (max-width: 1007px) {
+        .splith-text {
+            flex-basis: 100%;
+            padding: 2.5em;
+            font-size: 14px;
+        }
+
+        .images-workshop img {
+            max-width: 200px;
+            padding: 0.5em;
+        }
+
+        .slider-prev-next-control label {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #e38a8c;
+            opacity: 0.3;
+        }
+    }
+
+    /*---- NUMBER OF SLIDE CONFIGURATION ----*/
+    .wrapper {
+        max-width: 80em;
+        margin: 1em auto;
+        position: relative;
+    }
+
+    input {
+        display: none;
+    }
+
+    .inner {
+        width: 300%;
+    }
+
+    article {
+        width: 33.3333333333%;
+        float: left;
+        position: relative;
+    }
+
+    article img {
+        width: 100%;
+    }
+
+    /*---- SET UP CONTROL ----*/
+    .slider-prev-next-control {
+        height: 50px;
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        -webkit-transform: translateY(-50%);
+        -moz-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        -o-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+
+    .slider-prev-next-control label {
+        display: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e38a8c;
+        opacity: 0.7;
+    }
+
+    .slider-prev-next-control label:hover {
+        opacity: 1;
+    }
+
+    .slider-dot-control {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        text-align: center;
+    }
+
+    .slider-dot-control label {
+        cursor: pointer;
+        border-radius: 5px;
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background: #e38a8c;
+        -webkit-transition: all 0.3s;
+        -moz-transition: all 0.3s;
+        transition: all 0.3s;
+    }
+
+    .slider-dot-control label:hover {
+        background: #ccc;
+        border-color: #777;
+
+    }
+
+    /* Info Box */
+    .info {
+        position: absolute;
+        font-style: italic;
+        line-height: 20px;
+        opacity: 0;
+        color: #000;
+        text-align: left;
+        -webkit-transition: all 1000ms ease-out 600ms;
+        -moz-transition: all 1000ms ease-out 600ms;
+        transition: all 1000ms ease-out 600ms;
+    }
+
+    .info h3 {
+        color: #fcfff4;
+        margin: 0 0 5px;
+        font-weight: normal;
+        font-size: 1.5em;
+        font-style: normal;
+    }
+
+    .info.top-left {
+        top: 30px;
+        left: 30px;
+    }
+
+    .info.top-right {
+        top: 30px;
+        right: 30px;
+    }
+
+    .info.bottom-left {
+        bottom: 30px;
+        left: 30px;
+    }
+
+    .info.bottom-right {
+        bottom: 30px;
+        right: 30px;
+    }
+
+    /* Slider Styling */
+    .slider-wrapper {
+        width: 100%;
+        overflow: hidden;
+        box-shadow: 3px 3px 3px #ccc;
+        -webkit-transform: translateZ(0);
+        -moz-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        -o-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-transition: all 500ms ease-out;
+        -moz-transition: all 500ms ease-out;
+        transition: all 500ms ease-out;
+    }
+
+    .slider-wrapper .inner {
+        -webkit-transform: translateZ(0);
+        -moz-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        -o-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-transition: all 800ms cubic-bezier(0.77, 0, 0.175, 1);
+        -moz-transition: all 800ms cubic-bezier(0.77, 0, 0.175, 1);
+        transition: all 800ms cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    /*---- SET POSITION FOR SLIDE ----*/
+    #slide1:checked~.slider-prev-next-control label:nth-child(2)::after,
+    #slide2:checked~.slider-prev-next-control label:nth-child(3)::after,
+    #slide3:checked~.slider-prev-next-control label:nth-child(1)::after,
+    #slide2:checked~.slider-prev-next-control label:nth-child(1)::after,
+    #slide3:checked~.slider-prev-next-control label:nth-child(2)::after,
+    #slide1:checked~.slider-prev-next-control label:nth-child(3)::after {
+        font-family: FontAwesome;
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        margin: 0;
+        line-height: 38px;
+        font-size: 3em;
+        display: block;
+        color: #777;
+    }
+
+    #slide1:checked~.slider-prev-next-control label:nth-child(2)::after,
+    #slide2:checked~.slider-prev-next-control label:nth-child(3)::after,
+    #slide3:checked~.slider-prev-next-control label:nth-child(1)::after {
+        content: "\f105";
+        padding-left: 15px;
+    }
+
+    #slide1:checked~.slider-prev-next-control label:nth-child(2),
+    #slide2:checked~.slider-prev-next-control label:nth-child(3),
+    #slide3:checked~.slider-prev-next-control label:nth-child(1) {
+        display: block;
+        float: right;
+        margin-right: 5px;
+    }
+
+    #slide2:checked~.slider-prev-next-control label:nth-child(1),
+    #slide3:checked~.slider-prev-next-control label:nth-child(2),
+    #slide1:checked~.slider-prev-next-control label:nth-child(3) {
+        display: block;
+        float: left;
+        margin-left: 5px;
+    }
+
+    #slide2:checked~.slider-prev-next-control label:nth-child(1)::after,
+    #slide3:checked~.slider-prev-next-control label:nth-child(2)::after,
+    #slide1:checked~.slider-prev-next-control label:nth-child(3)::after {
+        content: "\f104";
+        padding-left: 8px;
+    }
+
+    #slide1:checked~.slider-dot-control label:nth-child(1),
+    #slide2:checked~.slider-dot-control label:nth-child(2),
+    #slide3:checked~.slider-dot-control label:nth-child(3) {
+        background: #333;
+    }
+
+    #slide1:checked~.slider-wrapper article:nth-child(1) .info,
+    #slide2:checked~.slider-wrapper article:nth-child(2) .info,
+    #slide3:checked~.slider-wrapper article:nth-child(3) .info {
+        opacity: 1;
+    }
+
+    #slide1:checked~.slider-wrapper .inner {
+        margin-left: 0%;
+    }
+
+    #slide2:checked~.slider-wrapper .inner {
+        margin-left: -100%;
+    }
+
+    #slide3:checked~.slider-wrapper .inner {
+        margin-left: -200%;
+    }
+
+    /*---- TABLET ----*/
+    @media only screen and (max-width: 850px) and (min-width: 450px) {
+        .slider-wrapper {
+            border-radius: 0;
+        }
+    }
+
+    /*---- MOBILE----*/
+    @media only screen and (max-width: 450px) {
+        .slider-wrapper {
+            border-radius: 0;
+        }
+
+        .slider-wrapper .info {
+            opacity: 0;
+        }
+    }
+
+    @media only screen and (min-width: 850px) {
+        body {
+            padding: 0 80px;
+        }
+    }
+
+    .video-responsive {
+        height: 0;
+        overflow: hidden;
+        padding-bottom: 56.25%;
+        padding-top: 30px;
+        position: relative;
+        margin-top: 2em;
+        margin-bottom: 2em;
+    }
+
+    .video-responsive iframe,
+    .video-responsive object,
+    .video-responsive embed {
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+
+    .img-flipper {
+        position: relative;
+        display: inline-block;
+        transition: all 1s ease;
+    }
+
+    .img-flipper .img-top {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 99;
+    }
+
+    .img-flipper:hover .img-top {
+        display: inline;
+    }
+
+    .cante-text {
+        background: #ff8e90;
+        color: white;
+        margin-right: -10px;
+        margin-left: -10px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    ul {
+
+        list-style-position: outside;
+    }
+
+    li {
+        margin-left: 20px;
+    }
+</style>
+<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<div class="Container">
+    <header class="PageHeader">
+        <div class="SectionHeader SectionHeader--center">
+            <h1 class="SectionHeader__Heading Heading u-h1">{{ page.title }}</h1>
+        </div>
+    </header>
+
+    <div class="eys-main">
+        <div class="images-workshop hidden-pocket">
+            <div class="img-flipper">
+                <a href="https://www.naos-store.co.uk/pages/skin-itself-workshop-with-sophie-shotter-aesthetic-doctor">
+                    <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_WORKSHOP_1A.jpg?v=1593066361"
+                        alt="Embrace your skin" />
+                    <img class="img-top"
+                        src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_WORKSHOP_1B.jpg?v=1593066094"
+                        alt="Embrace your skin" />
+                </a>
+            </div>
+            <div class="img-flipper">
+                <a href="https://www.naos-store.co.uk/pages/skin-make-up-workshop-with-rebecca-make-up-artist">
+                    <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_WORKSHOP_2A_31e521b2-3651-425d-9836-ef9ac566fb48.jpg?v=1593066094"
+                        alt="Embrace your skin" />
+                    <img class="img-top"
+                        src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_WORKSHOP_2B_b330259b-b70d-40cf-83a0-e60f8c259a5f.jpg?v=1593066094"
+                        alt="Embrace your skin" />
+                </a>
+            </div>
+            <div class="img-flipper">
+                <a
+                    href="https://www.naos-store.co.uk/pages/skin-ingredients-workshop-with-alicia-skin-expert-and-educator">
+                    <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_WORKSHOP_3A_5cfd135d-8d87-4369-bd1d-1b68154ec7f8.jpg?v=1593066093"
+                        alt="Embrace your skin" />
+                    <img class="img-top"
+                        src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_WORKSHOP_3B_041fe07c-6a64-45c2-9049-71644fae3711.jpg?v=1593066093"
+                        alt="Embrace your skin" />
+                </a>
+            </div>
+            <div class="img-flipper">
+                <a
+                    href="https://www.naos-store.co.uk/pages/skin-positivity-live-instagram-with-talontedlex-dr-craythorne">
+                    <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_WORKSHOP_4A_bf767051-f964-4abe-99e6-bd35809447d7.jpg?v=1594033615"
+                        alt="Embrace your skin" />
+                </a>
+                <a
+                    href="https://www.naos-store.co.uk/pages/skin-positivity-live-instagram-with-talontedlex-dr-craythorne">
+                    <img class="img-top" src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_WORKSHOP_4B.jpg?v=1594021475"
+                        alt="Embrace your skin" />
+                </a>
+            </div>
+        </div>
+        <div class="images-workshop hidden-lap-and-up">
+            <a href="https://www.naos-store.co.uk/pages/skin-itself-workshop-with-sophie-shotter-aesthetic-doctor">
+                <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_WORKSHOP_1A-MOBILE_f499bf1f-f417-404b-a6f5-c26b8a877bc3.jpg?v=1593066645"
+                    alt="Embrace your skin" />
+            </a>
+            <a href="https://www.naos-store.co.uk/pages/skin-make-up-workshop-with-rebecca-make-up-artist">
+                <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_WORKSHOP_2B-MOBILE_f8b7ed31-f000-47de-abbe-5a947ce90aa5.jpg?v=1593066645"
+                    alt="Embrace your skin" />
+            </a>
+        </div>
+        <div class="images-workshop hidden-lap-and-up">
+            <a href="https://www.naos-store.co.uk/pages/skin-ingredients-workshop-with-alicia-skin-expert-and-educator">
+                <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_WORKSHOP_3B-MOBILE_3ec5aac0-7a86-4008-a906-1a089ae9ebe8.jpg?v=1593066645"
+                    alt="Embrace your skin" />
+            </a>
+            <a href="https://www.naos-store.co.uk/pages/skin-positivity-live-instagram-with-talontedlex-dr-craythorne">
+                <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/EYS_WORKSHOP_4C-MOBILE.jpg?v=1594021487"
+                    alt="Embrace your skin" />
+            </a>
+        </div>
+        <div class="under-schedule-text">
+            Our panel of skin professionals, dermatologists and make-up artists will be on hand to answer all of your
+            questions – only limited spaces available, please see details below the video.
+        </div>
+        <div class="horitzontal-link">
+            <a href="" target="blank">See full schedule here</a>
+        </div>
+        <div class="video-responsive">
+            <iframe src="https://www.youtube.com/embed/N-AYliJNPAk" frameborder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+        <div class="under-schedule-text hidden-pocket">
+            <p>The workshops will be run on Zoom and each of them will last between 30 to 45min, ending with a Q&A. Our
+                skin experts will reveal a secret discount code for a flash sale after the workshop.<br>
+                For more information please contact us at <strong><a
+                        href="mailto:info@naos-store.co.uk">info@naos-store.co.uk</a></strong></p>
+
+            <p>
+                <strong>SKIN ITSELF</strong><br>Sophie Shotter is an aesthetic doctor who will be available to
+                cover all your
+                skin-related questions. Three time slots available 10am, 11am and 2pm for both days.
+            </p>
+
+            <div class="cante-text">
+                <p>
+                    <strong>SKIN & MAKEUP</strong><br> Rebecca Wordingham is a makeup artist for over 12 years
+                    now and will run 3 workshops, replicated Saturday and Sunday.
+                </p>
+                <p>
+                <ul>
+                    <li>
+                        <strong>Subtle make-up coverage for Acne</strong> - 11am <br>
+                        Rebecca will do a 10min skin prep
+                        using
+                        Bioderma Sebium products. In the demo, she will explain basic colour theory techniques, which
+                        will
+                        allow minimal makeup use and maximum undetectable coverage. Once the theory has been discussed
+                        she
+                        will demo using dermacolour a camouflage products, specifically used for covering acne on one
+                        side
+                        of the face and on the other using standard concealers. Q&A
+                    </li>
+                    <li>
+                        <strong>Age Management & skinprep</strong> - 3pm<br>
+                        After a brief intro, Becca will invite
+                        you
+                        to do a 15 minute face massage and will be using Institut Esthederm suncreams, retinol products
+                        and
+                        products from Bioderma Hydrabio range. Then she will demo how to combat hooded eyes from ageing
+                        and
+                        creating a radiant youthful glow. Q&A
+                    </li>
+                    <li>
+                        <strong>Pigmentation & make-up</strong> - 5pm <br>
+                        Rebecca will do a 10-minutes skin prep using the NEW Bioderma Pigmentbio range and key products
+                        from Institut Esthderm. Covering minor imperfections using concealer and brightening techniques.
+                        A simple eye-opening make-up. Q&A
+                    </li>
+                </ul>
+                </p>
+            </div>
+            <br>
+            <p>
+                <strong>SKIN & INGREDIENTS</strong><br>Alicia Falero is a skin expert & educator who will
+                demystify the jargon of the most famous active ingredients. She will run 3 workshops, replicated
+                Saturday and Sunday.
+            </p>
+            <p>
+            <ul>
+                <li>
+                    <strong>Deep cleansing for Skin Rejuvenation</strong> - 3pm <br>
+                    Discover how to apply and why
+                    cleansing effectively
+                    is the vital for skin health. Q&A
+                </li>
+                <li>
+                    <strong>Let intelligent ingredients do the work</strong> - 4pm <br>
+                    Giving a demonstration to go
+                    over the order of
+                    application for various types of formulations and active ingredients, explaining the difference
+                    between serums, ampoules and essences. Q&A
+                </li>
+                <li>
+                    <strong>Fact or Fiction? Understanding Sunscreen</strong> - 5pm<br>
+                    The science explained - giving
+                    simple yet important advice on how best to wear sunscreen and tan safely. Q&A
+                </li>
+            </ul>
+            </p>
+
+            <p class="cante-text"><strong>SKIN & POSITIVITY</strong><br>An Instagram joint live with a dermatologist
+                and skin
+                positivity promoter to answer all your questions/concerns. We will reveal this inspiring duo in the
+                coming days. Stay tuned!</p>
+
+        </div>
+
+        <div class="under-schedule-text hidden-lap-and-up">
+            <p>The workshops will be run on Zoom and each of them will last between 30 to 45min, ending with a Q&A. Our
+                skin experts will reveal a secret discount code for a flash sale after the workshop.</p>
+
+            <p>
+                <strong>SKIN ITSELF</strong>Sophie Shotter is an aesthetic doctor who will be available to
+                cover all your
+                skin-related questions. Three time slots available 10am, 11am and 2pm for both days.
+            </p>
+
+            <div class="cante-text">
+                <p>
+                    <strong>SKIN & MAKEUP</strong> by Rebecca Wordingham. Rebecca is a makeup artist for over 12 years
+                    now and will run 3 workshops, replicated Saturday and Sunday
+                </p>
+                <p>
+                <ul>
+                    <li>
+                        11-11.45am: Subtle make-up coverage for Acne
+                    </li>
+                    <li>
+                        3 – 3.45pm: Age Management & skinprep
+                    </li>
+                    <li>
+                        5 – 5.45pm : Pigmentation & make-up
+                    </li>
+                </ul>
+                </p>
+            </div>
+            <br>
+            <p>
+                <strong>SKIN & INGREDIENTS</strong> by Alicia Falero. Alicia is a skin expert & educator who will
+                demystify the jargon of the most famous active ingredients. She will run 3 workshops, replicated
+                Saturday and Sunday.
+            </p>
+            <p>
+            <ul>
+                <li>
+                    3 – 3.45pm : Deep cleansing for Skin Rejuvenation
+                </li>
+                <li>
+                    4 – 4.45pm : Let intelligent ingredients do the work
+                </li>
+                <li>
+                    5 – 5.45pm : Fact or Fiction? Understanding Sunscreen
+                </li>
+            </ul>
+            </p>
+
+            <p class="cante-text"><strong>SKIN & POSITIVITY</strong><br> An Instagram joint live with a dermatologists
+                and skin
+                positivity promoter to answer all your questions/concerns. We will reveal this inspiring duo in the
+                coming days. Stay tuned!</p>
+
+        </div>
+
+        <div class="wrapper">
+            <input checked type=radio name="slider" id="slide1" />
+            <input type=radio name="slider" id="slide2" />
+            <input type=radio name="slider" id="slide3" />
+
+            <div class="slider-wrapper">
+                <div class=inner>
+                    <article>
+                        <div class="splith-text-image">
+                            <div class="splith-image hidden-pocket">
+                                <div class="splith-image-img">
+                                    <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/rebecca_temporary_file.png?v=1591799557"
+                                        alt="Workshops" /></p>
+                                </div>
+                            </div>
+                            <div class="splith-text">
+                                <h2><strong>Rebecca Wordingham</strong></h3>
+                                    <h3>Make up artist</h3>
+                                    <p>I started my career over 12 years ago, initially working as a makeup artist in
+                                        film, television and music, for 7 years I have been working as a fashion and
+                                        beauty makeup artist shooting for brands including Arket, Stella McCartney, Cos,
+                                        Adidas to name a few. I shoot for magazines including British Vogue, i-D, etc. I
+                                        am the Creative Director and owner of The London School of Media Make Up, which
+                                        I set up with my mother, BAFTA-winning make up artist Jeanne Richmond in 2004. I
+                                        have worked with Naos products in my kit and on my own skin for 10 years. I am
+                                        thrilled to be apart of the Embrace your skin movement, everybody can benefit
+                                        from being kind to themselves and understanding their own skin a bit better. I
+                                        love the sense of community and inclusion, makes me really champion the project
+                                        and brand even more.
+                                    </p>
+                            </div>
+                        </div>
+                    </article>
+                    <article>
+                        <div class="splith-text-image">
+                            <div class="splith-image hidden-pocket">
+                                <div class="splith-image-img">
+                                    <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/alicia_temporary_file.png?v=1591803632"
+                                        alt="Workshops" /></p>
+                                </div>
+                            </div>
+                            <div class="splith-text">
+                                <h2><strong>Alicia Falero</strong></h3>
+                                    <h3>Skin Expert and Educator</h3>
+                                    <p>I feel grateful to have had a whirlwind of a career that has involved being a
+                                        face and body practitioner, an international trainer to many influential brands,
+                                        a treatments manager and most recently I now teach.
+                                        The thing I love most about the world of wellbeing and skincare is that after 20
+                                        years, I’m still learning, and as my knowledge grows, so does my passion. I look
+                                        forward to showcase some of my techniques which are the culmination of all my
+                                        experience from my travels training around the world. I’m thrilled to join
+                                        Embrace Your Skin movement because I want to... Spark your interest by sharing
+                                        what I know - to empower you to look after your skin health in the very best
+                                        way.</p>
+                            </div>
+                        </div>
+                    </article>
+                    <article>
+
+                        <div class="splith-text-image">
+                            <div class="splith-image hidden-pocket">
+                                <div class="splith-image-img">
+                                    <img src="https://cdn.shopify.com/s/files/1/0284/0664/4811/files/sophie_temporary_file.png?v=1591803065"
+                                        alt="Workshops" /></p>
+                                </div>
+                            </div>
+                            <div class="splith-text">
+                                <h2><strong>Sophie Shotter</strong></h3>
+                                    <h3>Aesthetic Doctor</h3>
+                                    <p>I’m an aesthetic Doctor and hormone specialist.
+                                        After my graduation at Leeds University in 2008, I started my career as an
+                                        anaesthetist before taking a keen interest in aesthetics, skin and BHRT
+                                        (Bio-Identical Hormone Replacement Therapy).
+                                        Today I split my time between my private practice in Kent (Illuminate Skin
+                                        Clinic) and The Cosmetic Skin Clinic in London & Buckinghamshire. I also often
+                                        write content for the press as I love sharing my knowledge on skin topics and
+                                        giving my opinion on products I advise to my patients. I join Embrace your skin
+                                        movement because the information given is right and will help people to make
+                                        their skin better.</p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <!-- .inner -->
+            </div>
+            <!-- .slider-wrapper -->
+
+            <div class="slider-prev-next-control">
+                <label for=slide1></label>
+                <label for=slide2></label>
+                <label for=slide3></label>
+            </div>
+            <!-- .slider-prev-next-control -->
+
+            <div class="slider-dot-control">
+                <label for=slide1></label>
+                <label for=slide2></label>
+                <label for=slide3></label>
+            </div>
+            <!-- .slider-dot-control -->
+        </div>
+    </div>
+</div>
+<script></script>

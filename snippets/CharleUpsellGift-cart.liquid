@@ -1,0 +1,244 @@
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+ <div class="tab-accordion-slideshow">
+<h1 id="tabClose" class="tabSample">MY GIFTS <svg class="accordionDrop" width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 451.847 451.847" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g>
+  <g xmlns="http://www.w3.org/2000/svg">
+    <path d="M225.923,354.706c-8.098,0-16.195-3.092-22.369-9.263L9.27,151.157c-12.359-12.359-12.359-32.397,0-44.751   c12.354-12.354,32.388-12.354,44.748,0l171.905,171.915l171.906-171.909c12.359-12.354,32.391-12.354,44.744,0   c12.365,12.354,12.365,32.392,0,44.751L248.292,345.449C242.115,351.621,234.018,354.706,225.923,354.706z" fill="#ffffff" data-original="#000000" style="" class=""/>
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  <g xmlns="http://www.w3.org/2000/svg">
+  </g>
+  </g></svg>
+   </h1>
+</div>
+
+<div class="toggleOneOption">
+<p>You have qualified for your Exclusive Free Gift, click below to make your selection.</p>
+<div class="option-holder"> 
+<p style="margin-right: 30px;">You’ve reached a £75 spend.<span> Choose 1 product.</span></p>  
+<!-- BRAND OPTION SELECTOR -->
+<select name="vendors" id="vendor" class="vendorsBrands" >
+<option selected="selected"> select a brand</option>
+  {%assign vendorBioderma = 'BIODERMA' %}
+  {% assign vendorEstederum = "INSTITUT ESTHEDERM" %}
+    <option value="{{vendorBioderma}}" class="vendor i{{forloop.index}}">{{vendorBioderma}}</option> 
+    <option value="{{vendorEstederum}}" class="vendor i{{forloop.index}}">{{vendorEstederum}}</option>    
+</select>
+</div>
+</div> 
+<!-- BIODERMA + ESTEDERM PRODUCTS SLIDER -->
+<div id="slideSample" class="slideShowSample toggleOne toggleOneSlides">
+{% for product in collections['gwp_collection'].products %}        
+  <div class="productContainer">
+   <div class="productContainerHolder">
+      <img src="{{ product | img_url }}"> 
+      <h2 class="vdName">{{product.vendor}}</h2>
+      <p>{{product.title}}</p>
+      <input type="hidden" name="id" value="{{ product.variants.first.id }}">       
+     <!-- <button id="addNewItemslide" type="submit" name="add" class="i{{product.id}}"> Add to cart</button> -->
+     <div  id="addPrd" data="{{ product.variants.first.id }}" class="ItemAd i{{product.id}}"> ADD</div>
+     <div  id="addPrd"  class="b{{product.id}}" style="display: none;">SELECTED</div>
+
+  </div>
+  </div>
+{%endfor%}
+</div>
+<!-- BIODERMA PRODUCTS SLIDER -->
+<div id="slideSample" class="slideShowSample toggleOneSlidesOne toggleOneBioderma" style="display: none;">
+  {% for product in collections['sample-gift-bioderma-collection'].products %}        
+    <div class="productContainer">
+     <div class="productContainerHolder">
+        <img src="{{ product | img_url }}"> 
+        <h2 class="vdName">{{product.vendor}}</h2>
+        <p>{{product.title}}</p>
+        <input type="hidden" name="id" value="{{ product.variants.first.id }}">       
+       <!-- <button id="addNewItemslide" type="submit" name="add" class="i{{product.id}}"> Add to cart</button> -->
+       <div  id="addPrd" data="{{ product.variants.first.id }}" class="ItemAd i{{product.id}}"> Add Item</div>
+       <div  id="addPrd"  class="b{{product.id}}" style="display: none;">SELECTED</div>
+    </div>
+    </div>
+  {%endfor%}
+  </div>
+<!-- ESTEDERM PRODUCTS SLIDER-->
+  <div id="slideSample" class="slideShowSample toggleOneSlidesTwo toggleOneEsthederm" style="display: none;">
+    {% for product in collections['sample-gift-esthederm-collection'].products %}        
+      <div class="productContainer">
+       <div class="productContainerHolder">
+          <img src="{{ product | img_url }}"> 
+          <h2 class="vdName">{{product.vendor}}</h2>
+          <p>{{product.title}}</p>
+          <input type="hidden" name="id" value="{{ product.variants.first.id }}">       
+         <!-- <button id="addNewItemslide" type="submit" name="add" class="i{{product.id}}"> Add to cart</button> -->
+         <div  id="addPrd" data="{{ product.variants.first.id }}" class="ItemAd i{{product.id}}"> Add Item</div>
+         <div  id="addPrd"  class="b{{product.id}}" style="display: none;">SELECTED</div>
+    
+      </div>
+      </div>
+    {%endfor%}
+    </div>
+
+<style>
+.activeSample{display:none !important;}
+.rotateArrow{transform: rotate(180deg) !important };
+.sectedPr{color:red;}
+.btnHiddenSe{display: none !important;}
+button.ProductForm__AddToCart.Button.Select.sectedPr {color: red;}
+.sectedPr{background:#5c5c5c !important; border-color: #5c5c5c !important; color : #fff  !important; display: block !important;}
+.slide1{display:block !important;}
+.togglleOneBiodermaDisplay{display:block !important;}
+</style>
+
+<script>
+$( window ).on( "load", function(){
+                       
+setTimeout(function(){
+jQuery.getJSON('/cart.js', function(cart) {
+// Get CART ITEMS AND PRODUCTS FROM COLLECTION + CHECK IF PRODUCT ID FROM COLLECTION MATCHES THE ID PRODUCT ID IN CART
+var itemsInCart = cart.items;
+var products = [{%for product in collections['gwp_collection'].products%}{{product|json}}{%if forloop.last == false%},{%endif%}{%endfor%}];
+var productsBioderma = [{%for product in collections['sample-gift-bioderma-collection'].products%}{{product|json}}{%if forloop.last == false%},{%endif%}{%endfor%}];
+var productsEsthederm = [{%for product in collections['sample-gift-esthederm-collection'].products%}{{product|json}}{%if forloop.last == false%},{%endif%}{%endfor%}];
+
+console.log('GIFT COLLECTIONS ITEM ID BELOW')
+console.log(products)
+console.log(itemsInCart)
+let entry
+let entry2
+let entry3
+let entry4
+ //  Add to Cart Function
+$(".ItemAd").click(function( e){
+      ProductIdPlan = (this.getAttribute('data'));
+    e.preventDefault();
+    data = {
+    "id": ProductIdPlan,
+    "quantity": 1,
+    };
+
+    jQuery.ajax({
+    type: 'POST',
+    url: '/cart/add.js',
+    data: data,
+    dataType: 'json',
+    success: function() { 
+      window.location.href = '/cart'; 
+    }
+  }); 
+}); 
+
+
+
+// document.getElementById('tab2').addEventListener('click', function () {
+// 	document.getElementById('slick-slide-control10').click()
+// })
+//  CHECK IF ITEM IS IN THE CART
+for(let entry of itemsInCart){
+for(let entry2 of products){
+  for(let entry3 of productsBioderma){
+    for(let entry4 of productsEsthederm){
+      if(entry.product_id == entry4.id){ 
+  $(".i"+entry.product_id).addClass("btnHiddenSe")
+  $('.ItemAd').addClass("btnHiddenSe")
+  $('.BtnDisabled').addClass("sectedPr")
+  $(".b"+entry.product_id).addClass("sectedPr")
+  console.log('includes', entry.product_id);   
+  console.log(cart.items.length)
+    }
+    }
+    if(entry.product_id == entry3.id){ 
+      
+  $(".i"+entry.product_id).addClass("btnHiddenSe")
+  $('.ItemAd').addClass("btnHiddenSe")
+  $('.BtnDisabled').addClass("sectedPr")
+  $(".b"+entry.product_id).addClass("sectedPr")
+  console.log('includes', entry.product_id);   
+  console.log(cart.items.length)
+    }
+  }
+if(entry.product_id == entry2.id){ 
+  $(".i"+entry.product_id).addClass("btnHiddenSe")
+  $('.ItemAd').addClass("btnHiddenSe")
+  $('.BtnDisabled').addClass("sectedPr")
+  $(".b"+entry.product_id).addClass("sectedPr")
+  console.log('includes', entry.product_id);   
+  console.log(cart.items.length)
+}
+}
+}
+} );
+    
+
+// DROPDOWN PROUCT VENDOR LOGIC
+$( ".vendorsBrands" ).change(function() {
+      var selectedOptionVal = $('#vendor').find(":selected").val()
+      console.log(selectedOptionVal)
+
+    if(selectedOptionVal == "BIODERMA"){
+      console.log('Works with Bioderma')
+      $(".toggleOneBioderma").css("display", "block");
+      $(".toggleOne").css("display", "none");
+      $(".toggleOneEsthederm").css("display", "none");
+      $("#slick-slide-control10").click();
+
+
+
+    }
+    if(selectedOptionVal == "INSTITUT ESTHEDERM"){
+      console.log('WORKS with Institut')
+      $(".toggleOneEsthederm").css("display", "block");
+      $(".toggleOneBioderma").css("display", "none");
+      $(".toggleOne").css("display", "none");
+      $("#slick-slide-control20").click();
+
+    }
+    if(selectedOptionVal == "select a brand"){
+      console.log('WORKS with Institut')
+      $(".toggleOneBioderma").css("display", "none");
+      $(".toggleOneEsthederm").css("display", "none");
+      $(".toggleOne").css("display", "block");
+      $("#slick-slide-control00").click();
+    }
+    });
+    $("#tabClose").click(function(){  
+      $(".toggleOneOption").toggleClass("activeSample")
+     $(".toggleOneSlides").toggleClass("activeSample");
+     $(".toggleOneSlidesOne").toggleClass("activeSample");
+     $(".toggleOneSlidesTwo").toggleClass("activeSample");
+      $(".accordionDrop").toggleClass("rotateArrow");
+      $("#slick-slide-control10").click();
+      $("#slick-slide-control20").click();
+      $("#slick-slide-control00").click();
+
+
+
+      }); 
+  }, 2500);
+
+        });
+</script>
