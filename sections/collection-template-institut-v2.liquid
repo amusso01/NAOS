@@ -1,0 +1,793 @@
+{%- capture collection_inner -%}
+  {%- comment -%}This is the common part to both template{%- endcomment -%}
+
+  {%- if collection.products_count > 0 -%}
+    {%- paginate collection.products by section.settings.grid_items_per_page -%}
+      <div class="ProductListWrapper fd-content-block">
+        <div class="ProductList ProductList--grid fd-product__grid">
+          {%- for product in collection.products -%}
+            <div class="fd-product__inner">
+              {%- render 'product-item', product: product, show_product_info: true, show_labels: true -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- render 'pagination', paginate: paginate -%}
+    {%- endpaginate -%}
+  {%- else -%}
+    <div class="EmptyState">
+      <div class="Container">
+        <h1 class="EmptyState__Title Heading u-h5">{{ 'collection.general.no_products' | t }}</h1>
+        <button class="EmptyState__Action Button Button--primary" data-action="reset-tags">{{ 'collection.general.reset' | t }}</button>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- if template == 'collection.ajax' -%}
+  {%- comment -%}
+  --------------------------------------------------------------------------------------------------------------------
+  CONTENT FOR AJAX ALTERNATE TEMPLATE
+  --------------------------------------------------------------------------------------------------------------------
+  {%- endcomment -%}
+
+  {{- collection_inner -}}
+
+{%- else -%}
+  {%- comment -%}
+  --------------------------------------------------------------------------------------------------------------------
+  CONTENT FOR NORMAL TEMPLATE
+  --------------------------------------------------------------------------------------------------------------------
+  {%- endcomment -%}
+
+  {%- assign active_tags = '' -%}
+
+  {%- for tag in current_tags -%}
+    {%- assign tag_as_handle = tag | replace: '&#39;', '' | replace: '&#34;', '' | handle -%}
+    {%- assign active_tags = active_tags | append: tag_as_handle -%}
+
+    {%- unless forloop.last -%}
+      {%- assign active_tags = active_tags | append: '+' -%}
+    {%- endunless -%}
+  {%- endfor -%}
+
+  {%- capture section_settings -%}
+  {
+    "collectionUrl": {{ collection.url | default: '/collections/all' | json }},
+    "currentTags": {% if active_tags != blank %}{{ active_tags | split: '+' | json }}{% else %}[]{% endif %},
+    "sortBy": {{ collection.sort_by | default: collection.default_sort_by | json }},
+    "filterPosition": {{ section.settings.filter_position | json }}
+  }
+  {%- endcapture -%}
+
+  <section class="fd-container-width" data-section-id="{{ section.id }}" data-section-type="collection" data-section-settings='{{ section_settings }}'>
+    {%- comment -%}
+    --------------------------------------------------------------------------------------------------------------------
+    COLLECTION INFO
+    --------------------------------------------------------------------------------------------------------------------
+    {%- endcomment -%}
+
+    {% assign mobile_image_metafield = collection.metafields.additional_images.mobile | first %}
+    {% assign tablet_image_metafield = collection.metafields.additional_images.tablet | first %}
+
+
+
+    <header class="fd-collection__header ">
+      <div class="fd-collection__header-image fd-collection__header-image-desktop">
+        <figure class="fd-collection__header-media">
+          <img src="{{ collection.image | img_url: 'master' }}" alt="{{ collection.image.alt | escape }}">
+        </figure>
+      </div>
+
+      {%- if tablet_image_metafield != blank -%}
+        <div class="fd-collection__header-image fd-collection__header-image-tablet">
+          <figure class="fd-collection__header-media">
+            <img src="{{ tablet_image_metafield.cloudinary_src }}" alt="{{ collection.image.alt | escape }}">
+          </figure>
+        </div>
+      {%- endif -%}
+
+      {%- if mobile_image_metafield != blank -%}
+        <div class="fd-collection__header-image fd-collection__header-image-mobile">
+          <figure class="fd-collection__header-media">
+            <img src="{{ mobile_image_metafield.cloudinary_src }}" alt="{{ collection.image.alt | escape }}">
+          </figure>
+        </div>
+      {%- endif -%}
+
+      <!-- IMAGE END -->
+
+      <div class="fd-collection__header-text fd-content-block">
+        <h1>{{ collection.title }}</h1>
+        <p>{{ collection.description }}</p>
+      </div> 
+
+    </header>
+    {%- comment -%}
+    --------------------------------------------------------------------------------------------------------------------
+    COLLECTION TOOLBAR
+    --------------------------------------------------------------------------------------------------------------------
+    {%- endcomment -%}
+
+    {%- if collection.all_products_count > 0 -%}
+      {%- comment -%}
+      In order to provide more predictable results (for instance not showing filters by tag even if the option is checked in settings,
+      but that there are no tags for the given collection to show), we are doing some more logic here. Basically, we try to check if there
+      are tags to show by stripping internal tags (those that start by "__")
+      {%- endcomment -%}
+
+      {%- assign has_visible_tags = false -%}
+
+      {%- case section.settings.filter_mode -%}
+        {%- when 'tag' -%}
+          {%- for tag in collection.all_tags -%}
+            {%- unless tag contains '__' -%}
+              {%- assign has_visible_tags = true -%}
+              {%- break -%}
+            {%- endunless -%}
+          {%- endfor -%}
+
+        {%- when 'group' -%}
+          {%- for tag in collection.all_tags -%}
+            {%- assign tag_parts = tag | split: '_' -%}
+
+            {%- if tag_parts.size == 2 -%}
+              {%- assign has_visible_tags = true -%}
+            {%- endif -%}
+          {%- endfor -%}
+      {%- endcase -%}
+
+      {%- assign show_filters = false -%}
+      {%- assign quick_links = linklists[section.settings.filter_menu] -%}
+
+      {%- if quick_links != blank or has_visible_tags -%}
+        {%- assign show_filters = true -%}
+      {%- endif -%}
+
+      {%- capture collection_toolbar -%}
+       
+          <div class="CollectionToolbar  fd-content-block">
+              <div class="CollectionToolbar__Group">
+               
+                  <button class="CollectionToolbar__Item CollectionToolbar__Item--filter Heading {% unless current_tags %}Text--subdued{% endunless %} u-h6 {% if section.settings.filter_position != 'drawer' %}hidden-lap-and-up{% endif %}"
+                          data-action="open-drawer"
+                          data-drawer-id="collection-filter-drawer"
+                          aria-label="{{ 'collection.filter.show_filter' | t }}">
+                    {{ 'collection.filter.title' | t }} {% if current_tags %}<span class="Text--subdued">({{ current_tags.size }})</span>{% endif %} {% render 'icon' with 'select-arrow' %}
+                  </button>
+            
+                  <button class="CollectionToolbar__Item CollectionToolbar__Item--sort Heading Text--subdued u-h6"
+                          aria-label="{{ 'collection.sorting.show_sort' | t }}"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                          aria-controls="collection-sort-popover">
+                    {{ 'collection.sorting.title' | t }} {% render 'icon' with 'select-arrow' %}
+                  </button>
+            
+              </div>
+          </div>
+     
+      {%- endcapture -%}
+
+      {%- comment -%}
+      --------------------------------------------------------------------------------------------------------------------
+      FILTERS AND SORT BY POPOVER
+      --------------------------------------------------------------------------------------------------------------------
+      {%- endcomment -%}
+
+      {%- if show_filters -%}
+        {%- comment -%}
+        Implementation note: the filters can be displayed in two different ways: in a sidebar menu, always visible, or in a drawer. Due to that, we are
+        setting the general code here, and then we will output it twice.
+        {%- endcomment -%}
+
+        {%- assign quick_links = linklists[section.settings.filter_menu] -%}
+
+        {%- capture filters_content -%}
+          {%- if quick_links != empty -%}
+            <div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+              <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+                {{- quick_links.title | escape -}} <span class="Collapsible__Plus"></span>
+              </button>
+
+              <div class="Collapsible__Inner">
+                <div class="Collapsible__Content">
+                  <ul class="Linklist">
+                    {%- for link in quick_links.links -%}
+                      <li class="Linklist__Item {% if link.active %}is-selected{% endif %}">
+                        <a href="{{ link.url }}" class="Link Link--primary Text--subdued {% if link.active %}is-active{% endif %}">{{ link.title | escape }}</a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- if has_visible_tags -%}
+            {%- if section.settings.filter_mode == 'tag' -%}
+              <div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+                <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+                  {{- 'collection.filter.all' | t -}} <span class="Collapsible__Plus"></span>
+                </button>
+
+                <div class="Collapsible__Inner">
+                  <div class="Collapsible__Content">
+                    <ul class="Linklist">
+                      {%- for tag in collection.all_tags -%}
+                        {%- if tag contains '__' -%}
+                          {%- continue -%}
+                        {%- endif -%}
+
+                        <li class="Linklist__Item {% if current_tags contains tag %}is-selected{% endif %}">
+                          <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag %}is-active{% endif %}" data-tag="{{ tag | handle }}" data-action="toggle-tag">
+                            {{- tag -}}
+                          </button>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            {%- else -%}
+              {%- assign groups = '' -%}
+
+              {%- for tag in collection.all_tags -%}
+                {%- assign tag_parts = tag | split: '_' -%}
+
+                {%- if tag_parts.size != 2 -%}
+                  {%- continue -%}
+                {%- endif -%}
+
+                {%- assign groups = groups | append: tag_parts.first | append: ',' -%}
+              {% endfor %}
+
+              {%- assign color_label = 'color,colour,couleur,colore,farbe,색,色,färg,farve' | split: ',' -%}
+              {%- assign groups = groups | split: ',' | compact | uniq -%}
+
+              {%- for group in groups -%}
+                {%- assign group_downcase = group | downcase -%}
+
+
+                <div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+                  <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+                    {{- group | escape -}} <span class="Collapsible__Plus"></span>
+                  </button>
+
+                  <div class="Collapsible__Inner">
+                    <div class="Collapsible__Content">
+                      <ul class="Linklist">
+                        {%- for tag in collection.all_tags -%}
+                          {%- assign tag_parts = tag | split: '_' -%}
+
+                          {%- if tag_parts.size != 2 or tag_parts.first != group -%}
+                            {%- continue -%}
+                          {%- endif -%}
+
+                  
+                            <li class="Linklist__Item {% if current_tags contains tag %}is-selected{% endif %}">
+                              <button type="button" class="Text--subdued Link Link--primary {% if current_tags contains tag %}is-active{% endif %}" data-tag="{{ tag | handle }}" data-action="toggle-tag">
+                                {{- tag_parts.last -}}
+                              </button>
+                            </li>
+                  
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endcapture -%}
+
+        <div id="collection-filter-drawer" class="CollectionFilters Drawer Drawer--secondary Drawer--fromRight" aria-hidden="true">
+          <header class="Drawer__Header Drawer__Header--center Drawer__Container">
+            <span class="Drawer__Title Heading u-h4">{{ 'collection.filter.all' | t }}</span>
+
+            <button class="Drawer__Close Icon-Wrapper--clickable" data-action="close-drawer" data-drawer-id="collection-filter-drawer" aria-label="{{ 'header.navigation.close_sidebar' | t }}">
+              {%- render 'icon' with 'close' -%}
+            </button>
+          </header>
+
+          <div class="Drawer__Content">
+            <div class="Drawer__Main" data-scrollable>
+              {{ filters_content }}
+            </div>
+
+            <div class="Drawer__Footer Drawer__Footer--padded" data-drawer-animated-bottom>
+              <div class="ButtonGroup">
+                <button type="button" class="ButtonGroup__Item Button Button--secondary" data-action="reset-tags" {% if current_tags == blank %}style="display: none"{% endif %}>{{ 'collection.filter.reset' | t }}</button>
+                <button type="button" class="ButtonGroup__Item ButtonGroup__Item--expand Button Button--primary" data-action="apply-tags">{{ 'collection.filter.apply' | t }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_sort_by -%}
+        <div id="collection-sort-popover" class="Popover" aria-hidden="true">
+          <header class="Popover__Header">
+            <button class="Popover__Close Icon-Wrapper--clickable" data-action="close-popover">{% render 'icon' with 'close' %}</button>
+            <span class="Popover__Title Heading u-h4">{{ 'collection.sorting.title' | t }}</span>
+          </header>
+
+          <div class="Popover__Content">
+            <div class="Popover__ValueList" data-scrollable>
+              {% assign collection_sort_by = collection.sort_by | default: collection.default_sort_by %}
+
+              {%- for option in collection.sort_options -%}
+                <button class="Popover__Value {% if option.value == collection_sort_by %}is-selected{% endif %} Heading Link Link--primary u-h6" data-value="{{ option.value }}" data-action="select-value">
+                  {{ option.name }}
+                </button>
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%}
+      --------------------------------------------------------------------------------------------------------------------
+      COLLECTION PRODUCTS
+      --------------------------------------------------------------------------------------------------------------------
+      {%- endcomment -%}
+
+      {% if section.settings.show_promobanner == true  %}
+      <section class="fd-content-block fd-promoBanner fd-container-width">
+        <figure class="fd-promoBanner-media">
+          <img src="{{ section.settings.promo_banner | img_url: 'master' }}" alt="promo banner" class="fd-promoBanner-image">
+        </figure>
+      </section>
+      {% endif %}
+ 
+
+
+      <section class="fd-collection__bestsellers fd-content-block ">
+        <h3>Bestsellers</h3>
+        <div class="glide glide-bestsellers">
+          <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides">
+              {% for block in section.blocks %}
+                {% if block.type == 'bestsellers' %}
+
+                  {%- if settings.product_show_secondary_image -%}
+                    {%- assign has_alternate_image = true -%}
+                  {%- else -%}
+                    {%- assign has_alternate_image = false -%}
+                  {%- endif -%}
+        
+                  <li class="glide__slide">
+                    <a href="/products/{{block.settings.bestseller_product.handle}}">
+        
+                      <div class="fd-product-image__alternate">
+                        {%- comment -%}
+                        IMPLEMENTATION NOTE: The alternate image (not visible by default) should be the first in the DOM, as the spinner (Image__Loader element) is
+                        displayed based on the immediately previously shown image.
+                        {%- endcomment -%}
+
+                        {%- if  block.settings.bestseller_product.media[1] != blank -%}
+                          {%- assign has_alternate_image = true -%}
+                        {%- else -%}
+                          {%- assign has_alternate_image = false -%}
+                        {%- endif -%}
+
+                        <figure class="fd-product-image__wrapper ">
+
+                        {%- if has_alternate_image -%}
+                          <img src="{{ block.settings.bestseller_product.media[1]  | img_url: 'master' }}" loading="lazy" alt="product image" class="fd-product-image__image fd-product-image__image-hover">
+                        {% else %}  
+                          <img src="{{ block.settings.bestseller_product.featured_image.src   | img_url: 'master' }}" loading="lazy" alt="product image" class="fd-product-image__image fd-product-image__image-hover">
+                        {%- endif -%}
+                          <img src="{{ block.settings.bestseller_product.featured_image.src  | img_url: 'master' }}" loading="lazy" alt="product image" class="fd-product-image__image ">
+
+                        </figure>
+
+                      </div>
+
+                      {% assign colorTag = false %}
+
+                      {% if block.settings.bestseller_product.metafields.my_fields.color_tag.value == "I’M NEW" %}
+                        {% assign colorTag = "blu" %}
+                      {% elsif block.settings.bestseller_product.metafields.my_fields.color_tag.value == "BESTSELLER"  %}  
+                        {% assign colorTag = "red" %}
+                      {% elsif block.settings.bestseller_product.metafields.my_fields.color_tag.value == "EXCLUSIVE"  %}  
+                        {% assign colorTag = "yellow" %}
+                      {% endif %}
+
+                      <div class="fd-collection__product-info">
+
+                        <p class="metafield {% if colorTag == 'yellow' %} metafield-yellow {% endif %} {% if colorTag == 'red' %} metafield-red {% endif %} {% if colorTag == 'blu' %} metafield-blu {% endif %}"> {{ block.settings.bestseller_product.metafields.my_fields.color_tag.value }}</p>
+                        <p class="title">{{ block.settings.bestseller_product.title }}</p>
+                        {% comment %}Start automatically added Judge.me widget{% endcomment %}
+                          {% render 'judgeme_widgets', widget_type: 'judgeme_preview_badge', concierge_install: true, product: block.settings.bestseller_product %}
+                        {% comment %}End automatically added Judge.me widget{% endcomment %}
+                        <p class="price">{{ block.settings.bestseller_product.price | money_without_trailing_zeros  }}</p>
+                      </div>
+
+                    </a>
+
+                    <form method="post" action="/cart/add" class="fd-add-to-cart__form">
+
+                      <input type="hidden" name="id" value="{{ block.settings.bestseller_product.variants.first.id }}" />
+                    
+                      <input  type="submit" data-id="{{ block.settings.bestseller_product.variants.first.id }}" value="Add to cart" class="btn fd-add-to-cart" />
+                    
+                    </form>
+                    <div class="fd-add-to-cart__modal" id="fdAddToModal" ></div>
+                  </li>
+              
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div class="glide__bullets" data-glide-el="controls[nav]">
+            {% assign bullet = 0 %}
+            {% for block in section.blocks %}
+              {% if block.type == 'bestsellers' %}
+                <button class="glide__bullet" data-glide-dir="={{ bullet }}"></button>
+                {% assign bullet = bullet | plus: 1 %}
+              {% endif %}
+            {% endfor %}
+          </div>
+
+
+          <div class="glide__arrows" data-glide-el="controls">
+            <button class="glide__arrow glide__arrow--left" data-glide-dir="<">
+              <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+                <g id="Group_69" data-name="Group 69" transform="translate(730 644) rotate(180)">
+                  <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="#fff" stroke="#fff" stroke-width="1">
+                    <rect width="58" height="58" rx="29" stroke="none"/>
+                    <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+                  </g>
+                  <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
+                </g>
+              </svg>
+            </button>
+            <button class="glide__arrow glide__arrow--right" data-glide-dir=">">
+              <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+                <g id="Group_68" data-name="Group 68" transform="translate(-672 -586)">
+                  <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="#fff" stroke="#fff" stroke-width="1">
+                    <rect width="58" height="58" rx="29" stroke="none"/>
+                    <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+                  </g>
+                  <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
+                </g>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {% if section.settings.show_range == true  %}
+      <section class="fd-collection__ranges ">
+        <div class="fd-content-block">
+          <h3><span>Shop by</span> Range</h3>
+          <div class="glide glide-range-bioderma">
+            <div class="glide__track" data-glide-el="track">
+              <ul class="glide__slides">
+                {% for block in section.blocks %}
+                  {% if block.type == 'ranges' %}
+          
+                    <li class="glide__slide">
+                      <a href="/collections/{{block.settings.range_collection.handle}}">
+                        <figure class="fd-range-image__wrapper">
+                          <img src="{{ block.settings.range_image  | img_url: 'master' }}" alt="Collection image">
+                        </figure>
+
+                        <div class="fd-collection__ranges-name">
+                          <p class="fd-collection__ranges-title">{{ block.settings.range_collection.title }}</p>
+                        </div>
+
+                      </a>
+                    </li>
+                
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="glide__arrows" data-glide-el="controls">
+              <button class="glide__arrow glide__arrow--left" data-glide-dir="<">
+                <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+                  <g id="Group_69" data-name="Group 69" transform="translate(730 644) rotate(180)">
+                    <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="#fff" stroke="#fff" stroke-width="1">
+                      <rect width="58" height="58" rx="29" stroke="none"/>
+                      <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+                    </g>
+                    <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
+                  </g>
+                </svg>
+              </button>
+              <button class="glide__arrow glide__arrow--right" data-glide-dir=">">
+                <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+                  <g id="Group_68" data-name="Group 68" transform="translate(-672 -586)">
+                    <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="#fff" stroke="#fff" stroke-width="1">
+                      <rect width="58" height="58" rx="29" stroke="none"/>
+                      <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+                    </g>
+                    <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+      {% if section.settings.show_body == true  %}
+      <section class="fd-collection__bodyArea">
+        <div class="fd-content-block">
+          <h3><span>Shop by</span> Skin concerns & body area</h3>
+          <div class="glide glide-body-bioderma">
+            <div class="glide__track" data-glide-el="track">
+              <ul class="glide__slides">
+                {% for block in section.blocks %}
+                  {% if block.type == 'bodyCollection' %}
+          
+                    <li class="glide__slide">
+                      <a href="/collections/{{block.settings.range_collection.handle}}">
+                        <figure class="fd-body-image__wrapper">
+                          <img src="{{ block.settings.body_image  | img_url: 'master' }}" alt="Collection image">
+                        </figure>
+
+                        <div class="fd-collection__body-name">
+                          <p class="fd-collection__body-title">{{ block.settings.body_collection.title }}</p>
+                        </div>
+
+                      </a>
+                    </li>
+                
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+
+            <div class="glide__bullets" data-glide-el="controls[nav]">
+            {% assign bulletBody = 0 %}
+            {% for block in section.blocks %}
+              {% if block.type == 'bodyCollection' %}
+                <button class="glide__bullet" data-glide-dir="={{ bulletBody }}"></button>
+                {% assign bulletBody = bulletBody | plus: 1 %}
+              {% endif %}
+            {% endfor %}
+            </div>
+
+
+            <div class="glide__arrows" data-glide-el="controls">
+              <button class="glide__arrow glide__arrow--left" data-glide-dir="<">
+                <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+                  <g id="Group_69" data-name="Group 69" transform="translate(730 644) rotate(180)">
+                    <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="#fff" stroke="#fff" stroke-width="1">
+                      <rect width="58" height="58" rx="29" stroke="none"/>
+                      <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+                    </g>
+                    <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
+                  </g>
+                </svg>
+              </button>
+              <button class="glide__arrow glide__arrow--right" data-glide-dir=">">
+                <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+                  <g id="Group_68" data-name="Group 68" transform="translate(-672 -586)">
+                    <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="#fff" stroke="#fff" stroke-width="1">
+                      <rect width="58" height="58" rx="29" stroke="none"/>
+                      <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+                    </g>
+                    <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+
+      <div class="CollectionMain ">
+        <h3>Shop the collection</h3>
+        {{- collection_toolbar -}}
+
+        <div class="CollectionInner">
+        
+          <div class="CollectionInner__Products">
+            {{ collection_inner }}
+          </div>
+        </div>
+
+      </div>
+    {%- else -%}
+      <div class="EmptyState ">
+        <div class="Container">
+          <h3 class="EmptyState__Title Heading u-h5">{{ 'collection.general.empty' | t: collection_title: collection.title }}</h3>
+          <a href="{{ routes.root_url }}" class="EmptyState__Action Button Button--primary">{{ 'collection.general.empty_button' | t }}</a>
+        </div>
+      </div>
+    {%- endif -%}
+  </section>
+{%- endif -%}
+
+{%- capture hack -%}
+{%- comment -%}This is just an ugly hack to make those variables appear as part of the theme editor in the General Settings{%- endcomment -%}
+{{ settings.product_list_horizontal_spacing }},{{ settings.product_list_vertical_spacing }}
+{%- endcapture -%}
+
+{% schema %}
+  {
+    "name": "Collection page",
+    "class": "fd-collection-page",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_promobanner",
+        "label": "Show Promo Banner",
+        "default": true
+      },
+      {
+        "type": "image_picker",
+        "label": "Promo Banner",
+        "id": "promo_banner"
+      },
+      {
+        "type": "header",
+        "content": "Range Section"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_range",
+        "label": "Show Range section",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Body Section"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_body",
+        "label": "Show Body Area section",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Toolbar"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_sort_by",
+        "label": "Show sort by",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Filters"
+      },
+      {
+        "type": "select",
+        "id": "filter_position",
+        "label": "Desktop position",
+        "options": [
+          {
+            "value": "sidebar",
+            "label": "Sidebar"
+          },
+          {
+            "value": "drawer",
+            "label": "Drawer"
+          }
+        ],
+        "default": "sidebar"
+      },
+      {
+        "type": "select",
+        "id": "filter_mode",
+        "label": "Mode",
+        "info": "Filters by group requires specific tag formatting. [Learn more](https://help.shopify.com/manual/using-themes/themes-by-shopify/supply#product-tips-tips-specific)",
+        "options": [
+          {
+            "value": "hidden",
+            "label": "Hidden"
+          },
+          {
+            "value": "tag",
+            "label": "By tag"
+          },
+          {
+            "value": "group",
+            "label": "By group"
+          }
+        ],
+        "default": "tag"
+      },
+      {
+        "type": "link_list",
+        "id": "filter_menu",
+        "label": "Quick links",
+        "info": "This menu won't show dropdown items."
+      },
+      {
+        "type": "header",
+        "content": "Grid"
+      },
+      {
+        "type": "range",
+        "id": "grid_items_per_page",
+        "label": "Products per page",
+        "min": 4,
+        "max": 48,
+        "step": 4,
+        "default": 16
+      },
+      {
+        "type": "select",
+        "id": "grid_mobile_items_per_row",
+        "label": "Products per row (mobile)",
+        "options": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          }
+        ],
+        "default": "2"
+      },
+      {
+        "type": "range",
+        "min": 2,
+        "max": 4,
+        "id": "grid_desktop_items_per_row",
+        "label": "Products per row (desktop)",
+        "default": 4
+      }
+    ],
+    "blocks": [
+      {
+        "name": "Bestseller",
+        "type": "bestsellers",
+        "settings": [
+          {
+            "type": "product",
+            "id": "bestseller_product",
+            "label": "Bestseller product" 
+          }
+        ]
+      },
+      {
+        "name": "Shop by Range",
+        "type": "ranges",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "range_collection",
+            "label": "Range" 
+          },
+          {
+            "type": "image_picker",
+            "id": "range_image",
+            "label": "Range Image"
+          }
+        ]
+      },
+      {
+        "name": "Shop by body area",
+        "type": "bodyCollection",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "body_collection",
+            "label": "Body area" 
+          },
+          {
+            "type": "image_picker",
+            "id": "body_image",
+            "label": "Body area Image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

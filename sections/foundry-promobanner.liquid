@@ -1,0 +1,28 @@
+
+<section class="fd-content-block fd-container-width fd-promoBanner" >
+  <figure class="fd-promoBanner-media">
+    <img src="{{ section.settings.promoBannerImage | img_url: 'master' }}" alt="promo banner" class="fd-promoBanner-image">
+  </figure>
+</section>
+
+{% schema %}
+  {
+    "name": "Promo Banner",
+    "class": "fd-section__promoBanner",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "promoBannerImage",
+        "label": "Promo banner Image",
+        "info" : "1200X70 .jpg recommended"
+      }
+    ],
+    "presets": [
+      {
+        "category": "Image",
+        "name": "Foundry Promo Banner",
+        "settings": {}
+      }
+    ]
+  }
+{% endschema %}

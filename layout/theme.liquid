@@ -40,6 +40,7 @@
 
     <link rel="stylesheet" href="{{ 'theme.scss.css' | asset_url }}" />
     <link rel="stylesheet" href="{{ 'custom-cart-sample-upsell.css' | asset_url }}" />
+    {{ 'foundry.css' | asset_url | stylesheet_tag }} 
 <!-- Slick slider for upsell on cart page -->
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 
@@ -107,7 +108,7 @@
     <script src="{{ 'theme.min.js' | asset_url }}" defer></script>
     <script src="{{ 'custom.js' | asset_url }}" defer></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>       
-
+     {{ 'foundry.js' | asset_url | script_tag }}
     <script>
       (function () {
         window.onpageshow = function() {
@@ -180,7 +181,7 @@
       {%- section 'header' -%}
 
       <main id="main" role="main">
-       {%- if template != 'index' -%} {% include 'b2' %}{%- endif -%}
+       
         {{ content_for_layout }}
 
         <noscript class="endOfLayoutContentX" type="text/mark"></noscript>

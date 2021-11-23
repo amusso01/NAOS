@@ -1,0 +1,95 @@
+<section class="fd-brands">
+  <div class="fd-content-block fd-container-width">
+    <div class="fd-brands__inner">
+      <h3>{{ section.settings.title }}</h3>
+      <div class="fd-brands__grid">
+        {% for block in section.blocks %}
+          {% if block.type == 'brand' %}
+            <article class="fd-brand-card">
+              <figure class="fd-brand__media">
+                <a href="{{ block.settings.overlay_url }}">
+                  <img src="{{ block.settings.image | img_url: 'master' }}" alt="Brand image" class="fd-brand-image">
+                  <p class="fd-btn">{{ block.settings.overlay_text }}</p>
+                </a>
+              </figure>
+              <div class="fd-brand-card__info" >
+                <p>{{ block.settings.content }}</p>
+                <a href="{{ block.settings.link_url }}">{{ block.settings.link_text }}</a>
+              </div>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Foundry About Brands",
+    "class": "fd-section__brands",
+    "max_blocks": 2,
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Our brands"
+      }
+    ],
+    "blocks": [
+      {
+        "name": "About Brand",
+        "type": "brand",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "overlay_text",
+            "label": "Overlay text"
+          },
+          {
+            "type": "url",
+            "id": "overlay_url",
+            "label": "Overlay URL"
+          },
+          {
+            "type": "richtext",
+            "id": "content",
+            "label": "Text",
+            "default": "<p>Add your own custom content to give more information about your store, availability details...</p>"
+          },
+          {
+            "type": "text",
+            "id": "link_text",
+            "label": "Link text"
+          },
+          {
+            "type": "url",
+            "id": "link_url",
+            "label": "Link URL"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "category": "Text",
+        "name": "Foundry About Brands",
+        "settings": {},
+        "blocks": [
+          {
+            "type": "brand"
+          },
+          {
+            "type": "brand"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

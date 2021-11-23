@@ -1,0 +1,31 @@
+<article class="fd-article-item" {% if block %}{{ block.shopify_attributes }}{% endif %}>
+  {%- if article.image != blank -%}
+    {%- assign image_url = article.image | img_url: 'master' -%}
+
+    <a href="{{ article.url }}">
+      <figure class="fd-article__media">
+        <img class="fd-article__image" src="{{ image_url }}"  alt="{{ article.image.alt | escape }}" />
+      </figure>
+    </a>
+  {%- endif -%}
+
+  <div class="fd-article__content">
+    {% assign showBlogName = true %}
+    {% if page.handle == 'blog' %}
+      {% assign showBlogName = false %}
+    {% endif %}
+
+    {%- if article.tags != empty -%}
+    <p class="fd-blog__article-tag"><span >{{ article.tags.first }}</span>{% if showBlogName == true %}<span class="vertical"> | </span>{{ blog.title }} {% endif %}</p>
+    {%- endif -%}
+    
+
+    <h2 class="fd-article__title">
+      <a href="{{ article.url }}">{{ article.title }}</a>
+    </h2>
+
+    <p class="fd-article__excerpt">{{ article.excerpt_or_content | strip_html | truncate: 150 }}</p>
+    <a href="{{ article.url }}" class="fd-article__readMore">{{ 'blog.article.read_more' | t }}</a>
+   
+  </div>
+</article>

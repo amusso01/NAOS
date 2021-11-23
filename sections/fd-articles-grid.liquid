@@ -1,0 +1,35 @@
+<section class="fd-article">
+  <div class="fd-container-width">
+    <h3>Latest</h3>
+    <div class="fd-blog__articles">
+      {% for block in section.blocks %}
+        {% if block.type == 'articles' %}
+          {%- render 'fd-article-item', article: block.settings.article -%} 
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Foundry Articles",
+    "class": "fd-section__article",
+    "max_blocks": 6,
+    "settings": [
+    ],
+    "blocks": [
+      {
+        "name": "Article",
+        "type": "articles",
+        "settings": [
+          {
+            "type": "article",
+            "id": "article",
+            "label": "Article"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

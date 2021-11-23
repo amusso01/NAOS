@@ -3,13 +3,24 @@
     <section id="section-{{ section.id }}" data-section-id="{{ section.id }}" data-section-type="announcement-bar">
       <div class="AnnouncementBar">
         <div class="AnnouncementBar__Wrapper">
-          <p class="AnnouncementBar__Content Heading">
-            {%- if section.settings.link -%}
-              <a href="{{ section.settings.link }}">{{ section.settings.content | escape }}</a>
-            {%- else -%}
-              {{ section.settings.content | escape }}
-            {%- endif -%}
-          </p>
+          <div class="glide glide__announcement">
+            <div class="glide__track" data-glide-el="track" style="height: auto;">
+              <ul class="glide__slides">
+              {% for block in section.blocks %}
+                {% if block.type == 'announcement' %}
+                <p class="AnnouncementBar__Content Heading glide__slide">
+                  {%- if block.settings.link -%}
+                    <a href="{{ block.settings.link }}">{{ block.settings.announcement_content | escape }}</a>
+                  {%- else -%}
+                    {{ block.settings.announcement_content | escape }}
+                  {%- endif -%}
+                </p>
+                {% endif %}
+             {% endfor %}
+              </ul>
+            </div>
+          </div>
+     
         </div>
       </div>
     </section>
@@ -19,6 +30,7 @@
         background: {{ section.settings.background }};
         color: {{ section.settings.text_color }};
       }
+  
     </style>
 
     <script>
@@ -30,6 +42,7 @@
 {% schema %}
   {
     "name": "Announcement bar",
+    "max_blocks": 4,
     "settings": [
       {
         "type": "checkbox",
@@ -54,17 +67,24 @@
         "id": "text_color",
         "label": "Text",
         "default": "#ffffff"
-      },
+      }
+    ],
+     "blocks": [
       {
-        "type": "text",
-        "id": "content",
-        "label": "Text",
-        "default": "Announce something here"
-      },
-      {
-        "type": "url",
-        "id": "link",
-        "label": "Link"
+        "name": "Announcement",
+        "type": "announcement",
+        "settings": [
+          {
+            "type": "text",
+            "id": "announcement_content",
+            "label": "Announcement Content" 
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          }
+        ]
       }
     ]
   }

@@ -15,35 +15,26 @@
   }
 {%- endcapture -%}
 
-<section class="Product Product--{{ section.settings.image_size }}" data-section-id="{{ section.id }}" data-section-type="product" data-section-settings='{{ section_settings }}'>
-  <div class="Product__Wrapper">
-    {%- capture action_list_items -%}
-      {%- if section.settings.enable_image_zoom -%}
-        <div class="Product__ActionItem hidden-lap-and-up">
-          <button class="RoundButton RoundButton--small RoundButton--flat" data-action="open-product-zoom">{% render 'icon' with 'plus' %}</button>
-        </div>
-      {%- endif -%}
 
-      {%- if section.settings.show_share_buttons -%}
-        <div class="Product__ActionItem hidden-lap-and-up">
-          <button class="RoundButton RoundButton--small RoundButton--flat" data-action="toggle-social-share" data-animate-bottom aria-expanded="false">
-            <span class="RoundButton__PrimaryState">{% render 'icon' with 'share' %}</span>
-            <span class="RoundButton__SecondaryState">{% render 'icon' with 'close' %}</span>
-          </button>
+{% assign colorTag = false %}
 
-          {%- assign share_url = shop.url | append: product.url -%}
-          {%- assign twitter_text = product.title -%}
-          {%- assign pinterest_description = product.description | strip_html | truncatewords: 15 | url_param_escape -%}
-          {%- assign pinterest_image = product.featured_media | img_url: '1024x' | prepend: 'https:' -%}
+{% if product.metafields.my_fields.color_tag.value == "I’M NEW" %}
+  {% assign colorTag = "blu" %}
+{% elsif product.metafields.my_fields.color_tag.value == "BESTSELLER"  %}  
+  {% assign colorTag = "red" %}
+{% elsif product.metafields.my_fields.color_tag.value == "EXCLUSIVE"  %}  
+  {% assign colorTag = "yellow" %}
+{% endif %}
 
-          <div class="Product__ShareList" aria-hidden="true">
-            <a class="Product__ShareItem" href="https://www.facebook.com/sharer.php?u={{ share_url }}" target="_blank" rel="noopener">{%- render 'icon' with 'facebook' -%} Facebook</a>
-            <a class="Product__ShareItem" href="https://pinterest.com/pin/create/button/?url={{ share_url }}{% if pinterest_image != blank %}&media={{ pinterest_image }}{% endif %}&description={{ pinterest_description }}" target="_blank" rel="noopener">{%- render 'icon' with 'pinterest' -%} Pinterest</a>
-            <a class="Product__ShareItem" href="https://twitter.com/share?{% if twitter_text != blank %}text={{twitter_text}}&{% endif %}url={{ share_url }}" target="_blank" rel="noopener">{%- render 'icon' with 'twitter' -%} Twitter</a>
-          </div>
-        </div>
-      {%- endif -%}
-    {%- endcapture -%}
+
+
+<section class="fd-product__breadcrumb  fd-content-block-product fd-container-width">
+  {% include 'b2' %}
+</section>
+
+<section class="fd-product-inner" data-section-id="{{ section.id }}" data-section-type="product" data-section-settings='{{ section_settings }}'>
+  <div class="fd-product-inner__wrapper fd-content-block-product fd-container-width">
+ 
 
     {%- comment -%}
     --------------------------------------------------------------------------------------------------------------------
@@ -51,380 +42,463 @@
     --------------------------------------------------------------------------------------------------------------------
     {%- endcomment -%}
 
-    {%- assign initial_media_id = product.featured_media.id -%}
-    {%- assign initial_media_index = 0 -%}
-    {%- assign media_count = 0 -%}
-
-    {%- capture slideshow_media -%}
+    {% capture fdGallery %}
+        
       {%- for media in product.media -%}
-        {%- if media.alt == 'featured' or media.alt == 'featured mobile' -%}
-          {%- continue -%}
-        {%- endif -%}
 
-        {%- if product.selected_variant and media.id == product.selected_variant.featured_media.id -%}
-          {%- assign initial_media_index = media_count -%}
-          {%- assign initial_media_id = media.id -%}
-        {%- endif -%}
-
-        {%- capture supported_sizes -%}{%- render 'image-size', sizes: '200,400,600,700,800,900,1000,1200,1400,1600', image: media -%}{%- endcapture -%}
-
-        {%- case media.media_type -%}
-          {%- when 'image' -%}
-            <div id="Media{{ media.id }}" tabindex="0" class="Product__SlideItem Product__SlideItem--image Carousel__Cell {% if initial_media_id == media.id %}is-selected{% endif %}" data-media-type="image" data-media-id="{{ media.id }}" data-media-position="{{ media.position }}" data-image-media-position="{% increment image_position %}">
-              <div class="AspectRatio AspectRatio--withFallback" style="padding-bottom: {{ 100.0 | divided_by: media.aspect_ratio }}%; --aspect-ratio: {{ media.aspect_ratio }};">
-                {% assign image_url = media | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
-
-                <img class="Image--lazyLoad Image--fadeIn" data-src="{{ image_url }}" data-widths="[{{ supported_sizes }}]" data-sizes="auto" data-expand="-100" alt="{{ media.alt | escape }}" data-max-width="{{ media.width }}" data-max-height="{{ media.height }}" data-original-src="{{ media | img_url: 'master' }}">
-                <span class="Image__Loader"></span>
-
-                <noscript>
-                  <img src="{{ media | img_url: '800x' }}" alt="{{ media.alt | escape }}">
-                </noscript>
-              </div>
-            </div>
-
-          {%- when 'external_video' -%}
-            <div id="Media{{ media.id }}" tabindex="-1" class="Product__SlideItem Product__SlideItem--video Carousel__Cell {% if initial_media_id == media.id %}is-selected{% endif %}" data-media-type="external_video" data-media-id="{{ media.id }}" data-media-position="{{ media.position }}" data-video-host="{{ media.host | escape }}" data-video-id="{{ media.external_id | escape }}">
-              <div class="Image--lazyLoad Image--fadeIn" data-expand="-100">
-                <div class="VideoWrapper">
-                  {{- media | external_video_tag: image_size: '1024x' -}}
-                </div>
-              </div>
-            </div>
-
-          {%- when 'video' -%}
-            <div id="Media{{ media.id }}" tabindex="-1" class="Product__SlideItem Product__SlideItem--video Carousel__Cell {% if initial_media_id == media.id %}is-selected{% endif %}" data-media-type="video" data-media-id="{{ media.id }}" data-media-position="{{ media.position }}">
-              <div class="Image--lazyLoad Image--fadeIn" data-expand="-100">
-                <div class="VideoWrapper VideoWrapper--native" style="padding-bottom: {{ 100.0 | divided_by: media.aspect_ratio }}%">
-                  {{- media | video_tag: image_size: '1024x', controls: true -}}
-                </div>
-              </div>
-            </div>
-
-          {%- when 'model' -%}
-            <div id="Media{{ media.id }}" tabindex="-1" class="Product__SlideItem Product__SlideItem--model Carousel__Cell {% if initial_media_id == media.id %}is-selected{% endif %}" data-media-type="model" data-media-id="{{ media.id }}" data-media-position="{{ media.position }}">
-              <div class="Image--lazyLoad Image--fadeIn" data-expand="-100">
-                <div class="ModelWrapper">
-                  {{- media | model_viewer_tag: image_size: '1024x', reveal: 'interaction', toggleable: true -}}
-                </div>
-              </div>
-            </div>
-        {%- endcase -%}
-
-        {%- assign media_count = media_count | plus: 1 -%}
+        <li class="glide__slide"> 
+          <figure class="fd-product-media" >
+            <img src="{{ media | img_url: '411X570' }}" alt="">
+          </figure>
+        </li>
+        
       {%- endfor -%}
-    {%- endcapture -%}
+      
+    {% endcapture %}
 
-    {%- if product.media.size > 0 -%}
-      <div class="Product__Gallery {% if section.settings.stack_images %}Product__Gallery--stack{% endif %} {% if section.settings.show_thumbnails and media_count > 1 %}Product__Gallery--withThumbnails{% else %}Product__Gallery--withDots{% endif %}">
-        <span id="ProductGallery" class="Anchor"></span>
+    {% capture fdThumb %}
+        
+      {%- for media in product.media -%}
 
-        {%- if action_list_items != blank -%}
-          <div class="Product__ActionList hidden-lap-and-up {% if product.media[initial_media_index].media_type != 'image' %}is-hidden{% endif %}">
-            {{ action_list_items }}
+      <button class="glide__bullet" style='background-image: url({{ media | img_url: "70X90" }}); width:70px; height:90px' data-glide-dir="= {{ forloop.index0 }}"></button>
+        
+      {%- endfor -%}
+      
+    {% endcapture %}
+
+
+    <div class="fd-product-inner__gallery">
+
+      <!-- <div class="fd-overlay-badge" >
+        {% assign imageBadge = product.metafields.foundry_digital.badge_image %}
+
+        <img src="{{ imageBadge  | img_url: "77X"  }}" alt="product badge awward">
+
+      </div> -->
+
+      
+      <div class="glide glide-product">
+        <div class="glide-product__inner">
+          <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides">
+    
+              {{ fdGallery }}
+    
+            </ul>
+          </div>  
+
+
+          <div class="glide__bullets" data-glide-el="controls[nav]">
+          
+            {{ fdThumb }}
+           
           </div>
-        {%- endif -%}
-
-        {%- capture slideshow_nav -%}
-          {%- if media_count > 1 -%}
-            {%- if section.settings.show_thumbnails -%}
-              <div class="Product__SlideshowNav Product__SlideshowNav--thumbnails">
-                <div class="Product__SlideshowNavScroller">
-                  {%- for media in product.media -%}
-                    {%- if media.alt == 'featured' or media.alt == 'featured mobile' -%}
-                      {%- continue -%}
-                    {%- endif -%}
-
-                    {%- capture nav_item_badge -%}
-                      {%- case media.media_type -%}
-                        {%- when 'model' -%}
-                          <span class="Product__SlideshowNavBadge">{% render 'icon', icon: 'media-model-badge' %}</span>
-
-                        {%- when 'video' or 'external_video' -%}
-                          <span class="Product__SlideshowNavBadge">{% render 'icon', icon: 'media-video-badge' %}</span>
-                      {%- endcase -%}
-                    {%- endcapture -%}
-
-                    {%- if section.settings.stack_images -%}
-                      <a href="#Media{{ media.id }}" data-offset="-25" data-focus-on-click data-media-id="{{ media.id }}" class="Product__SlideshowNavImage AspectRatio {% if forloop.first %}is-selected{% endif %}" style="--aspect-ratio: {{ media.preview_image.aspect_ratio }}">
-                        <img src="{{ media | img_url: '160x' }}" alt="{{ media.alt | escape }}">
-                        {{- nav_item_badge -}}
-                      </a>
-                    {%- else -%}
-                      <a href="{{ media | img_url: '1024x' }}" data-media-id="{{ media.id }}" class="Product__SlideshowNavImage AspectRatio {% if forloop.first %}is-selected{% endif %}" style="--aspect-ratio: {{ media.preview_image.aspect_ratio }}">
-                        <img src="{{ media | img_url: '160x' }}" alt="{{ media.alt | escape }}">
-                        {{- nav_item_badge -}}
-                      </a>
-                    {%- endif -%}
-                  {%- endfor -%}
-                </div>
-              </div>
-            {%- endif -%}
-
-            {%- if section.settings.stack_images -%}
-              <div class="Product__SlideshowNav Product__SlideshowNav--dots">
-                <div class="Product__SlideshowNavScroller">
-                  {%- for media in product.media -%}
-                    {%- if media.alt == 'featured' or media.alt == 'featured mobile' -%}
-                      {%- continue -%}
-                    {%- endif -%}
-
-                    <a href="#Media{{ media.id }}" data-offset="-25" data-focus-on-click class="Product__SlideshowNavDot {% if forloop.first %}is-selected{% endif %}"></a>
-                  {%- endfor -%}
-                </div>
-              </div>
-            {%- endif -%}
-          {%- endif -%}
-        {%- endcapture -%}
-
-        {%- if section.settings.stack_images -%}
-          {{- slideshow_nav -}}
-        {%- endif -%}
-
-        {%- capture flickity_options -%}
-        {
-          "prevNextButtons": false,
-          "pageDots": false,
-          "adaptiveHeight": true,
-          "watchCSS": true,
-          "dragThreshold": 8,
-          "initialIndex": {{ initial_media_index }},
-          "arrowShape": {"x0": 20, "x1": 60, "y1": 40, "x2": 60, "y2": 35, "x3": 25}
-        }
-        {%- endcapture -%}
-
-        <div class="Product__Slideshow {% if section.settings.enable_image_zoom %}Product__Slideshow--zoomable{% endif %} Carousel" data-flickity-config='{{ flickity_options }}'>
-          {{ slideshow_media }}
         </div>
+       
 
-        {%- comment -%}Add the "view in your space" button, which allows to show the product in customer's environment (if the device supports it){%- endcomment -%}
-        {%- assign first_3d_model = product.media | where: 'media_type', 'model' | first -%}
-
-        {%- if first_3d_model -%}
-          <button class="Product__ViewInSpace Button Button--full" data-shopify-xr data-shopify-model3d-id="{{ first_3d_model.id }}" data-shopify-model3d-default-id="{{ first_3d_model.id }}" data-shopify-title="{{ product.title | escape }}" data-shopify-xr-hidden>
-            {%- render 'icon', icon: 'media-view-in-space' -%} {{- 'product.general.view_in_space' | t -}}
+        <div class="glide__arrows" data-glide-el="controls">
+          <button class="glide__arrow glide__arrow--left" data-glide-dir="<">
+            <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+              <g id="Group_69" data-name="Group 69" transform="translate(730 644) rotate(180)">
+                <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="transparent" stroke="transparent" stroke-width="1">
+                  <rect width="58" height="58" rx="29" stroke="none"/>
+                  <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+                </g>
+                <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
+              </g>
+            </svg>
+            
           </button>
-        {%- endif -%}
-
-        {%- if media_count > 1 -%}
-          {%- comment -%}
-            IMPLEMENTATION NOTE: The reason we create ourselves our own UI instead of relying of the built-in feature of Flickity is that,
-            since the media API, Shopify requires to add arrows next to the dot. Unfortunately this layout is not
-            achievable easily using Flickity options only, so we have to run our own
-          {%- endcomment -%}
-
-          <div class="Product__SlideshowMobileNav {% if section.settings.stack_images or section.settings.show_thumbnails %}hidden-desk{% endif %}">
-            <button class="Product__SlideshowNavArrow Product__SlideshowNavArrow--previous" type="button" data-direction="previous" aria-label="{{ 'general.accessibility.previous' | t }}">
-              {% render 'icon' with 'media-arrow-left' %}
-            </button>
-
-            <div class="flickity-page-dots">
-              {%- for i in (1..media_count) -%}
-                <button type="button" class="dot {% if forloop.index0 == initial_media_index %}is-selected{% endif %}" data-index="{{ forloop.index0 }}"></button>
-              {%- endfor -%}
-            </div>
-
-            <button class="Product__SlideshowNavArrow Product__SlideshowNavArrow--next" type="button" data-direction="next" aria-label="{{ 'general.accessibility.next' | t }}">
-              {% render 'icon' with 'media-arrow-right' %}
-            </button>
-          </div>
-        {%- endif -%}
-
-        {%- unless section.settings.stack_images -%}
-          {{- slideshow_nav -}}
-        {%- endunless -%}
-      </div>
-    {%- endif -%}
-<div class="Product" id="desktopWid">
-{% comment %}Start automatically added Judge.me widget{% endcomment %}
-  {% render 'judgeme_widgets', widget_type: 'judgeme_review_widget', concierge_install: true, product: product %}
-{% comment %}End automatically added Judge.me widget{% endcomment %}
-</div>
-    {%- capture product_aside -%}
-      {%- comment -%}
-      --------------------------------------------------------------------------------------------------------------------
-      PRODUCT TABS
-      --------------------------------------------------------------------------------------------------------------------
-      {%- endcomment -%}
-
-      {%- render 'product-tabs' -%}
-
-      {%- comment -%}
-      --------------------------------------------------------------------------------------------------------------------
-      PRODUCT WEAR IT WITH
-
-      We allow merchants to add a tag that looks like __with:product-handle to feature an additional product
-      --------------------------------------------------------------------------------------------------------------------
-      {%- endcomment -%}
-
-      {%- for tag in product.tags -%}
-        {%- if tag contains '__with' -%}
-          {%- assign product_handle = tag | split: '__with:' | last -%}
-          {%- assign associated_product = all_products[product_handle] -%}
-
-          {%- if associated_product != empty -%}
-            <div class="Section Section--spacingNormal">
-              <header class="SectionHeader SectionHeader--center">
-                <h3 class="SectionHeader__Heading Heading u-h4">{{ 'product.buy_it_with.title' | t }}</h3>
-              </header>
-
-              {% render 'product-item', product: associated_product, use_horizontal: true, show_labels: false, show_product_info: true, show_vendor: false, show_price_on_hover: false %}
-            </div>
-
-            {%- break -%}
-          {%- endif -%}
-        {%- endif -%}
-      {%- endfor -%}
-    {%- endcapture -%}
-
-    <div class="Product__InfoWrapper">
-      <div class="Product__Info {% if media_count == 0 %}Product__Info--noGallery{% endif %}">
-        <div class="Container">
-          {%- render 'product-meta', product: product, show_description: true -%}
-
-          {%- if product.template_suffix != 'coming-soon' -%}
-            {%- render 'product-form', product: product -%}
-          {%- endif -%}
-
-          {%- if section.settings.description_below_add_to_cart -%}
-            <div class="ProductMeta__Description">
-              <div class="Rte">
-                {%- comment -%}
-                We have figured out that some merchants were copy-pasting huge chunk of code into the product description,
-                which can make the theme crashes if it contains some special attributes used by the theme. We therefore make sure to process this
-                {%- endcomment -%}
-
-                {{ product.description | replace: 'data-section-type', 'data-section-type-placeholder' }}
-              </div>
-
-              {%- if section.settings.show_share_buttons -%}
-                <div class="ProductMeta__ShareButtons hidden-pocket">
-                  <span class="ProductMeta__ShareTitle Heading Text--subdued u-h7">{{ 'product.form.share' | t }}</span>
-
-                  {%- assign share_url = shop.url | append: product.url -%}
-                  {%- assign twitter_text = product.title -%}
-                  {%- assign pinterest_description = product.description | strip_html | truncatewords: 15 | url_param_escape -%}
-                  {%- assign pinterest_image = product.featured_image | img_url: 'large' | prepend: 'https:' -%}
-
-                  <div class="ProductMeta__ShareList Text--subdued">
-                    <a class="ProductMeta__ShareItem" href="https://www.facebook.com/sharer.php?u={{ share_url }}" target="_blank" rel="noopener" aria-label="Facebook">{%- render 'icon' with 'facebook' -%}</a>
-                    <a class="ProductMeta__ShareItem" href="https://twitter.com/share?{% if twitter_text != blank %}text={{twitter_text}}&{% endif %}url={{ share_url }}" target="_blank" rel="noopener" aria-label="Twitter">{%- render 'icon' with 'twitter' -%}</a>
-                    <a class="ProductMeta__ShareItem" href="https://pinterest.com/pin/create/button/?url={{ share_url }}{% if pinterest_image != blank %}&media={{ pinterest_image }}{% endif %}&description={{ pinterest_description }}" target="_blank" rel="noopener" aria-label="Pinterest">{%- render 'icon' with 'pinterest' -%}</a>
-                  </div>
-                </div>
-              {%- endif -%}
-            </div>
-          {%- endif -%}
-
-          {%- if section.settings.stack_images and product_aside != blank and media_count > 0 -%}
-            <div class="Product__QuickNav hidden-pocket">
-              <div class="Product__QuickNavWrapper">
-                <a href="#ProductAside" class="Heading Link Link--secondary u-h7">{{ 'product.form.view_info' | t }} {% render 'icon' with 'select-arrow-right' %}</a>
-                <a href="#ProductGallery" class="Heading Link Link--secondary u-h7">{{ 'product.form.view_images' | t }} {% render 'icon' with 'select-arrow-right' %}</a>
-              </div>
-            </div>
-          {%- endif -%}
+          <button class="glide__arrow glide__arrow--right" data-glide-dir=">">
+            <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+              <g id="Group_68" data-name="Group 68" transform="translate(-672 -586)">
+                <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="transparent" stroke="transparent" stroke-width="1">
+                  <rect width="58" height="58" rx="29" stroke="none"/>
+                  <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+                </g>
+                <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
+              </g>
+            </svg>
+            
+          </button>
         </div>
+
+    
+      </div>
+
+    
+  
+    </div>
+
+    {%- comment -%}
+    --------------------------------------------------------------------------------------------------------------------
+    PRODUCT INFO
+    --------------------------------------------------------------------------------------------------------------------
+    {%- endcomment -%}
+
+    <div class="fd-product-inner__info">
+      {% if colorTag != false %}
+      <p class="metafield {% if colorTag == 'yellow' %} metafield-yellow {% endif %} {% if colorTag == 'red' %} metafield-red {% endif %} {% if colorTag == 'blu' %} metafield-blu {% endif %}"> {{ product.metafields.my_fields.color_tag.value }}</p>
+      {% endif %}
+      <h1> {{ product.title }} </h1>
+      <p class="fd-product__subtitle">{{ product.metafields.descriptors.subtitle.value }}</p>
+      {% comment %}Start automatically added Judge.me widget{% endcomment %}
+      {% render 'judgeme_widgets', widget_type: 'judgeme_preview_badge', concierge_install: true, product: product %}
+      {% comment %}End automatically added Judge.me widget{% endcomment %}
+
+      <div class="fd-product__price">
+        <p class="price">{{ product.price | money_without_trailing_zeros }}</p>
+        {% if product.metafields.my_fields.free_gift_on_checkout.value == true %}
+        <p class="free-gift">
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16.027" height="17.515" viewBox="0 0 16.027 17.515">
+              <g id="Group_169" data-name="Group 169" transform="translate(-1057.07 -3214.67)">
+                <g id="Group_56" data-name="Group 56" transform="translate(1057.82 3215.434)">
+                  <rect id="Rectangle_59" data-name="Rectangle 59" width="14.527" height="2.817" transform="translate(0 4.07)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
+                  <rect id="Rectangle_60" data-name="Rectangle 60" width="12.723" height="9.113" transform="translate(0.903 6.887)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
+                  <line id="Line_1" data-name="Line 1" y2="11.93" transform="translate(7.264 4.07)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
+                  <path id="Path_97" data-name="Path 97" d="M1210.159,301.991a2.725,2.725,0,0,1,1.876-1.575,1.213,1.213,0,0,1,1.322.546,1.491,1.491,0,0,1-.4,1.475,5.806,5.806,0,0,1-2.569,1.815c-.658.234-.851.257-.733-.484A6.327,6.327,0,0,1,1210.159,301.991Z" transform="translate(-1202.36 -300.394)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
+                  <path id="Path_98" data-name="Path 98" d="M1184.467,312.7a2.23,2.23,0,0,1-1.51-1.319.992.992,0,0,1,.275-1.138,1.22,1.22,0,0,1,1.243.137,4.752,4.752,0,0,1,1.79,1.849c.272.5.315.656-.3.654A5.179,5.179,0,0,1,1184.467,312.7Z" transform="translate(-1179.191 -308.826)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
+                </g>
+              </g>
+            </svg>            
+          </span>
+          FREE GIFT ON CHECKOUT!
+        </p>
+        {% endif %}
+      </div>
+      <div class="fd-product__benefits">
+        <h3>Product benefits:</h3>
+        <ul class="fd-product__benefits-wrapper">
+          
+          {% for ingredient in product.metafields.accentuate.single_benefit %} 
+            <li class="fd-product__benefits-item">
+              <span>
+                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                    viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
+                  <style type="text/css">
+                    .st5{fill:#FFFFFF;}
+                    .st6{fill:none;stroke:#E67E6B;stroke-width:2.001;stroke-linecap:round;stroke-miterlimit:4.0021;}
+                  </style>
+                  <g id="Group_239" transform="translate(-775.459 -533)">
+                    <rect id="Rectangle_220" x="775.46" y="533" class="st5" width="16" height="16"/>
+                    <path id="Path_178" class="st6" d="M776.98,540.32l4.3,4.36l8.66-7.35"/>
+                  </g>
+                </svg>                        
+              </span>
+              {{ ingredient }}
+            </li>
+          {% endfor %}
+
+        </ul>
+      </div>
+
+      {%- render 'product-form', product: product -%}
+
+      <div class="fd-product__shipping">
+        <p><span>FREE</span> standard Shipping on orders over £35. Learn more about shipping <a target="_blank" rel=”noopener noreferrer” href="/pages/delivery">here</a></p>
+      </div>
+
+      <div class="fd-product__accordion">
+        <dl class="js-badger-accordion">
+          <dt>
+            <button class="js-badger-accordion-header">
+                Description
+                <span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
+                    <g id="Group_233" data-name="Group 233" transform="translate(-392 -131)">
+                      <rect id="Rectangle_213" data-name="Rectangle 213" width="17" height="17" transform="translate(392 131)" fill="#fff"/>
+                      <g id="Group_147" data-name="Group 147" transform="translate(394.915 133.66)">
+                        <path id="Path_126" data-name="Path 126" d="M12937.058,930.461v11.856" transform="translate(-12931.13 -930.461)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="1"/>
+                        <path id="Path_127" data-name="Path 127" d="M0,0V11.856" transform="translate(11.856 5.928) rotate(90)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="1"/>
+                      </g>
+                    </g>
+                  </svg>
+                </span>
+            </button>
+          </dt>
+          <dd class="badger-accordion__panel js-badger-accordion-panel">
+              <div class="js-badger-accordion-panel-inner">
+                  {{ product.metafields.my_fields.long_description.value }}
+              </div>
+          </dd>
+
+          <dt>
+            <button class="js-badger-accordion-header">
+                Indications
+                <span>
+                 <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
+                    <g id="Group_233" data-name="Group 233" transform="translate(-392 -131)">
+                      <rect id="Rectangle_213" data-name="Rectangle 213" width="17" height="17" transform="translate(392 131)" fill="#fff"/>
+                      <g id="Group_147" data-name="Group 147" transform="translate(394.915 133.66)">
+                        <path id="Path_126" data-name="Path 126" d="M12937.058,930.461v11.856" transform="translate(-12931.13 -930.461)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="1"/>
+                        <path id="Path_127" data-name="Path 127" d="M0,0V11.856" transform="translate(11.856 5.928) rotate(90)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="1"/>
+                      </g>
+                    </g>
+                  </svg>
+                </span>
+            </button>
+          </dt>
+          <dd class="badger-accordion__panel js-badger-accordion-panel">
+              <div class="js-badger-accordion-panel-inner">
+                {{ product.metafields.my_fields.indications.value }}
+              </div>
+          </dd>
+          <dt>
+              <button class="js-badger-accordion-header">
+                  Shipping & returns
+                  <span>
+                   <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
+                      <g id="Group_233" data-name="Group 233" transform="translate(-392 -131)">
+                        <rect id="Rectangle_213" data-name="Rectangle 213" width="17" height="17" transform="translate(392 131)" fill="#fff"/>
+                        <g id="Group_147" data-name="Group 147" transform="translate(394.915 133.66)">
+                          <path id="Path_126" data-name="Path 126" d="M12937.058,930.461v11.856" transform="translate(-12931.13 -930.461)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="1"/>
+                          <path id="Path_127" data-name="Path 127" d="M0,0V11.856" transform="translate(11.856 5.928) rotate(90)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="1"/>
+                        </g>
+                      </g>
+                    </svg>
+                  </span>
+              </button>
+          </dt>
+          <dd class="badger-accordion__panel js-badger-accordion-panel">
+              <div class="js-badger-accordion-panel-inner">
+                  <p>View our <a target="_blank" rel=”noopener noreferrer” href="/pages/delivery">shipping & returns policy</a></p>
+              </div>
+          </dd>
+          <dt>
+            <button class="js-badger-accordion-header">
+                Ingredients
+                <span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
+                    <g id="Group_233" data-name="Group 233" transform="translate(-392 -131)">
+                      <rect id="Rectangle_213" data-name="Rectangle 213" width="17" height="17" transform="translate(392 131)" fill="#fff"/>
+                      <g id="Group_147" data-name="Group 147" transform="translate(394.915 133.66)">
+                        <path id="Path_126" data-name="Path 126" d="M12937.058,930.461v11.856" transform="translate(-12931.13 -930.461)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="1"/>
+                        <path id="Path_127" data-name="Path 127" d="M0,0V11.856" transform="translate(11.856 5.928) rotate(90)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="1"/>
+                      </g>
+                    </g>
+                  </svg>
+                </span>
+            </button>
+          </dt>
+          <dd class="badger-accordion__panel js-badger-accordion-panel">
+              <div class="js-badger-accordion-panel-inner">
+                  {{ product.metafields.my_fields.ingredients.value }}
+              </div>
+          </dd>
+        
+        </dl>
       </div>
     </div>
 
-    {%- if product_aside != blank -%}
-      <div class="Product__Aside">
-        <span id="ProductAside" class="Anchor"></span>
-        {{- product_aside -}}
-      </div>
-    {%- endif -%}
   </div>
-  <div class="Product__Info" id="mobileWid">
-{% comment %}Start automatically added Judge.me widget{% endcomment %}
-  {% render 'judgeme_widgets', widget_type: 'judgeme_review_widget', concierge_install: true, product: product %}
-{% comment %}End automatically added Judge.me widget{% endcomment %}
-</div>
+
 </section>
 
-{%- comment -%}
---------------------------------------------------------------------------------------------------------------------
-FEATURED IMAGE
-
-We allow merchants to use one image as a "featured image" by adding the alt tag "featured"
---------------------------------------------------------------------------------------------------------------------
-{%- endcomment -%}
-
-{%- for media in product.media -%}
-  {%- if media.alt == 'featured' -%}
-    {%- assign desk_featured_media = media.preview_image -%}
-  {%- endif -%}
-
-  {%- if media.alt == 'featured mobile' -%}
-    {%- assign mobile_featured_media = media.preview_image -%}
-  {%- endif -%}
-{%- endfor -%}
-
-{%- if desk_featured_media or mobile_featured_media -%}
-  {%- assign mobile_featured_media = mobile_featured_media | default: desk_featured_media -%}
-  {%- assign desk_featured_media = desk_featured_media | default: mobile_featured_media -%}
-
-  <div class="Product__FeatureImageWrapper" style="background: url({{ desk_featured_media | img_url: '1x1', format: 'jpg' }})">
-    <div class="Product__FeatureImage Product__FeatureImage--{{ section.settings.featured_image_size }} Image--lazyLoad Image--zoomOut hide-no-js" data-expand="-25" data-bgset="{{ mobile_featured_media | img_url: 'x850' }} [(max-width: 640px)] | {{ desk_featured_media | img_url: '1500x' }}"></div>
-
-    <noscript>
-      <div class="Product__FeatureImage Product__FeatureImage--{{ section.settings.featured_image_size }}" style="background-image: url({{ desk_featured_media | img_url: '1500x' }})"></div>
-    </noscript>
-  </div>
-
-  <style>
-    #shopify-section-{{ section.id }} + .shopify-section--bordered {
-      border-top: 0;
-    }
-  </style>
-{%- else -%}
-  <style>
-    /* This is a bit hacky but allows to circumvent the complete independency of section (as next section included in the page does not know anything about this page) */
-
-    @media screen and (max-width: 640px) {
-      #shopify-section-{{ section.id }} + .shopify-section--bordered {
-        border-top: 0;
-      }
-
-      #shopify-section-{{ section.id }} + .shopify-section--bordered > .Section {
-        padding-top: 0;
-      }
-    }
-  </style>
-{%- endif -%}
-
-{%- comment -%}
---------------------------------------------------------------------------------------------------------------------
-PHOTO SWIPE
-
-This is the root container for the zoom functionality. Must not be removed, as order element is important.
---------------------------------------------------------------------------------------------------------------------
-{%- endcomment -%}
-
-{%- if section.settings.enable_image_zoom -%}
-  <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
-    <!-- Background of PhotoSwipe -->
-    <div class="pswp__bg"></div>
-
-    <!-- Slides wrapper with overflow:hidden. -->
-    <div class="pswp__scroll-wrap">
-
-      <!-- Container that holds slides. Do not remove as content is dynamically added -->
-      <div class="pswp__container">
-        <div class="pswp__item"></div>
-        <div class="pswp__item"></div>
-        <div class="pswp__item"></div>
+<!--  ROUTINE SECTION  -->
+{% if product.metafields.accentuate.have_routine %}
+  <section class="fd-routines">
+    <h3>Build your routine</h3>
+    <p class="subtitleMain">{{ product.metafields.accentuate.routine_subtitle.value }}</p>
+    <div class="fd-content-block-product fd-container-width fd-routines__inner">
+      <!-- CLEANSE -->
+      {% if  product.metafields.accentuate.cleanse_routine %}
+      <div class="fd-routines__card">
+        <h4>Cleanse</h4>
+        {% assign ref_product =  product.metafields.accentuate.cleanse_routine.value %}
+        {%- render 'product-item-routines', product: ref_product -%}
       </div>
-
-      <!-- Main UI bar -->
-      <div class="pswp__ui pswp__ui--hidden">
-        <button class="pswp__button pswp__button--prev RoundButton" data-animate-left title="{{ 'product.slideshow.previous' | t }}">{% render 'icon' with 'arrow-left' %}</button>
-        <button class="pswp__button pswp__button--close RoundButton RoundButton--large" data-animate-bottom title="{{ 'product.slideshow.close' | t }}">{% render 'icon' with 'close' %}</button>
-        <button class="pswp__button pswp__button--next RoundButton" data-animate-right title="{{ 'product.slideshow.next' | t }}">{% render 'icon' with 'arrow-right' %}</button>
+      {% endif %}
+      <!-- BOOST -->
+      {% if  product.metafields.accentuate.boost_routine %}
+      <div class="fd-routines__card">
+        <h4>Boost</h4>
+        {% assign ref_product =  product.metafields.accentuate.boost_routine.value %}
+        {%- render 'product-item-routines', product: ref_product -%}
       </div>
+      {% endif %}
+      <!-- TREAT -->
+      {% if  product.metafields.accentuate.treat_routine %}
+      <div class="fd-routines__card">
+        <h4>Treat</h4>
+        {% assign ref_product =  product.metafields.accentuate.treat_routine.value %}
+        {%- render 'product-item-routines', product: ref_product -%}
+      </div>
+      {% endif %}
+      <!-- PROTECT -->
+      {% if   product.metafields.accentuate.protect_routine %}
+      <div class="fd-routines__card">
+        <h4>Protect</h4>
+        {% assign ref_product =  product.metafields.accentuate.protect_routine.value %}
+        {%- render 'product-item-routines', product: ref_product -%}
+      </div>
+      {% endif %}
+
     </div>
-  </div>
-{%- endif -%}
+  </section>
+{% endif %}
+<!--  ENDROUTINE SECTION  -->
+
+{% comment %} CAPTURE ICONS {% endcomment %}
+{% assign icons = product.metafields.accentuate.icons | split: '|' %}
+
+{% capture svgIcons %}
+  {% for icon in icons  limit: 3 %} 
+
+    {% if icon == "Face" %}
+
+    <div class="fd-product__howTo-icon">
+     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 83.9 98.3" xml:space="preserve"><style>.fd4{fill:#48484b}.fd8{fill:#f0f0f0}</style><path class="fd4" d="M66.8 96c-.2 0-.3 0-.4-.1-1-.4-2-.8-2.8-1.5-.8-.6-1.5-1.3-2.1-2.1-.4-.5-.7-1-.9-1.5-.3-.7-.6-1.4-.8-2.2-.5-1.8-.6-3.6-.5-5.4.2-3.4 1-6.6 2.2-9.7.5-1.3 1-2.6 1.6-3.9.3-.8.7-1.7.9-2.6.1-.2.1-.4.2-.5.5-1.7.9-3.5 1.1-5.3.1-1.1.2-2.3.2-3.4v-.9c-.1.1-.1.3-.2.4-.6 1.9-1.3 3.9-2 5.8-.7 1.8-1.6 3.4-2.7 4.9-1 1.4-2.1 2.7-3.3 3.9-.4.4-.7.9-.9 1.5-1.1 2.8-1.8 5.6-1.9 8.6-.2 2.7.1 5.4.9 8.1.4 1.4 1 2.8 1.7 4.1.1.2.2.5.2.8-.1.4-.3.7-.7.8h-.4c-.2 0-.4-.1-.5-.2v-.1c-.7-1.1-1.3-2.4-1.7-3.6-.7-2.1-1.2-4.2-1.3-6.5-.1-1.8-.1-3.6.1-5.3.2-1.5.5-2.9.9-4.4 0-.1.1-.2 0-.3l-.2.2-1.2.9c-1.8 1.4-3.8 2.6-5.9 3.4-1.5.6-3 1-4.6 1.1-2.1.1-4.1-.2-6.1-.9-.3-.1-.7-.3-1-.4-.3-.1-.6-.2-.9-.4-.2-.1-.3-.2-.5-.2-.5-.3-1-.6-1.6-.9-.5-.3-1-.6-1.4-.9-.1 0-.1-.1-.2-.2 0-.1-.1-.1-.1-.1v.1l.6 3.6c.1 1.2.2 2.4.2 3.7 0 1.3 0 2.6-.1 3.8-.1 1.8-.3 3.5-.7 5.2-.1.5-.2.9-.3 1.4-.1.4-.3.7-.7.8h-.4c-.4-.1-.7-.4-.7-.8 0-.3.1-.5.1-.8.1-.4.2-.7.2-1.1.2-.4.2-.8.3-1.3.2-1 .3-2.1.4-3.1.1-1.2.1-2.3.1-3.5 0-2.3-.2-4.7-.6-7-.1-.4-.2-.9-.3-1.3-.1-.4-.2-.9-.3-1.4 0-.2-.1-.3-.2-.4h-.1c-.2-.3-.5-.5-.8-.7l-.4-.4h-.1l-.1-.1-1.1-1.1s0-.1-.1-.1v-.1l-1.2-1.2-1.5-1.8c-.7-.9-1.4-1.8-2-2.7-.4-.6-.7-1.1-1-1.8-.4-.8-.7-1.7-1-2.6-.5-1.4-1-2.9-1.5-4.3-.1-.4-.2-.9-.4-1.3 0-.1-.1-.2-.2-.2-1-.4-1.8-1-2.5-1.8-.4-.5-.7-1-1-1.5-.3-.5-.5-.9-.7-1.4-.2-.6-.4-1.2-.6-1.7-.1-.4-.3-.9-.3-1.4-.1-.8-.3-1.7-.3-2.5s-.1-1.7 0-2.5c0-.4.1-.9.2-1.3.3-.9.9-1.5 1.9-1.6h.7c.3.1.6.1.9.2.1 0 .1.1.2 0 .1-1.2.3-2.4.4-3.6.2-1.7.2-3.4.2-5.1 0-2.2.2-4.4.5-6.6.3-2.4.9-4.7 1.9-6.9.7-1.4 1.5-2.8 2.6-3.9 1.4-1.5 3-2.5 4.8-3.2 1.6-.6 3.2-1 4.8-1.2.9-.1 1.8-.1 2.8-.2.5 0 1 0 1.5.1.7 0 1.3.1 2 .2.4.1.7.3.8.7 0 .1.1.2.1.3.4 1.5 1 2.9 1.7 4.3 1.6 2.9 3.7 5.4 6.2 7.6 2.4 2.1 5.1 3.9 7.9 5.3 1 .5 1.9 1.1 2.8 1.8 1.9 1.6 3.5 3.4 5 5.4 2.6 3.7 4.5 7.8 5.7 12.2.5 1.8.8 3.7 1 5.5.1.9.2 1.8.2 2.7.1 1.5 0 2.9-.1 4.4-.1.6-.1 1.2-.2 1.7-.1.8-.3 1.6-.4 2.3-.5 2.1-1.1 4.1-1.9 6.1-.6 1.5-1.2 2.9-1.7 4.4-.4 1.2-.8 2.3-1 3.5-.9 1.4-1.2 3.2-1.2 5 0 1.2.1 2.4.3 3.5.3 1.4.8 2.6 1.6 3.8 1 1.4 2.4 2.5 4.1 3 .2.1.4.1.5.2.4.2.6.9.2 1.3-.1.1-.3.3-.4.3-.2.1-.3.1-.5.1zM34.3 77.1c.6.3 1.1.6 1.7.8 1.3.5 2.6.8 3.9.9 1.8.1 3.6-.2 5.3-.8 2.1-.8 4-1.9 5.8-3.3 2.8-2.1 5.2-4.6 7.3-7.3 1.5-1.8 2.6-3.8 3.4-5.9 1.2-3.2 2.2-6.4 3.1-9.7v-.4c-.1-.6-.2-1.3-.4-1.9-1.1-4.8-3-9.2-5.8-13.2-1.1-1.6-2.4-3.1-3.8-4.4-.1-.1-.3-.2-.4-.2-1.7-.1-3.4.1-5.1.6-.5.2-1.1.4-1.6.6-.7.3-1.3-.2-1.2-.9 0-.4.3-.6.6-.7 1.3-.5 2.6-.9 4-1.1.3-.1.7-.1 1.1-.2-.2-.1-.3-.2-.5-.3-2.4-1.2-4.7-2.7-6.8-4.3-2.7-2.1-5.1-4.5-7-7.4-1.3-2-2.4-4.1-3-6.3 0-.2-.1-.2-.3-.2-.6-.1-1.2-.1-1.9-.1-1.6 0-3.2.1-4.8.4-.6.1-1.1.2-1.7.4l-.9.3c-2.5.9-4.4 2.6-5.8 4.9-.6 1-1 2-1.4 3.1-.7 2.2-1.1 4.4-1.3 6.7-.2 1.8-.2 3.7-.3 5.5 0 1.3 0 2.5-.2 3.8-.2 1.6-.4 3.1-.5 4.7-.2 1.6-.3 3.1-.2 4.7 0 1.1.1 2.2.3 3.2.2 1 .5 2 .7 3 .9 3.2 1.9 6.4 3.1 9.6.7 1.8 1.5 3.4 2.6 4.9 1.5 2 3.1 3.8 4.9 5.5 1.7 1.6 3.5 3.1 5.5 4.3.7.3 1.1.5 1.6.7zm-19-23.6c0-.2-.1-.3-.1-.4-.5-1.6-.9-3.1-1.1-4.7-.1-1.1-.2-2.2-.2-3.3 0-.9 0-1.7.1-2.6 0-.1 0-.1-.1-.2-.3-.1-.6-.3-1-.3s-.5 0-.6.4c-.1.5-.2 1-.2 1.5 0 1.7.2 3.4.7 5.1.3 1.2.8 2.3 1.4 3.3.4.5.7.9 1.1 1.2z"/><path class="fd4" d="M11.1 93.1c-.4 0-.7-.4-.7-.7 0-.3.1-.6.3-.9.3-.4.6-.8.8-1.2l.9-1.5c.2-.5.5-1 .7-1.5.3-.7.6-1.5.8-2.2.1-.5.2-.9.3-1.4.3-1.2.3-2.5.2-3.7-.1-.6-.3-1.2-.5-1.7-.2-.6-.5-1.2-.8-1.8-.3-.6-.7-1.3-1.1-1.9-.5-.8-.9-1.5-1.4-2.2-.6-.8-1.2-1.6-1.7-2.5-.4-.6-.8-1.2-1.3-1.7-.5-.6-1-1.3-1.4-2-.3-.5-.7-1.1-1-1.7l-.6-1.2c-.2-.5-.4-1.1-.6-1.6-.3-.8-.5-1.5-.7-2.3-.2-.8-.3-1.6-.5-2.5-.2-1.7-.3-3.4-.2-5.1 0-1.2.2-2.4.4-3.6.1-.5.2-.9.2-1.4 0-.3.1-.6.2-.8.2-.7.4-1.5.6-2.2l.6-1.8c.2-.6.4-1.1.7-1.7.4-.8.7-1.6 1.1-2.4.7-1.5 1.2-3.1 1.4-4.7.3-1.7.2-3.5.2-5.3 0-1.4-.1-2.8 0-4.2.1-1.4.2-2.9.4-4.3.5-2.7 1.5-5.2 2.9-7.6.8-1.4 1.8-2.8 3-3.9 1.8-1.7 3.8-3 6-3.9 1.9-.8 4-1.4 6-1.7 1.9-.3 3.9-.4 5.9-.2.7 0 1.4.1 2 .2 1.2.1 2.3.1 3.5 0 1.1-.1 2.1-.3 3.1-.4 1-.1 1.9-.2 2.9-.3 1.3-.1 2.7-.1 4-.1 3.1.1 6.1.4 9 1.3 1.6.5 3.2 1.1 4.6 1.9 1 .6 2 1.2 2.9 2 .6.5 1.2 1.1 1.7 1.6l1.2 1.5c.6.8 1.1 1.6 1.6 2.4.7 1.1 1.4 2.3 2 3.4.6 1.1 1.2 2.3 1.8 3.4.8 1.6 1.5 3.3 2.1 5 .6 1.5 1.1 3 1.5 4.5.6 2 1 4.1 1.3 6.2.2 1.3.3 2.6.4 3.9.1 1.2.1 2.3 0 3.5-.1 1.8-.3 3.7-.6 5.5-.3 1.3-.6 2.6-1 3.9-.3 1.1-.5 2.2-.6 3.3-.1 1.5-.1 2.9 0 4.4.1 1 .2 2 .4 3.1.3 1.8.8 3.5 1.3 5.2l1.2 3.9c.5 1.5 1 3 1.4 4.6.3 1.1.7 2.3.9 3.5.4 1.6.6 3.3.6 4.9 0 1.4-.1 2.7-.5 4-.4 1.4-1.1 2.6-2 3.8l-.6.6c-.1.2-.3.3-.5.3h-.4c-.4-.1-.6-.3-.7-.7 0-.4 0-.7.3-.9.6-.5 1-1.2 1.4-1.8.3-.5.5-.9.6-1.4.1-.4.2-.7.3-1.1.2-.9.3-1.8.3-2.8 0-1.3-.2-2.5-.5-3.8-.2-.7-.3-1.4-.5-2.1-.2-.7-.4-1.5-.6-2.2-.2-.8-.5-1.7-.8-2.5-.2-.5-.3-1.1-.5-1.6-.2-.7-.4-1.3-.6-2-.2-.8-.5-1.6-.7-2.4-.3-1-.6-2.1-.8-3.2-.2-1-.4-2-.6-3.1-.2-1.3-.3-2.6-.4-3.9 0-1.1 0-2.3.1-3.4.1-.7.2-1.3.3-2 .1-.7.3-1.4.5-2 .1-.4.2-.9.3-1.3.2-.8.4-1.6.5-2.4.2-1.2.3-2.3.4-3.5.1-1.2.1-2.3 0-3.5-.1-1.8-.3-3.6-.6-5.4-.1-.5-.2-1-.3-1.4-.1-.2 0-.4-.1-.6-.1-.3-.1-.6-.2-.9-.1-.4-.2-.9-.4-1.3-.1-.5-.2-.9-.4-1.4l-.6-1.8c-.2-.7-.5-1.4-.8-2.1-.2-.6-.4-1.2-.7-1.7-.1-.3-.3-.6-.4-.9-.2-.5-.4-1-.7-1.5l-.9-1.8c-.2-.5-.5-.9-.7-1.4-.3-.6-.7-1.3-1.1-1.9-.2-.4-.5-.8-.7-1.2-.4-.7-.9-1.3-1.3-2l-1.5-2.1c-.5-.6-1.1-1.2-1.6-1.7-.8-.7-1.7-1.3-2.6-1.8-.6-.3-1.2-.6-1.9-.9-.6-.3-1.3-.5-2-.7-.7-.2-1.4-.4-2-.6H54c.6-.4.5-.4.4-.4h-.3c-.1-.1-.2-.1-.3-.1-.1-.1-.2-.1-.2-.1h-.1c-.1-.1-.2-.1-.3-.1-.1-.1-.2-.1-.4-.1-.1-.1-.2-.1-.4-.1-.1-.1-.3-.1-.4-.1-.2-.1-.3-.1-.5-.1-.4-.1-.7-.1-1.1-.1-.2-.1-.5-.1-.7-.1-.3-.1-.6-.1-1-.1-.9-.1-1.9-.1-2.8-.1-1.6 0-3.2.1-4.8.3-.7.1-1.4.2-2 .3-1.3.2-2.5.2-3.8.2-1.1 0-2.2-.2-3.2-.2-1.4-.1-2.7-.1-4.1 0-1.6.1-3.2.4-4.8.9-2.4.7-4.6 1.8-6.6 3.4-1.5 1.2-2.7 2.6-3.6 4.3-1.3 2.2-2.2 4.4-2.7 6.9-.2 1.2-.4 2.4-.4 3.6-.1 1.8 0 3.6 0 5.3 0 1.3 0 2.7-.1 4-.1 1.8-.4 3.1-.8 4.5-.3.9-.7 1.8-1.1 2.7-.8 1.6-1.5 3.3-2 5-.6 1.9-1 3.8-1.2 5.7-.2 1.5-.2 3-.2 4.5 0 1.1.2 2.1.4 3.2.3 1.5.7 3 1.3 4.5.7 1.7 1.6 3.2 2.7 4.6 1 1.5 2.1 2.9 3.1 4.4 1.2 1.7 2.3 3.5 3.2 5.5.5 1 .8 2.1 1 3.2.1.8.1 1.6.1 2.5-.1 2-.7 3.9-1.4 5.7-.6 1.4-1.3 2.7-2.2 4-.2.4-.5.7-.8 1.1-.1.1-.2.2-.4.2-.1-.1-.2-.1-.4-.1z"/><path class="fd8" d="M34.7 79.4c.3.1.7.3 1 .4 2 .7 4 1.1 6.1.9 1.6-.1 3.1-.5 4.6-1.1 2.1-.8 4.1-2 5.9-3.4l1.2-.9c.1 0 .1-.1.2-.2v.3c-.4 1.4-.7 2.9-.9 4.4-.2 1.8-.3 3.5-.1 5.3.2 2.2.6 4.4 1.3 6.5.5 1.3 1 2.5 1.7 3.6v.1c-.3.1-.7.2-1 .3-1 .3-2 .5-3 .7l-1.8.3c-.3 0-.6.1-.9.1-.5 0-.9 0-1.4.1h-1.3c-.6 0-1.2 0-1.8-.1-1.5-.1-3-.3-4.4-.7-1-.3-1.9-.6-2.8-1-.9-.4-1.8-.9-2.7-1.5-.2-.1-.4-.3-.6-.5-.1-.1-.1-.2-.1-.3.2-.9.4-1.9.5-2.8.1-.4.1-.8.1-1.2 0-.3.1-.7.1-1 0-.3.1-.5.1-.8 0-.4.1-.8.1-1.2.1-1.1.1-2.3.1-3.4 0-.6 0-1.3-.1-1.9-.1-.4-.1-.7-.1-1zM66.8 62c.1-.6.1-1.1.2-1.7.1-1.5.2-2.9.1-4.4 0-.9-.1-1.8-.2-2.7-.2-1.9-.5-3.7-1-5.5-1.2-4.4-3-8.5-5.7-12.2-1.4-2-3-3.9-5-5.4-.9-.7-1.8-1.3-2.8-1.8-2.9-1.5-5.5-3.2-7.9-5.3-2.5-2.2-4.6-4.7-6.2-7.6-.7-1.4-1.4-2.8-1.7-4.3 0-.1-.1-.2-.1-.3-.1-.4-.3-.7-.8-.7-.7-.1-1.3-.2-2-.2-.5 0-1 0-1.5-.1 0-.1 0-.1.1-.1.5-.1 1.1-.2 1.6-.3.4-.1.9-.1 1.3-.2.3 0 .7-.1 1-.1h1.1c.6 0 1.2 0 1.8.1.3 0 .7.1 1 .1.3 0 .3 0 .4.3.1.3.1.5.2.8.2.8.5 1.5.9 2.2.1.3.2.5.4.8.7 1.3 1.5 2.6 2.4 3.8l1.5 1.8c.6.6 1.1 1.3 1.8 1.9.5.5 1 .9 1.5 1.4.6.5 1.3 1 1.9 1.5.8.6 1.6 1.2 2.5 1.7.6.4 1.2.7 1.8 1.1.3.1.5.3.8.4.6.3 1.2.6 1.7.9.6.3 1.1.7 1.6 1.1.8.6 1.5 1.3 2.2 2.1.5.5.9 1 1.3 1.5.8 1 1.6 2 2.3 3.1.4.6.7 1.2 1.1 1.8.3.6.7 1.2 1 1.9.5 1.1 1 2.2 1.4 3.4.6 1.6 1.1 3.2 1.5 4.9.2.8.4 1.6.5 2.5 0 .2.1.3.1.5v.3c-.1 0-.1-.2-.1-.3-.1.2-.2.5-.2.7-.2.7-.5 1.5-.7 2.3-.4 1.4-.9 2.9-1.4 4.3-.4 1.3-.9 2.5-1.4 3.8-.1 0-.1.2-.3.2z"/><path class="fd8" d="M57.2 94.6c0-.3-.1-.5-.2-.8-.8-1.3-1.3-2.7-1.7-4.1-.8-2.6-1.1-5.3-.9-8.1.2-3 .8-5.8 1.9-8.6.2-.6.5-1 .9-1.5 1.2-1.2 2.3-2.5 3.3-3.9 1.1-1.5 2.1-3.1 2.7-4.9.7-1.9 1.4-3.8 2-5.8 0-.1 0-.2.2-.4v.9c0 1.1-.1 2.3-.2 3.4-.2 1.8-.6 3.5-1.1 5.3-.1.2-.1.4-.2.5-.3.1-.4.3-.5.5-.3.3-.6.7-.9 1.1-.5.6-1 1.1-1.5 1.7-.1.1-.1.2-.2.3l-.6 1.5c-.5 1.2-.8 2.4-1.1 3.7-.2.7-.3 1.5-.4 2.3-.1.6-.1 1.1-.2 1.7 0 .4 0 .8-.1 1.1-.1.4-.1.8 0 1.3 0 .5 0 1 .1 1.5.1 1.6.4 3.1.8 4.6.3 1 .6 2 1.1 3 .3.6.5 1.2.9 1.7.1.3.1.3-.1.4-.7.3-1.5.7-2.2 1-.8.2-1.3.4-1.8.6z"/><path class="fd4" d="M19.6 92.4c-.3 0-.6-.3-.7-.6v-.3c0-.4.2-.6.5-.8.7-.5 1.2-1.1 1.7-1.8.4-.7.7-1.4 1-2.2.3-1.1.4-2.3.3-3.5 0-.9-.1-1.8-.4-2.7-.2-.9-.5-1.9-.8-2.8-.1-.2-.1-.3-.1-.5 0-.5.2-.9.7-1h.3c.4.1.6.3.7.7.4 1 .7 2.1.9 3.2.2.9.3 1.8.4 2.7.1 1.5 0 2.9-.4 4.4-.3 1.1-.8 2.2-1.5 3.2-.4.6-.9 1.2-1.5 1.6-.2.2-.4.3-.6.5-.1.1-.1 0-.2.1 0-.2-.2-.2-.3-.2z"/><path class="fd8" d="M50.4 3.4c.4 0 .7 0 1.1.1-.4.1-.7 0-1.1-.1zm-1.6-.1c.3 0 .6 0 1 .1H49c-.1 0-.2 0-.2-.1z"/><path class="fd8" d="M49.7 3.4c.2 0 .5 0 .7.1-.2-.1-.5 0-.7-.1zM13.2 40.2h-.7.7zM51.5 3.6c.2 0 .3 0 .5.1-.2-.1-.3 0-.5-.1zm.5 0c.1 0 .3 0 .4.1-.1 0-.3 0-.4-.1zM19.6 92.4h.4c-.1.1-.3.1-.4 0zm-8.5.7h.4c-.1.1-.2.1-.4 0zm66.7 0h.4c-.1.1-.3.1-.4 0zm-11 2.9h.4c-.1.1-.2.1-.4 0zm-14-92.3c.1 0 .2 0 .4.1-.2 0-.3 0-.4-.1zm-.4 0c.1 0 .2 0 .4.1-.1-.1-.3 0-.4-.1zM28.6 95.2h.4c-.2.1-.3.1-.4 0zm27.5.2h.4c-.2.1-.3.1-.4 0zM54.1 4c.1 0 .2 0 .3.1-.1-.1-.2 0-.3-.1zm-.3-.1c.1 0 .2 0 .3.1-.1 0-.2 0-.3-.1z"/><path class="fd8" d="M53.1 3.8c.1 0 .2 0 .3.1-.1-.1-.2 0-.3-.1zm-31 72.3h-.3c.1-.1.2-.1.3 0zm7.8.6s0-.1 0 0c.1-.1.1-.1.1 0h-.1zM53.5 3.9c.1 0 .2 0 .2.1 0-.1-.1-.1-.2-.1zm.9.1c.1 0 .2 0 .2.1-.1 0-.1 0-.2-.1zM14.2 40.4c-.1.1-.1 0-.2 0h.2zM24.7 72l.1.1c-.1 0-.1-.1-.1-.1zm1.2 1.2s.1 0 .1.1c0 0-.1 0-.1-.1zm1.4 1.3s.1 0 0 0c0 .1 0 0 0 0zm-2.7-2.6c.1 0 .1 0 0 0 .1.1.1 0 0 0zm1.4 1.4s.1 0 0 0zm1.4 1.3zm-1-62.2c.5-.2 1.1-.3 1.7-.4 1.6-.3 3.2-.5 4.8-.4.6 0 1.2.1 1.9.1.1 0 .2.1.3.2.6 2.3 1.7 4.4 3 6.3 1.9 2.8 4.3 5.2 7 7.4 2.1 1.7 4.4 3.1 6.8 4.3.1.1.3.1.5.3-.4.1-.7.1-1.1.2-1.4.2-2.7.6-4 1.1-.3.1-.6.4-.6.7-.1.7.6 1.2 1.2.9.5-.2 1.1-.4 1.6-.6 1.7-.5 3.4-.7 5.1-.6.2 0 .3.1.4.2 1.4 1.3 2.7 2.8 3.8 4.4 2.8 4 4.7 8.4 5.8 13.2.1.6.3 1.3.4 1.9v.4c-1 3.3-2 6.5-3.1 9.7-.8 2.2-2 4.1-3.4 5.9-2.2 2.7-4.6 5.2-7.3 7.3-1.8 1.3-3.7 2.5-5.8 3.3-1.7.6-3.5.9-5.3.8-1.4-.1-2.7-.4-3.9-.9-.6-.2-1.2-.5-1.7-.8.1-.1.1-.2.1-.3 0-.2-.1-.4-.1-.6-.2-1.1-.5-2.3-.8-3.4 0-.2-.1-.3-.3-.4-.4-.4-.8-.7-1.2-1.1l-.2-.2c-.5-.4-.9-.8-1.3-1.3-.5-.6-1.1-1.1-1.5-1.7-.3-.3-.6-.6-.8-1-.5-.6-1-1.2-1.4-1.8-.5-.7-1-1.4-1.4-2.2-.4-.8-.7-1.6-1.1-2.5-.7-1.7-1.3-3.5-1.8-5.3-.4-1.1-.7-2.2-1-3.4-.2-.8-.5-1.7-.7-2.5-.3-.9-.4-1.9-.5-2.8 0-.2 0-.5-.1-.7-.1-.4-.1-.8-.1-1.2v-2.5c.1 0 .1 0 .2.1 2.1 1 4.3 1.5 6.6 1.6 1.1 0 2.2-.1 3.3-.2.8-.1 1.6-.3 2.4-.6.5-.2.8-.7.6-1.2-.2-.5-.7-.7-1.2-.5-1.2.4-2.5.6-3.8.7-2.5.2-4.8-.3-7.1-1.4-.2-.1-.5-.2-.8-.1v-.5c.1-.5.1-.9.2-1.4 0-.4.1-.8.1-1.2.1-.7.2-1.3.2-2 0-.2 0-.5.1-.7.1-.5.1-1 .1-1.5.1 0 .1-.1.2-.1 1.3-.8 2.8-1.2 4.3-1.3 1.7-.1 3.3.1 4.9.5.7.2 1.4.4 2 .7.5.2 1 0 1.1-.5.2-.4 0-.9-.4-1.2-.1-.1-.2-.1-.3-.1-1.8-.7-3.8-1.1-5.7-1.2-1.5-.1-2.9.1-4.3.5-.6.2-1.1.4-1.7.6v-1.3c.1-.6 0-1.2.1-1.8.1-.4 0-.8.1-1.1 0-.7.1-1.4.2-2 .1-.6.2-1.2.2-1.9.1-.9.3-1.7.5-2.5.2-.9.5-1.7.8-2.6.4-1.1.9-2.1 1.6-3.1.3-.5.6-.9 1-1.3.3-.3.5-.7.8-.9-.4-.3-.2-.4-.2-.5zm13.5 52.3c.5 0 1 0 1.6-.1 1.4-.1 2.7-.4 3.9-.8.5-.2.9-.3 1.3-.6.4-.2.5-.6.5-1-.1-.4-.4-.7-.8-.7-.2 0-.4 0-.5.1-.9.4-1.8.7-2.8.9-2.3.5-4.5.4-6.8 0-.6-.1-1.2-.3-1.7-.4-.4-.1-.9.2-1 .6-.1.4 0 .9.5 1.1.1.1.3.1.4.1 1.6.6 3.5.8 5.4.8zm13-20.8c.6 0 1.2 0 1.8-.1 1.8-.2 3.4-.7 5-1.4.1-.1.2-.1.3-.2.3-.2.5-.5.4-.9-.1-.4-.3-.6-.7-.7-.3-.1-.5 0-.7.1-2.8 1.3-5.6 1.6-8.6 1.2-.8-.1-1.5-.3-2.3-.6-.5-.2-1 .1-1.1.5-.2.5 0 1 .5 1.2.1 0 .2.1.3.1 1.7.6 3.4.8 5.1.8zM39.6 56c1.5 0 2.6-.5 3.5-1.4.5-.5.3-1.3-.4-1.5-.3-.1-.6 0-.8.2-.2.2-.4.4-.7.5-.9.6-1.9.5-2.9.1-.2-.1-.4-.2-.5-.3-.4-.3-1-.2-1.3.2-.3.4-.2 1 .2 1.3.9.5 1.9.9 2.9.9z"/><path d="M20.7 33.3c0 .5 0 1-.1 1.5 0 .2 0 .5-.1.7-.1.7-.1 1.3-.2 2-.1.4-.1.8-.1 1.2-.1.5-.1.9-.2 1.4v.5c-.1 0-.1.1-.2.1-.4.3-.6.8-.3 1.2l.3.3v2.5c0 .4 0 .8.1 1.2 0 .2 0 .5.1.7.1.9.3 1.9.5 2.8.2.8.5 1.7.7 2.5.3 1.1.7 2.2 1 3.4.6 1.8 1.2 3.5 1.8 5.3.3.8.7 1.7 1.1 2.5.4.8.9 1.5 1.4 2.2.5.6.9 1.2 1.4 1.8.3.3.6.7.8 1 .5.6 1 1.1 1.5 1.7.4.4.8.9 1.3 1.3l.2.2c.4.4.8.8 1.2 1.1.1.1.2.2.3.4.3 1.1.6 2.2.8 3.4 0 .2.1.4.1.6 0 .1.1.2-.1.3-.5-.2-.9-.5-1.3-.7-2-1.2-3.8-2.7-5.5-4.3-1.8-1.7-3.4-3.6-4.9-5.5-1.1-1.5-2-3.1-2.6-4.9-1.2-3.2-2.2-6.4-3.1-9.6-.3-1-.6-2-.7-3-.2-1.1-.3-2.2-.3-3.2 0-1.6.1-3.1.2-4.7.2-1.6.4-3.1.5-4.7.1-1.3.2-2.5.2-3.8 0-1.8.1-3.7.3-5.5.2-2.3.6-4.5 1.3-6.7.4-1.1.8-2.1 1.4-3.1 1.3-2.3 3.3-3.9 5.8-4.9l.9-.3c0 .2-.2.3-.3.4-.4.2-.6.6-.8.9-.4.4-.7.8-1 1.3-.6 1-1.1 2-1.6 3.1-.3.8-.6 1.7-.8 2.6-.2.8-.4 1.7-.5 2.5-.1.6-.2 1.2-.2 1.9-.1.7-.1 1.4-.2 2 0 .4 0 .8-.1 1.1-.1.6 0 1.2-.1 1.8 0 .4-.1.9 0 1.3 0 0-.1 0-.1.1-.5.2-.9.5-1.3.8-.4.3-.6.9-.3 1.3s.8.5 1.3.2c.3 0 .4-.1.5-.2zm-5.4 20.2c-.4-.4-.7-.7-.9-1.1-.7-1-1.1-2.1-1.4-3.3-.5-1.7-.7-3.4-.7-5.1 0-.5 0-1 .2-1.5.1-.4.2-.5.6-.4.3 0 .6.2 1 .3.1 0 .1.1.1.2-.1.9-.1 1.7-.1 2.6 0 1.1 0 2.2.2 3.3.2 1.6.6 3.2 1.1 4.7-.2.1-.2.2-.1.3z" fill="#fff"/><path class="fd4" d="M20.7 33.3c-.1.1-.2.1-.4.2-.5.3-1 .2-1.3-.2-.3-.4-.2-1 .3-1.3.4-.3.9-.5 1.3-.8 0 0 .1 0 .1-.1.5-.2 1.1-.4 1.7-.6 1.4-.4 2.9-.6 4.3-.5 2 .1 3.9.5 5.7 1.2.1 0 .2.1.3.1.4.2.6.7.4 1.2-.2.4-.7.7-1.1.5-.7-.3-1.3-.5-2-.7-1.6-.4-3.2-.6-4.9-.5-1.5.1-3 .5-4.3 1.3 0 .1 0 .2-.1.2zm19.2 31.4c-1.9 0-3.7-.2-5.5-.7-.1 0-.3-.1-.4-.1-.4-.2-.6-.7-.5-1.1.1-.4.6-.7 1-.6.6.1 1.2.3 1.7.4 2.3.4 4.5.5 6.8 0 1-.2 1.9-.5 2.8-.9.2-.1.4-.1.5-.1.4 0 .7.3.8.7.1.4-.1.8-.5 1-.4.2-.9.4-1.3.6-1.3.5-2.6.7-3.9.8h-1.5zm13-20.8c-1.7 0-3.4-.2-5.1-.8-.1 0-.2-.1-.3-.1-.5-.2-.7-.7-.5-1.2.2-.4.7-.7 1.1-.5.8.2 1.5.4 2.3.6 3 .5 5.9.1 8.6-1.2.2-.1.5-.2.7-.1.4.1.6.3.7.7.1.4-.1.7-.4.9-.1.1-.2.1-.3.2-1.6.8-3.3 1.2-5 1.4-.5.1-1.1.1-1.8.1zm-33.1-1.6l-.3-.3c-.3-.4-.1-1 .3-1.2.1 0 .1-.1.2-.1.3-.1.5 0 .8.1 2.2 1.1 4.6 1.5 7.1 1.4 1.3-.1 2.6-.3 3.8-.7.5-.2 1 .1 1.2.5.2.5-.1 1-.6 1.2-.8.3-1.6.5-2.4.6-1.1.2-2.2.3-3.3.2-2.3-.1-4.5-.5-6.6-1.6 0-.1-.1-.1-.2-.1zM39.6 56c-.9 0-1.9-.3-2.8-1-.4-.3-.5-.9-.2-1.3s.8-.5 1.3-.2c.2.1.3.2.5.3 1 .5 1.9.5 2.9-.1.2-.1.5-.3.7-.5.2-.2.5-.3.8-.2.7.2.9 1 .4 1.5-1.1.9-2.1 1.5-3.6 1.5z"/></svg>
+      <p>Face</p>
+    </div>
+
+    {% elsif icon == "Kids" %}
+
+    <div class="fd-product__howTo-icon">
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 48.3 49" xml:space="preserve"><style>.fd5{fill:#f0f0f0}.fd9{fill:#47474b}</style><path class="fd5" d="M8.1 40.4c-.2-.1-.3-.2-.4-.3 0 0 0-.1-.1-.1-.4-.4-.7-.8-1.1-1.2-.4-.5-.8-.9-1.1-1.4-.4-.5-.7-1.1-1-1.6-.1-.4-.3-.6-.4-.8-.1-.2-.3-.5-.4-.7-.3-.6-.6-1.2-.8-1.9-.4-1-.7-2-.9-3-.1-.4-.2-.8-.2-1.3 0-.2-.1-.5-.1-.7 0-.2-.1-.4-.1-.7 0-.3-.1-.6-.1-.9v-2.1c0-.4 0-.7.1-1.1v-.4c0-.3.1-.7.1-1 .1-.6.2-1.2.3-1.7.2-1 .5-1.9.8-2.9.1-.6.3-1 .5-1.5s.5-1.1.8-1.6c.2-.5.5-.9.8-1.3.4-.6.8-1.3 1.3-1.9.3-.3.5-.7.8-1 .5-.5.9-1.1 1.5-1.5.2-.3.5-.6.8-.8.5-.5 1.1-.9 1.6-1.3.4-.3.8-.6 1.2-.8.4-.3.9-.5 1.3-.8.4-.2.9-.5 1.4-.7.3-.1.7-.3 1-.4.5-.2 1.1-.4 1.6-.6.6-.2 1.2-.4 1.9-.5.4-.1.8-.2 1.2-.2.4-.1.7-.1 1.1-.2h.5c.2 0 .4 0 .6-.1h.1c.6 0 1.2-.1 1.8 0h1.6c.3 0 .5 0 .8.1.2 0 .4.1.5.1.3 0 .7.1 1 .2.4.1.8.2 1.3.3.4.1.7.2 1.1.3.6.2 1.3.4 1.9.7.3.1.6.3.9.4.4.2.7.3 1 .5.6.3 1.1.6 1.6.9.6.3 1.1.7 1.6 1.1.3.2.6.5.9.7.3.3.6.5.9.8.4.4.8.7 1.1 1.1.4.4.8.9 1.2 1.4.4.5.7.9 1.1 1.4.4.6.8 1.3 1.2 1.9.2.4.5.9.7 1.3.2.5.5 1.1.7 1.6.2.4.3.9.4 1.3.2.6.3 1.2.5 1.8.1.4.1.7.2 1.1 0 .3.1.5.1.8 0 .2.1.5.1.7v3c0 .3 0 .7-.1 1v.4c0 .3-.1.7-.1 1 0 .4-.1.8-.2 1.2-.1.5-.2.9-.3 1.4-.2.7-.4 1.4-.6 2-.1.4-.3.8-.5 1.2-.3.6-.5 1.2-.8 1.7-.2.3-.3.6-.5.9-.3.6-.7 1.1-1.1 1.6-.2.3-.5.7-.7 1-.2.2-.4.5-.6.7-.3.3-.5.6-.8.9-.2.2-.4.5-.7.7l-.1.1c-.3.3-.6.5-.9.8l-1.2.9c-.4.3-.9.6-1.3.9-.2.2-.5.3-.7.5-.4.2-.8.5-1.2.7-.7.4-1.5.7-2.2 1-1 .4-2 .7-3 .9l-1.5.3c-.3 0-.6.1-.8.1-.3 0-.5.1-.8.1-.2 0-.5 0-.7.1h-2.8c-.3 0-.6 0-.9-.1h-.2v-.2c.1-.2 0-.4 0-.6-.1-.6-.1-1.2-.2-1.8-.1-.6-.1-1.2-.2-1.8-.1-.6-.1-1.2-.2-1.8-.1-.7-.2-1.3-.2-2 0-.2-.1-.3-.2-.5-.1-.1-.2-.2-.3-.2-1-.6-2-1.3-3.1-1.9-.1-.1-.2-.1-.2-.3-.1-.6-.3-1.2-.6-1.8 0-.1-.1-.2-.1-.2-.1-.6-.1-1.1 0-1.7 0-.1 0-.1.1-.1h.1c2.5-.8 4.2-3.3 3.9-6.1-.1-1.2-.6-2.3-1.5-3.2-.1-.1-.3-.2-.3-.3 0-.1.1-.3.1-.4.2-.7.5-1.4.9-2.1.1-.1.1-.2.2-.2.2-.1.3-.1.5-.2 1.2-.4 2.4-.6 3.7-.9.8-.2 1.5-.4 2.2-.8.5-.3.9-.6 1.1-1.1 0-.1.1-.1.1-.1h.1c.5.4 1 .4 1.5.4.6 0 .9-.5.8-1.1-.1-.3-.4-.5-.8-.6-.4 0-.8 0-1.1-.1-3.3-.7-5.2-4-4.3-7.2.8-2.7 3.6-4.4 6.4-4 1.7.3 3.1 1.2 4 2.7.8 1.4 1 2.8.6 4.4-.3 1.2-1 2.3-1.9 3.1-.4.3-.8.6-1.3.8-.2.1-.4.2-.5.4-.4 1-.3 2 .6 2.7.3.3.6.4 1 .6 1.3.6 2.6 1.3 3.9 2 .8.4 1.5.9 2.2 1.5.3.2.6.5.8.8.1.1.2.3.2.4 0 .2 0 .4.1.5 0 1 0 2-.1 3-.1.7-.1 1.4-.2 2.2-.1.7-.2 1.3-.2 2-.1.9-.3 1.8-.4 2.7-.2 1.2-.4 2.4-.7 3.6-.1.5-.3 1.1-.4 1.6-.1.2-.2.3-.4.4h-.1c-.4.1-.8.1-1.2.1-.6 0-1.3-.1-1.9-.2-.2 0-.3-.1-.5-.1-.4-.1-.9.3-.9.8v4.1c0 .5.4.8.9.7.4 0 .8-.4.7-.8v-2.9h.1c.5.1 1.1.1 1.6.1.6 0 1.2 0 1.7-.2.6-.2 1-.6 1.3-1.2l.3-.9c.4-1.6.7-3.3 1-4.9.1-.8.3-1.7.4-2.5.1-.7.2-1.5.3-2.2.1-.6.1-1.2.2-1.9.1-1 .1-2 .1-3 0-.3 0-.7-.1-1-.1-.6-.4-1-.7-1.4-.5-.5-1.1-1-1.7-1.4-1.8-1.2-3.7-2.2-5.7-3.1-.2-.1-.4-.2-.5-.3-.1-.1-.2-.2-.2-.4 0-.1 0-.1.1-.1s.2-.1.3-.2c1.4-.8 2.4-1.9 3-3.3.7-1.6 1-3.3.6-5-.9-4-4.9-6.4-8.8-5.4-3.7.9-6.2 4.6-5.4 8.5.5 2.3 1.8 4 3.8 5.1 0 0 .1 0 .1.1s-.1.1-.1.1c-.2.1-.4.3-.6.4-.6.3-1.1.4-1.7.5-1 .2-2 .4-3.1.7-.4.1-.9.3-1.3.4-.3.1-.5.3-.7.6-.5.7-.8 1.5-1.1 2.4-.1.2-.1.2-.2.1-1.1-.5-2.3-.6-3.5-.3-2.9.6-4.8 3.3-4.4 6.2.1 1.1.6 2.1 1.3 3 .1.1.1.2.1.3l-.3.6c-.2.2-.3.4-.4.6-.7 1.2-1.2 2.4-1.5 3.8-.5.4-.6 1.1-.6 1.7v1.7c0 .4 0 .7.1 1.1zm18.3-4.2H28c.8 0 1.6-.2 2.4-.3.8-.2 1.6-.5 2.4-.9 1.5-.9 2.4-2.2 2.6-3.9 0-.1.1-.2.1-.3.5-.5.9-1.1 1.3-1.7l.6-1.2c.1-.5.2-.9.1-1.4-.2-.9-.7-1.6-1.4-2.2-1-.7-2.1-1-3.4-.7-1.2.3-2.2 1-2.8 2.1-.4.7-.5 1.5-.4 2.3 0 .1 0 .1-.1.2-.3.1-.7.3-1 .5-.4.3-.8.6-1.1 1-.3.3-.7.6-1.1.7-.2.1-.5.1-.7.1-.4 0-.8 0-1.2-.2-.6-.2-1.2-.3-1.8-.1-.7.1-1.3.4-1.8.9-.4.3-.7.6-.9 1.1-.3.7-.3 1.3.1 2 .1.3.3.5.5.7.3.3.7.5 1 .8.2.2.5.2.7.3 1.5 0 2.9.2 4.3.2z"/><path class="fd9" d="M8.1 40.4c-.1-.4-.1-.7-.1-1v-1.7c0-.7.1-1.3.2-1.9.3-1.3.7-2.6 1.5-3.8.1-.2.3-.4.4-.6l.3-.6c0-.1 0-.2-.1-.3-.7-.9-1.1-1.8-1.3-3-.4-2.9 1.6-5.6 4.4-6.2 1.2-.3 2.3-.1 3.5.3.2.1.2.1.2-.1.3-.8.6-1.6 1.1-2.4.2-.3.4-.5.7-.6.4-.2.8-.3 1.3-.4 1-.3 2-.5 3.1-.7.6-.1 1.2-.3 1.7-.5.2-.1.4-.2.6-.4.1 0 .1-.1.1-.1l-.1-.1c-2.1-1.1-3.4-2.8-3.8-5.1-.8-4 1.7-7.6 5.4-8.5 4-1 7.9 1.5 8.8 5.4.4 1.7.2 3.4-.6 5-.7 1.4-1.7 2.5-3 3.3-.1.1-.2.1-.3.2-.1 0-.1.1-.1.1 0 .2.1.3.2.4.1.1.3.2.5.3 2 .9 3.9 1.9 5.7 3.1.6.4 1.2.9 1.7 1.4.4.4.7.9.7 1.4 0 .3.1.7.1 1 0 1 0 2-.1 3-.1.6-.1 1.2-.2 1.9s-.2 1.5-.3 2.2c-.1.8-.2 1.7-.4 2.5-.3 1.6-.6 3.3-1 4.9l-.3.9c-.2.6-.7 1-1.3 1.2-.6.2-1.2.2-1.7.2S34.5 41 34 41h-.1v2.9c0 .4-.3.8-.7.8-.5 0-.8-.3-.9-.7v-4.1c0-.5.5-.9.9-.8.2 0 .3.1.5.1.6.1 1.3.2 1.9.2.4 0 .8 0 1.2-.1h.1c.2 0 .3-.2.4-.4.2-.5.3-1 .4-1.6.3-1.2.5-2.4.7-3.6.1-.9.3-1.8.4-2.7.1-.6.2-1.3.2-2 .1-.7.2-1.4.2-2.2.1-1 .1-2 .1-3 0-.2 0-.4-.1-.5 0-.2-.1-.3-.2-.4-.2-.3-.5-.5-.8-.8-.7-.6-1.5-1-2.2-1.5-1.3-.7-2.6-1.4-3.9-2-.4-.2-.7-.3-1-.6-.8-.7-1-1.8-.6-2.7.1-.2.3-.3.5-.4.5-.2.9-.5 1.3-.8 1-.8 1.6-1.9 1.9-3.1.4-1.5.2-3-.6-4.4-.9-1.5-2.2-2.4-4-2.7-2.8-.5-5.5 1.2-6.4 4-1 3.2 1 6.5 4.3 7.2.4.1.8.1 1.1.1.4 0 .7.2.8.6.2.5-.2 1.1-.8 1.1-.5 0-1 0-1.4-.1h-.1c-.1 0-.1 0-.1.1-.2.5-.7.8-1.1 1.1-.7.4-1.4.7-2.2.8-1.2.2-2.5.5-3.7.9-.2 0-.3.1-.5.2-.1 0-.2.1-.2.2-.4.6-.7 1.3-.9 2.1 0 .1-.1.3-.1.4 0 .1.2.2.3.3.8.9 1.3 2 1.5 3.2.3 2.8-1.4 5.3-3.9 6.1h-.1c-.1 0-.1 0-.1.1-.1.6-.2 1.1 0 1.7 0 .1 0 .2.1.2.3.6.4 1.2.6 1.8 0 .1.1.2.2.3 1 .6 2 1.3 3.1 1.9.1.1.2.1.3.2.1.1.2.3.2.5.1.7.2 1.3.2 2 .1.6.1 1.2.2 1.8.1.6.1 1.2.2 1.8.1.6.1 1.2.2 1.8 0 .2.1.4 0 .6v.2c-.1.2-.2.3-.4.4-.5.2-1 0-1.1-.5v-.2c0-.4-.1-.8-.1-1.2-.1-.9-.2-1.7-.3-2.6-.1-1.1-.3-2.2-.4-3.2 0-.1 0-.2-.1-.2-.5-.3-1-.6-1.4-.9l-.1-.1v.2c.1.6.1 1.3.2 2 0 .6.1 1.3.1 1.9 0 .9 0 1.7-.1 2.6v1.5c0 .4-.3.7-.7.8-.4 0-.8-.2-.9-.6v-1.6c.1-1 .1-2.1 0-3.1 0-.8-.1-1.6-.1-2.3-.1-.9-.2-1.8-.4-2.7-.1-.7-.3-1.3-.6-1.9-.1-.1-.1-.3-.2-.4-.2-.6-.1-1.2-.1-1.8 0-.2 0-.2-.1-.2-.3-.1-.5-.4-.5-.8s.3-.8.8-.8c.3 0 .6 0 1-.1 2.1-.5 3.4-2.5 3-4.7-.4-2.2-2.6-3.7-4.9-3.1-2.1.5-3.5 2.6-3 4.8.2.7.5 1.4 1 1.9.1.1.2.3.2.4.1.3.1.6 0 .9-.1.5-.3 1-.6 1.4-.3.4-.6.9-.8 1.3-.7.8-1 2.3-1.1 3.8 0 1.1 0 2.2.2 3.2.1.3.1.6.2 1 0 .1.1.3.1.4.1.5-.2.9-.7 1-.4.1-.8-.2-.9-.6-.1-.3-.1-.6-.2-.9-.1-.6-.1-1.2-.2-1.7z"/><path class="fd5" d="M10 42.2c-.1-.3-.1-.6-.2-1-.2-1.1-.3-2.1-.2-3.2.1-1.5.3-3 1-4.4.2-.5.5-.9.8-1.3.3-.4.5-.9.6-1.4V30c0-.2-.1-.3-.2-.4-.5-.5-.9-1.2-1-1.9-.5-2.2.9-4.3 3-4.8 2.2-.5 4.4.9 4.9 3.1.4 2.2-.9 4.2-3 4.7-.3.1-.6.1-1 .1-.5 0-.8.4-.8.8 0 .3.2.6.5.8.1.1.1.1.1.2-.1.6-.1 1.2.1 1.8 0 .2.1.3.2.4.3.6.5 1.3.6 1.9.2.9.3 1.8.4 2.7.1.8.1 1.6.1 2.3v3.6c-.3-.1-.7-.3-1-.4-.5-.2-1-.5-1.5-.7-.4-.2-.8-.4-1.1-.6-.4-.2-.8-.5-1.2-.8-.4-.1-.7-.4-1.1-.6.1 0 .1 0 0 0zm7.4 3.8v-1.1c0-.9.1-1.7.1-2.6 0-.6 0-1.3-.1-1.9 0-.7-.1-1.3-.2-2v-.2c.1 0 .1 0 .1.1.5.3 1 .6 1.4.9.1.1.1.1.1.2.1 1.1.3 2.2.4 3.2.1.9.2 1.7.3 2.6 0 .4.1.8.1 1.2v.1c-.2 0-.4-.1-.6-.1-.6-.1-1.1-.3-1.7-.4h.1z"/><path class="fd9" d="M26.4 36.2c-1.4 0-2.8-.2-4.2-.4-.3 0-.5-.1-.7-.3-.3-.2-.7-.5-1-.8-.2-.2-.4-.4-.5-.7-.4-.7-.4-1.3-.1-2 .2-.4.5-.8.9-1.1.5-.4 1.1-.8 1.8-.9.6-.1 1.2-.1 1.8.1.4.1.8.2 1.2.2.2 0 .5-.1.7-.1.4-.1.8-.4 1.1-.7.3-.4.7-.7 1.1-1 .3-.2.6-.4 1-.5.1 0 .1 0 .1-.2-.1-.8 0-1.6.4-2.3.6-1.1 1.5-1.8 2.8-2.1 1.2-.3 2.4 0 3.4.7.7.5 1.2 1.3 1.4 2.2.1.5 0 .9-.1 1.4-.1.4-.3.8-.6 1.2-.4.6-.8 1.2-1.3 1.7-.1.1-.1.2-.1.3-.2 1.7-1.1 3-2.6 3.9-.7.4-1.6.7-2.4.9-.8.2-1.6.3-2.4.3-.6.2-1.2.2-1.7.2zm.2-1.7c.6 0 1.2 0 1.7-.1.7-.1 1.4-.2 2.1-.4.7-.2 1.3-.4 1.8-.8.8-.5 1.3-1.3 1.4-2.2 0-.3.1-.5.1-.8 0-.2.1-.4.3-.6.1-.1.2-.1.2-.2.5-.5 1-1.1 1.3-1.7.1-.2.2-.4.2-.6.1-.2.1-.5 0-.7-.2-.4-.4-.8-.8-1.1-1.1-.7-2.6-.5-3.4.6-.8 1.1-.5 2.5.6 3.2.1 0 .2.1.2.1.3.2.5.5.4.9-.1.5-.7.8-1.1.6-.5-.2-1-.6-1.3-1-.1-.1-.2-.2-.4-.1-.1 0-.1 0-.2.1l-.6.3c-.2.2-.5.4-.7.6-.5.5-1 .9-1.6 1.1-.7.3-1.4.3-2.2.2-.3 0-.6-.1-.8-.2-.4-.2-.8-.2-1.2-.1-.6.1-1 .5-1.3.9 0 0 0 .1-.1.1-.1.2-.1.3 0 .5.1.1.1.2.2.3.2.2.5.4.8.6.1 0 .1.1.2.1.3.1.7.1 1 .1 1.2.3 2.2.3 3.2.3z"/><path class="fd5" d="M26.6 34.5c-1 0-2.1-.1-3.1-.2-.3 0-.7-.1-1-.1-.1 0-.1 0-.2-.1-.3-.2-.5-.4-.8-.6-.1-.1-.2-.2-.2-.3-.1-.2-.1-.3 0-.5 0 0 0-.1.1-.1.4-.4.8-.8 1.3-.9.4-.1.8-.1 1.2.1.3.1.5.2.8.2.7.1 1.5 0 2.2-.2.6-.2 1.2-.6 1.6-1.1.2-.2.4-.5.7-.6.2-.1.4-.3.6-.3.1 0 .1 0 .2-.1.2-.1.3 0 .4.1.4.4.8.8 1.3 1 .5.2 1-.1 1.1-.6.1-.3-.1-.7-.4-.9-.1 0-.2-.1-.2-.1-1.2-.7-1.4-2.1-.6-3.2.8-1 2.3-1.3 3.4-.6.4.3.7.6.8 1.1.1.2.1.5 0 .7-.1.2-.1.4-.2.6-.3.7-.8 1.2-1.3 1.7-.1.1-.2.1-.2.2-.2.2-.3.3-.3.6s0 .5-.1.8c-.2.9-.7 1.7-1.4 2.2-.6.4-1.2.6-1.8.8-.7.2-1.4.3-2.1.4h-1.8z"/></svg>
+      <p>Kids</p>
+    </div>
+
+    {% elsif icon == "Skin" %}
+
+    <div class="fd-product__howTo-icon">
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 64 104.9" xml:space="preserve"><style>.fd6{fill:#f0f0f0}.fd10{fill:#48484b}</style><path class="fd6" d="M34.6 8.3v-.4c-.1-.3 0-.6 0-.9 0-1.1.3-2.2.8-3.2.2-.3.4-.5.6-.7.3-.3.7-.2 1.1-.1.5.2.9.5 1.2.9.4.5.6 1 .9 1.5.3.5.6 1 .9 1.6.8 1.3 1.6 2.6 2.5 3.9.1.1.2.3.3.4.2.3.3.7.5 1 1.1 3.2 2.1 6.3 3.2 9.5.2.5.3 1 .3 1.6 0 .5.1 1 .1 1.4 0 .3.1.6.1.9 0 .3 0 .6.1.9.1.3 0 .5.1.8 0 .3.1.6.1.9 0 .3 0 .6.1.9.1.2 0 .4.1.7 0 .3 0 .7.1 1 .1.5.1 1 .2 1.5 0 .2 0 .5.1.7 0 .3.1.6.1.9 0 .3.1.6.1.9 0 .2.1.4.1.7 0 .5.1 1 .1 1.5 0 .6.1 1.2.2 1.8.1.7.2 1.4.2 2.1.1.6.2 1.2.2 1.8 0 .3.1.7.2 1v1.3c-.1.4-.1.9-.3 1.3-.1.6-.4 1.1-.6 1.6-.5 1.1-1.1 2.3-1.6 3.4l-1.2 2.7c-.4.9-.7 1.7-1.1 2.6-.5 1.1-1 2.3-1.4 3.4-.4.9-.8 1.9-1.1 2.8-.5 1.2-1 2.5-1.4 3.7-.2.5-.3 1-.5 1.5-.3.7-.5 1.5-.8 2.3-.3.9-.6 1.9-.8 2.9-.1.5-.1.9-.2 1.4 0 .4.1.8.3 1.1.4.8.8 1.5 1.3 2.2 1.1 1.6 2.2 3.2 3.4 4.7l1.8 2.4c.6.8 1.2 1.5 1.8 2.3l2.4 3 2.4 3c.6.7 1.1 1.4 1.7 2.1.4.5.8 1 1.1 1.4l1.2 1.5c.1.1.2.2.2.3.1.1.1.2-.1.2-.1 0-.3.1-.4.1-1.4.4-2.8.7-4.2 1.1-1.9.5-3.8 1-5.7 1.4l-6 1.5c-1.7.4-3.4.8-5 1.3-.3.1-.3 0-.5-.2-.6-1-1.1-2.1-1.7-3.1-.4-.7-.8-1.4-1.1-2.1l-1.5-2.7c-.2-.4-.5-.9-.7-1.3l-1.2-2.1c-.2-.4-.5-.9-.7-1.3-.4-.7-.7-1.3-1.1-2-.3-.6-.7-1.2-1-1.8-.3-.6-.7-1.2-1-1.8-.2-.4-.4-.8-.6-1.1-.3-.6-.7-1.2-1-1.7-.1-.1-.1-.2-.2-.4 0-.1-.1-.2-.2-.2l.2-.2c.3-.4.6-.9.8-1.3.1-.2.1-.4.1-.5 0-.4-.3-.7-.8-.8-.4-.1-.8.1-.9.5-.1.2-.2.4-.3.5-.2 0-.2-.1-.3-.3l-2.1-3.6c-.4-.7-.9-1.3-1.3-1.9-.5-.7-1.1-1.5-1.5-2.3-.4-.7-.7-1.4-.9-2.1-.2-.6-.4-1.3-.5-2-.4-1.2-.4-2-.4-2.8 0-.6.1-1.1.2-1.7.2-1.4.7-2.7 1.1-4 .3-.9.6-1.9.9-2.8.4-1.1.8-2.3 1.3-3.4s1-2.1 1.7-3.1c.2-.3.5-.6.8-.9.4-.4.8-.7 1.1-1.1.4-.4.7-.8 1.1-1.2.9-1.2 1.6-2.6 2.3-3.9.1-.3.3-.6.4-.9 0-.1.1-.2-.1-.2-.1 0-.1-.1-.2-.2-.3-.6-.6-1.3-.9-1.9l-.6-1.5c0-.1-.1-.3-.1-.4-.1-.5-.4-.9-.6-1.3-.3-.5-.6-1-1-1.5 0-.1-.1-.2-.2-.2v-.2c.2-1.3.4-2.7.7-4 .1-.7.2-1.3.4-2 .1 0 .1.1.2.1l1.3 1.3 2.1 2.1.2.2c.3.2.5.4.7.7.1.1.2.3.4.4 0 0 .1 0 .1-.1 0-.3.1-.7.1-1 .1-.5.2-1 .2-1.5 0-.1 0-.2.1-.3.7.1 1.3.2 2 .1.1.1 0 .2 0 .3l-.6 5.4c-.1.9-.3 1.8-.6 2.6-1 2.9-1.8 5.8-2.6 8.7-.4 1.6-.8 3.2-.9 4.8-.1 1.6-.1 3.2-.3 4.8-.1.5.3.9.8 1 .5.1.9-.2 1-.7.1-.3.1-.5.1-.8.1-1.3.1-2.6.2-3.9.1-1.2.2-2.4.5-3.6.8-2.9 1.6-5.7 2.5-8.6.2-.8.5-1.5.7-2.3.5-2.3.7-4.6 1-6.9.1-1.2.2-2.5.3-3.7.1-1.2.2-2.5.2-3.7 0-.7-.1-1.3-.6-1.9 0-.1-.1-.1-.1-.2v-.7l.6-.3c.1-.1.2-.1.1-.3-.2-.4-.4-.9-.6-1.3 0-.1-.1-.2-.2-.2-.1-1.4-.1-2.8-.2-4.2 0-.2-.1-.5-.2-.7-.1-.2-.2-.3-.2-.5-.5-.9-1-1.9-1.3-2.8-.4-1.1-.7-2.2-.7-3.3 0-.5 0-1.1.2-1.6.1 0 .2.1.3.2.8.9 1.7 1.7 2.5 2.6.6.7 1.3 1.3 1.9 2 .2.2.3.4.5.6.5.6.9 1.1 1.4 1.7.1.1.2.3.3.3 0 0 .1 0 .1.1v.1c0 .1.1.2.1.3 1 2.9 2 5.9 2.9 8.8.1.3.1.5.2.8 0 .4.1.9.1 1.3l.3 3.6c.1.9.2 1.9.3 2.8.1 1.2.2 2.4.3 3.5l.3 2.7c.1 1 .2 2.1.3 3.1l.3 2.7c.1.6.2 1.1.2 1.7 0 1-.3 2-.7 2.9-.2.5-.5 1.1-.8 1.6-1.8 3.9-3.4 7.8-5 11.8-1.2 3-2.4 6-3.3 9-.4 1.3-.8 2.7-1 4.1-.1.8-.1 1.6.4 2.4.2.4.4.8.7 1.2 1.2 1.9 2.5 3.8 3.9 5.6 3.7 5 7.6 9.8 11.5 14.6.2.2.3.4.5.6.3.3.7.4 1.1.2.4-.2.5-.6.5-1 0-.2-.1-.3-.3-.5-2.9-3.5-5.7-7-8.5-10.6-2-2.6-4-5.2-5.9-8-.6-.9-1.3-1.9-1.8-2.9-.3-.5-.3-1-.2-1.5.1-.8.3-1.5.5-2.2.6-2.2 1.4-4.4 2.2-6.5 1.4-3.8 3-7.5 4.6-11.2.8-1.9 1.6-3.8 2.5-5.6.3-.7.6-1.3.8-2 .3-1.1.4-2.2.2-3.3-.2-1.1-.3-2.2-.4-3.2-.1-1.2-.3-2.4-.4-3.7-.1-1.3-.3-2.6-.4-4-.1-1.4-.3-2.8-.4-4.1-.2-1.6-.3-3.3-.5-4.9 0-.5-.1-1-.3-1.5l-3-9c-.4-1.1-.9-2.2-1.6-3.2-.5-1-.9-1.7-1.4-2.4z"/><path class="fd10" d="M35.7 13.9c-.1-.5-.3-1-.5-1.4-1.1-1.8-2.3-3.5-3.4-5.3-.2-.3-.4-.6-.5-.9-.2-.5-.6-.9-.9-1.3l-.3-.3c-.3-.2-.4-.1-.6.1l-.1.1c-.3.5-.5 1-.6 1.6-.2.5-.2 1-.2 1.6 0 1.2.3 2.2.7 3.3.4 1 .8 1.9 1.3 2.8.1.2.2.3.2.5.2.3.2.6.2.8.1 1.4.1 2.8.2 4.2 0 .7.1 1.4.1 2.1v.7c0 .1 0 .2.1.2.4.6.6 1.2.6 1.9 0 1.2-.1 2.5-.2 3.7-.1 1.2-.2 2.5-.3 3.7-.2 2.3-.5 4.6-1 6.9-.2.8-.5 1.5-.7 2.3-.9 2.8-1.8 5.7-2.5 8.6-.3 1.2-.5 2.4-.5 3.6-.1 1.3-.1 2.6-.2 3.9 0 .3 0 .5-.1.8-.1.5-.6.8-1 .7-.5-.1-.8-.5-.8-1 .3-1.6.3-3.2.3-4.8.1-1.7.4-3.2.9-4.8.8-2.9 1.7-5.8 2.6-8.7.3-.9.4-1.7.6-2.6.3-1.8.5-3.6.6-5.4v-.3c-.7.1-1.3 0-2-.1h-.1c-1.3-.3-2.6-.8-3.8-1.3-.2-.1-.2-.2-.2-.4 0-.7 0-1.5.1-2.2 0-.3 0-.6.1-.9.1-.3.1-.5.1-.8.1-.5.2-.9.3-1.4-.4.5-.7 1.1-.9 1.8 0 .1-.1.2-.1.3-.4 1-.7 2-.9 3-.2.7-.3 1.3-.4 2-.3 1.3-.5 2.7-.7 4v.2c-.1.4-.2.9-.2 1.4-.2 1.6-.6 3.1-1.2 4.5-.7 2-1.6 4-2.7 5.9-.8 1.4-1.8 2.6-3 3.7-.9.7-1.5 1.7-2 2.7-.7 1.3-1.2 2.7-1.8 4.1-.7 2-1.4 4-1.9 6-.2 1.3-.4 2.6-.4 3.9 0 1.7.5 3.3 1.3 4.8.4.7.7 1.3 1.2 1.9 1.3 1.7 2.5 3.6 3.6 5.5 3.2 5.5 6.3 11 9.3 16.5l3 5.4c.1.2.2.4.2.6 0 .4-.2.7-.6.9-.4.1-.8 0-1-.3-.1-.1-.1-.2-.2-.3-3.6-6.4-7.1-12.8-10.8-19.2-1-1.8-2.1-3.6-3.2-5.4-.5-.8-1-1.5-1.6-2.3-.8-1.1-1.5-2.1-2-3.3-.8-1.8-1.2-3.6-1.1-5.6.1-1.6.4-3.1.8-4.6.7-2.3 1.4-4.6 2.4-6.9.5-1.2 1-2.4 1.7-3.5.6-.9 1.3-1.7 2.1-2.5.8-.7 1.4-1.5 1.9-2.4.6-1 1.2-2 1.6-3.1.1-.2.1-.3 0-.4-.5-1-.9-2-1.3-3.1-.1-.3-.2-.5-.3-.8-.1-.3-.2-.7-.4-1-.6-1-1.3-2-2-3-.5-.7-1.1-1.4-1.6-2.1l-.6-.6c-.6-.4-1.3-.8-1.9-1.2-.9-.6-1.8-1.1-2.7-1.7-.4-.3-.8-.6-1.2-1-1.2-1.1-1.4-3-.7-4.3.3-.6.8-1.1 1.5-1.3.3-.1.7 0 1 .1.6.2 1.2.5 1.8.8 1 .5 1.9 1 2.9 1.6.1.1.2.1.3.1l.1.1c.9.5 1.8 1.1 2.7 1.6.2.1.3.2.5.4 1.6 1.5 3.2 3.1 4.7 4.6 0 0 .1.1.2.1s0-.1 0-.1c.1-.5.2-1 .3-1.6 0-.2 0-.3-.1-.3-.9-.7-1.8-1.4-2.6-2.1-.8-.7-1.5-1.5-2.3-2.2-1-.9-2.1-1.5-3.3-2-.4-.2-.9-.5-1.3-.7-.9-.6-1.8-1.2-2.6-2-.5-.5-.9-1.1-1.1-1.8-.3-1.3 0-2.4.9-3.4.2-.2.4-.3.6-.4.5-.1.9-.1 1.3.1 1.6.7 3.2 1.3 4.8 1.9h.1c.1.1.2.1.3.1 1 .4 2 .8 2.9 1.1.4.2.9.4 1.2.6 1.3.9 2.7 1.8 4 2.6.2.1.2.1.4 0 .2-.2.4-.4.7-.6.3-.2.2-.2.1-.4-.4-.9-.9-1.9-1.2-2.8 0-.1-.1-.2-.1-.2 0-.1-.1-.1-.1-.2-.7-1.1-1.6-2.2-2.5-3.2-.8-.9-1.4-1.9-1.7-3.1-.2-.7-.3-1.5-.3-2.3 0-1.1.4-2 1.1-2.9.3-.4.7-.7 1.2-.8.7-.2 1.4 0 2 .4.4.3.8.7 1.1 1 .7.8 1.5 1.5 2.2 2.3l.1.1.9.9.9.9c0-.1 0-.2-.1-.3-.4-1.4-.7-2.7-.6-4.2 0-.3.1-.7.1-1 .1-.3.2-.7.3-1 .2-.7.5-1.3 1-1.8.7-.7 1.6-.8 2.5-.4.4.2.8.5 1.1.9.5.5.8 1 1.1 1.7.1.2.2.4.3.5.4.7.8 1.4 1.3 2.1.5.7.9 1.4 1.4 2.2.7 1 1.2 2 1.6 3.2l3 9c.2.5.2 1 .3 1.5.2 1.6.3 3.3.5 4.9.1 1.4.3 2.8.4 4.1.1 1.3.3 2.6.4 4 .1 1.2.2 2.4.4 3.7.1 1.1.3 2.2.4 3.2.2 1.1.1 2.2-.2 3.3-.2.7-.4 1.4-.8 2-.9 1.8-1.7 3.7-2.5 5.6-1.6 3.7-3.1 7.4-4.6 11.2-.8 2.2-1.6 4.3-2.2 6.5-.2.7-.4 1.5-.5 2.2-.1.5 0 1 .2 1.5.6 1 1.2 2 1.8 2.9 1.9 2.7 3.9 5.3 5.9 8 2.8 3.6 5.6 7.1 8.5 10.6.1.1.2.3.3.5.1.4-.1.8-.5 1-.4.2-.8.1-1.1-.2-.2-.2-.4-.4-.5-.6-3.9-4.8-7.8-9.6-11.5-14.6-1.4-1.8-2.7-3.6-3.9-5.6-.2-.4-.5-.8-.7-1.2-.4-.8-.5-1.6-.4-2.4.2-1.4.6-2.7 1-4.1 1-3.1 2.1-6.1 3.3-9 1.6-4 3.3-7.9 5-11.8.2-.5.5-1.1.8-1.6.4-.9.7-1.9.7-2.9 0-.6-.1-1.1-.2-1.7l-.3-2.7c-.1-1-.2-2.1-.3-3.1l-.3-2.7c-.1-1.2-.2-2.4-.3-3.5-.1-.9-.2-1.9-.3-2.8l-.3-3.6c0-.4-.1-.9-.1-1.3 0-.3-.1-.5-.2-.8-.9-3-1.9-5.9-2.9-8.8 0 0 0-.1-.1-.3zm-10.6 6c.1.4.3.7.5 1.1 0 .1.1.1.2.1.3-.1.6-.1.9-.2h.1c.9-.1 1.7 0 2.5.3h.1v-.1c-.1-1.3-.1-2.7-.2-4 0-.1-.1-.2-.1-.3-.5-.6-1.1-1.3-1.6-2-.7-.9-1.4-1.8-2.2-2.6-1.3-1.3-2.5-2.6-3.8-3.9l-.4-.4c-.3-.2-.4-.2-.7 0l-.1.1c-.4.5-.6 1.1-.6 1.8 0 .6.1 1.2.2 1.7.3.9.6 1.7 1.3 2.3 1 1 1.9 2.1 2.6 3.3.2.4.4.7.6 1.1.3.7.5 1.2.7 1.7zm-9.5.7s-.1-.1-.1 0c0 0-.1 0-.1-.1l-6.3-2.4c-.2-.1-.2 0-.3.1-.4.6-.5 1.2-.1 1.9.2.3.4.6.7.9.9.8 1.9 1.5 3 2 1 .5 2 .9 2.8 1.6l.1.1s0 .1.1.1c.8.6 1.5 1.2 2.1 1.9.8.8 1.7 1.6 2.6 2.3.1.1.2.1.3.2.1-.5.2-1 .3-1.4.1-.1.1-.3.1-.5.2-.9.5-1.7.9-2.5v-.2c.2-.3.2-.3-.1-.4-1.3-.8-2.6-1.7-3.8-2.5-.6-.6-1.4-.8-2.2-1.1zm2.3 20.8c.1-.2.1-.4.2-.5.3-.8.6-1.6.8-2.4.2-1 .3-2.1.5-3.1 0-.1 0-.2-.1-.3-.1 0-.2-.1-.3-.2-1.7-1.7-3.4-3.4-5.1-5-.1-.1-.3-.3-.5-.4-1.8-1.1-3.5-2.2-5.3-3.1-.5-.3-1.1-.6-1.6-.8-.3-.1-.4-.1-.6.2v.1c-.2.8-.2 1.5.5 2.1.2.2.3.3.5.4.9.7 1.9 1.3 2.9 2 .7.4 1.4.9 2.1 1.4.4.3.7.5.9.9.7.9 1.4 1.9 2.1 2.8.6.9 1.2 1.7 1.7 2.6.2.3.3.6.4 1 .1.7.5 1.5.9 2.3zM25.4 28v.2c0 .3 0 .3.2.4.8.3 1.5.6 2.3.7.5.1 1 .2 1.5.1.3 0 .3 0 .3-.3 0-.4.1-.7.1-1.1.1-1.2.2-2.4.3-3.5 0-.3-.1-.6-.3-.8-.2-.3-.5-.4-.9-.6-.6-.3-1.3-.3-2-.3-.1 0-.2.1-.3.2-.2.3-.3.6-.4.9-.5 1.2-.7 2.6-.8 4.1z"/><path class="fd6" d="M22.6 18.6c.1.1.1.1.1.2.4 1 .8 1.9 1.2 2.8.1.2.1.2-.1.4s-.5.3-.7.6c-.2.2-.2.2-.4 0-1.3-.9-2.7-1.7-4-2.6-.4-.3-.8-.5-1.2-.6-1-.4-2-.7-2.9-1.1-.1 0-.2-.1-.3-.1.1-.6.3-1.1.6-1.5.2-.2.4-.4.6-.5.1-.1.2 0 .4 0l4.5 1.8c.7.3 1.3.5 2 .8l.2-.2zm-11 6c1.2.5 2.3 1.2 3.3 2 .8.7 1.6 1.5 2.3 2.2.8.8 1.7 1.5 2.6 2.1.2.1.2.2.2.4-.1.5-.2 1-.3 1.6v.1c-.1 0-.1-.1-.2-.1-1.6-1.5-3.2-3.1-4.7-4.6-.2-.1-.3-.3-.5-.4-.9-.5-1.8-1.1-2.7-1.6-.1 0-.1-.1-.1-.1.1 0 .1-.1.1-.2-.1-.4 0-.7 0-1v-.4z"/><path class="fd10" d="M20.7 80.2c.1-.2.2-.3.3-.5.2-.4.6-.5.9-.5.4.1.7.4.8.8 0 .2 0 .4-.1.5-.2.5-.5.9-.8 1.3l-.2.2c-.5.6-1 1.1-1.6 1.6-.1.1-.2.2-.3.2-.4.3-1 .2-1.3-.2-.3-.4-.2-.9.2-1.3.4-.3.9-.7 1.3-1.1.3-.2.6-.6.8-1z"/><path class="fd6" d="M26.9 6.3c0 .3-.1.7-.1 1-.1 1.4.1 2.8.6 4.2 0 .1.1.2.1.3l-.9-.9-.9-.9c.1 0 .1-.1.1-.2-.2-1.1.1-2.1.7-3 .1-.3.2-.4.4-.5z"/><path d="M28.8 6.6c0-.6.3-1.1.6-1.6 0-.1.1-.1.1-.1.2-.2.3-.2.6-.1l.3.3c.4.4.7.8.9 1.3.1.3.3.6.5.9 1.1 1.8 2.2 3.5 3.4 5.3.3.4.4.8.5 1.3-.2 0-.2-.2-.3-.3-.5-.6-.9-1.1-1.4-1.7-.2-.2-.3-.4-.5-.6-.6-.7-1.3-1.3-1.9-2-.8-.9-1.7-1.7-2.5-2.6-.1 0-.2-.1-.3-.1zm-6.5 22.7c.2-1 .5-2 .9-3 0-.1.1-.2.1-.3.2.1.3.3.5.4 0 .3 0 .6-.1.9-.1.7-.1 1.5-.1 2.2 0 .2.1.3.2.4 1.2.6 2.5 1.1 3.8 1.3h.1c-.1.1-.1.2-.1.3-.1.5-.2 1-.2 1.5 0 .3-.1.7-.1 1l-.1.1c-.2-.1-.3-.2-.4-.4-.2-.3-.4-.5-.7-.7-.1 0-.1-.1-.2-.2l-2.1-2.1c-.4-.4-.9-.8-1.3-1.3-.1-.1-.1-.1-.2-.1zm9-7.5c0-.7-.1-1.4-.1-2.1.1 0 .1.2.2.2.2.4.4.9.6 1.3.1.1 0 .2-.1.3l-.6.3zm4.4-7.9zM15.1 24.5c-.9-.6-1.9-1.1-2.8-1.6-1.1-.5-2.1-1.2-3-2-.3-.3-.5-.6-.7-.9-.3-.7-.3-1.3.1-1.9.1-.1.2-.2.4-.1 2.1.9 4.2 1.6 6.3 2.4 0 0 .1 0 .1.1 0 0 .1.1.1 0 .1.2.3.4.4.5.5.4 1 .7 1.5 1.1.6.4 1.2.7 1.8 1 .8.3 1.5.8 2.2 1.3.1.1.2.1.3.1v.2c-.3.8-.6 1.7-.9 2.5 0 .2-.1.3-.1.5-.1 0-.1-.1-.2-.1l-1.5-.9c-1-.6-2.1-1.2-3.1-1.8-.2-.1-.4-.3-.6-.3-.2 0-.2-.1-.3-.1.1 0 0 0 0 0z" fill="#fff"/><path class="fd6" d="M25.4 28c.1-1.4.3-2.8.9-4.2.1-.3.3-.6.4-.9.1-.1.1-.2.3-.2.7 0 1.4 0 2 .3.3.1.6.3.9.6.2.2.3.5.3.8-.1 1.2-.2 2.4-.3 3.5 0 .4-.1.7-.1 1.1 0 .3 0 .3-.3.3-.5.1-1 0-1.5-.1-.8-.2-1.6-.4-2.3-.7-.2-.1-.2-.1-.2-.4-.1 0-.1 0-.1-.1zm-10.1-3.4c.2 0 .4.1.6.3 1 .6 2.1 1.2 3.1 1.8l1.5.9c.1 0 .1.1.2.1-.1.5-.2.9-.3 1.4-.1-.1-.2-.2-.3-.2-.9-.7-1.8-1.5-2.6-2.3-.7-.7-1.4-1.3-2.2-2 0 .1 0 0 0 0zm6.6-.1c-.1 0-.2 0-.3-.1-.7-.5-1.4-1-2.2-1.3-.6-.3-1.2-.6-1.8-1-.5-.3-1-.7-1.5-1.1-.2-.1-.4-.3-.4-.5.8.3 1.6.5 2.3 1 1.3.9 2.5 1.7 3.8 2.5.2.3.2.3.1.5zm3.2-4.6c.1 0 .2 0 .2.1.4.3.9.6 1.3.9l.1.1c-.3.1-.6.1-.9.2-.1 0-.2 0-.2-.1-.1-.4-.3-.8-.5-1.2zm-1.3 6.4c-.2-.1-.3-.3-.5-.4.2-.6.5-1.2.9-1.8-.1.5-.2.9-.3 1.4 0 .3-.1.6-.1.8zm-8.2-5.7h-.1c0-.1.1-.1.1 0zm9.5-.7zm-3.3 4.8z"/></svg>
+      <p>Skin</p>
+    </div>
+
+    {% elsif icon == "Body" %}
+
+    <div class="fd-product__howTo-icon">
+     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 48.3 49" xml:space="preserve"><style>.fd11{fill:#47474b}</style><path d="M44.9 17c.1-1-.1-2-.5-2.8-.8-1.2-2.2-2-3.6-2.1-1.7-.2-3.4-.5-5-1.1-3.2-1.5-4.8-4.9-4.2-8.1H20.5c.6 3.2-1 6.6-4.1 8.1-1.7.5-3.4.9-5.1 1.1-1.5.2-2.8.9-3.6 2.1-.4.8-.6 1.8-.5 2.7l-.7 30.8h39.1L44.9 17z" fill="#f0f0f0"/><path class="fd11" d="M22.5 13h1.3v22.3h-1.3zm12.2 21.6c.3-1 .7-2.1 1.1-3.1 1.1-2.8 2.2-5.8 2.3-8.9h-1.3c-.1 2.9-1.2 5.7-2.2 8.5-.4 1-.8 2.1-1.2 3.2-1.1 3.3-1.9 7.8.1 11.4H35c-2.2-3.4-1.4-7.9-.3-11.1zm-21.9 11c1.9-3.6 1.1-8.1 0-11.4-.4-1.1-.8-2.1-1.2-3.2-1-2.7-2.1-5.6-2.2-8.5H8.1c.1 3.1 1.2 6.1 2.3 8.9.4 1 .8 2.1 1.1 3.1 1.1 3.2 1.8 7.7-.3 11h1.6z"/><path class="fd11" d="M32.7 8.9c1.6.5 3.2.9 4.9 1.1 1.4.2 2.7.9 3.5 2.1.4.9.5 1.8.5 2.8l.6 30.7h1.3L42.8 15c.1-1.2-.1-2.4-.6-3.4l-.1-.1c-1-1.5-2.7-2.5-4.5-2.8-1.6-.2-3.1-.5-4.6-1-2.4-1.2-3.7-3.8-3.4-6.4h-1.3c-.1 3.1 1.5 6.2 4.4 7.6zM4.1 45.6l.6-30.7c-.1-1 .1-1.9.5-2.8.8-1.2 2.1-2 3.5-2.1 1.7-.2 3.3-.5 5-1.1 2.8-1.4 4.4-4.5 4.1-7.5h-1.3c.4 2.6-.9 5.2-3.3 6.3-1.5.5-3.1.8-4.7 1C6.7 8.9 5 9.9 4 11.5c-.5 1.1-.7 2.3-.6 3.4l-.6 30.7h1.3z"/></svg>
+      <p>Body</p>
+    </div>
+
+    {% elsif icon == "Mouth" %}
+
+    <div class="fd-product__howTo-icon">
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 99.7 49" xml:space="preserve"><style>.fd7{fill:#464549}.fd12{fill:#f0f0f0}</style><path class="fd7" d="M95.3 17.8c.3.4.2.8-.1 1.2-.8 1.2-1.7 2.3-2.6 3.3-3.1 3.6-6.5 6.9-10.3 9.7-2.5 1.9-5.2 3.6-8.1 4.9-2.1.9-4.2 1.6-6.4 2l-3.6.6c-1.3.2-2.6.3-3.9.5-1.3.1-2.7.2-4 .3l-5.7.3c-2.9.1-5.9.1-8.8-.1-2-.1-4-.2-6-.4-2.5-.2-5-.6-7.4-1.1-3.1-.7-5.9-1.8-8.7-3.3-2.9-1.6-5.6-3.6-8.1-5.8-3.4-2.9-6.4-6.2-9.2-9.7L1.5 19c-.3-.4-.2-1.1.4-1.4 1.7-.8 3.4-1.7 5.2-2.5 0 0 .1 0 .1-.1.1 0 .1-.1.2-.1 2.5-1.1 5-2.3 7.5-3.3 3.7-1.5 7.4-2.9 11.3-4.1 3-.9 6.1-1.6 9.3-1.8 1.2-.1 2.4 0 3.5.1 1 .1 2 .4 3 .7 1.3.4 2.5.7 3.9.9 1.7.2 3.3.1 5-.2 1.1-.2 2.3-.5 3.5-.8 1.6-.4 3.3-.7 5-.7 1.9 0 3.8.2 5.6.5 2 .4 3.9.9 5.8 1.4 3.4 1 6.7 2.2 9.9 3.5 4.7 1.9 9.3 4 13.9 6.2.2.2.5.3.7.5zm-9.1 8.5c.1 0 .2-.1.2-.1 2-1.9 3.8-3.8 5.5-5.9l.2-.2h-.3c-1.5.4-2.9.7-4.4 1-2.1.4-4.2.8-6.4 1.2l-5.7.9c-1.8.2-3.6.4-5.3.6-2 .2-4 .2-6 .3-1.3 0-2.7 0-4-.1-1-.1-2-.1-2.9-.2-.8-.1-1.5-.2-2.3-.2H42.1c-2.7.1-5.4.1-8.1.1-2.5 0-5.1 0-7.6-.1-1-.1-2.1-.1-3.1-.2-1.4-.1-2.7-.3-4.1-.5-1.4-.2-2.9-.4-4.3-.6-.4-.1-.8-.2-1.3-.2-.3-.1-.6-.1-.9-.2-2.6-.5-5.3-1-7.9-1.7h-.2c0 .1.1.2.2.2 2.4 3 5.1 5.7 8 8.2 2.4 2.1 5 4 7.8 5.5 2.7 1.5 5.5 2.6 8.5 3.2 1.6.3 3.2.6 4.8.8 1.6.2 3.2.3 4.8.5 1.5.1 3.1.2 4.6.2 1.8.1 3.7.1 5.5 0 1.7 0 3.3-.1 5-.2 1.6-.1 3.2-.2 4.7-.3l3.3-.3c1.3-.1 2.6-.3 3.9-.5 1.1-.2 2.2-.3 3.4-.6 2.6-.7 5-1.7 7.3-3 3.6-2 6.8-4.5 9.8-7.3-.1-.1 0-.2 0-.3zM8.5 16.4h-.1c-1.3.6-2.4 1.1-3.6 1.7 0 0-.1 0-.1.1 2.1.6 4.2 1 6.4 1.4.2 0 .4.1.5.1l5.4.9c1.6.2 3.2.5 4.8.6 1.4.1 2.8.3 4.2.3 1.5.1 2.9.1 4.4.1h7.1c2.9-.1 5.8-.1 8.7-.1h7.1c.8 0 1.6 0 2.4.1.7.1 1.4.1 2.1.2 1.9.2 3.8.2 5.8.2 2.3 0 4.7-.1 7-.3 1.8-.2 3.7-.4 5.5-.6 1.9-.3 3.7-.6 5.6-.9 2.9-.5 5.8-1 8.6-1.7.6-.1 1.2-.3 1.7-.4 0 0-.1-.1-.2-.1-3.9-1.9-7.8-3.6-11.7-5.2-3.6-1.4-7.2-2.8-11-3.8-2.7-.8-5.4-1.4-8.2-1.5-1.5-.1-3 0-4.4.3-1.1.2-2.1.5-3.2.8-2.1.5-4.2.9-6.3.7-.8 0-1.6-.1-2.4-.3-1.1-.2-2.2-.5-3.2-.8-1.5-.5-3.1-.8-4.7-.7-2.1 0-4.2.3-6.3.8-2.7.6-5.4 1.5-8 2.4-4.2 1.5-8.3 3.2-12.4 5.1-.6.1-1.1.3-1.5.6z"/><path class="fd12" d="M95.3 17.8c-.2-.2-.4-.3-.7-.4-4.5-2.3-9.2-4.3-13.9-6.2-3.3-1.3-6.6-2.5-9.9-3.5C68.9 7 67 6.5 65 6.2c-1.9-.3-3.7-.5-5.6-.5-1.7 0-3.4.3-5.1.7-1.1.3-2.3.6-3.4.8-1.6.3-3.3.4-5 .2-1.3-.1-2.6-.5-3.9-.9-1-.3-2-.6-3-.7-1.2-.2-2.3-.2-3.5-.1-3.2.2-6.2.9-9.3 1.8-3.8 1.1-7.6 2.6-11.3 4.1-2.5 1-5 2.1-7.5 3.3-.1 0-.1.1-.2.1-.2-.4-.5-.7-.7-1-.3-.4-.2-.4.1-.6.7-.3 1.3-.7 2-1 1.1-.5 2.1-1 3.2-1.5.7-.3 1.5-.7 2.2-1 1-.4 2.1-.9 3.1-1.4 1.1-.5 2.2-1 3.4-1.4 1.1-.5 2.3-.9 3.4-1.3 1.7-.6 3.3-1.2 5-1.7 1.6-.5 3.1-1 4.7-1.3 1.1-.3 2.2-.5 3.2-.6.5-.1 1-.1 1.5-.2.9-.1 1.8-.1 2.7-.1.5 0 1 .1 1.5.1.7.1 1.4.2 2 .4.7.2 1.4.4 2.2.6.7.2 1.5.4 2.2.5.6.1 1.1.1 1.7.2.6.1 1.2.1 1.8 0 .4 0 .7 0 1.1-.1.3-.1.7-.1 1-.1.6-.1 1.2-.2 1.7-.3 1-.3 2.1-.5 3.1-.8.6-.1 1.2-.3 1.9-.4 1.2-.2 2.4-.2 3.7-.2.4 0 .8 0 1.2.1.2 0 .4 0 .7.1.5 0 .9.1 1.4.2.6.1 1.2.2 1.9.4 1.1.2 2.2.5 3.2.8 1.7.5 3.3 1 4.9 1.6 1 .3 2 .7 2.9 1.1 1.4.5 2.8 1.1 4.3 1.7.8.3 1.7.7 2.5 1.1l2.7 1.2c.7.3 1.4.6 2 .9 1.1.5 2.1 1 3.2 1.5.8.4 1.7.8 2.5 1.2.2.1.2.1.1.3-.3.5-.7.9-1 1.4l-1.5 1.8c-.1 0-.4.3-.6.6z"/><path class="fd7" d="M53.2 43.7h.5c.4.1.7.5.6 1-.1.4-.4.8-.8.8-1.4.1-2.8.4-4.2.7-1.2.3-2.4.6-3.5.9-.1 0-.3.1-.4.1-.4-.1-.8-.4-.8-.8s.2-.8.6-.9c.4-.1.9-.3 1.3-.4 1.5-.4 3.1-.8 4.6-1.1.8-.2 1.5-.3 2.1-.3z"/><path class="fd12" d="M8.5 16.4c.5-.3.9-.4 1.4-.7 4.1-1.8 8.2-3.6 12.4-5.1 2.6-.9 5.3-1.8 8-2.4 2.1-.5 4.2-.8 6.3-.8 1.6 0 3.2.3 4.7.7 1.1.3 2.1.7 3.2.8l2.4.3c2.1.1 4.2-.2 6.3-.7 1.1-.3 2.1-.6 3.2-.8 1.5-.3 3-.4 4.4-.3 2.8.1 5.5.7 8.2 1.5 3.7 1.1 7.4 2.4 11 3.8 4 1.6 7.9 3.3 11.7 5.2.1 0 .2.1.2.2-.6.1-1.2.3-1.7.4-2.9.7-5.7 1.2-8.6 1.7-1.9.3-3.7.6-5.6.9-1.8.3-3.6.5-5.5.6-2.3.2-4.6.3-7 .3-1.9 0-3.8-.1-5.8-.2-.7-.1-1.4-.1-2.1-.2-.8-.1-1.6-.1-2.4-.1-2.4 0-4.7-.1-7.1 0-2.9 0-5.8.1-8.7.1-2.4 0-4.8.1-7.1 0-1.5 0-2.9-.1-4.4-.1l-4.2-.3-4.8-.6-5.4-.9c-.2 0-.4-.1-.5-.1 0-.2-.2-.3-.3-.5-.3-.3-.6-.7-1-1-.3-.4-.7-.7-1-1.1.1-.2-.2-.4-.2-.6z"/><path class="fd12" d="M13.5 21.9c.4 0 .8.1 1.3.2 1.4.2 2.9.5 4.3.6 1.4.2 2.7.3 4.1.5 1 .1 2.1.2 3.1.2 2.5.1 5.1.2 7.6.1 2.7 0 5.4-.1 8.1-.1h12.7c.8 0 1.5.1 2.3.2 1 .1 2 .2 2.9.2 1.3.1 2.7.1 4 .1 2 0 4-.1 6-.3 1.8-.1 3.6-.3 5.3-.6l5.7-.9c2.1-.4 4.3-.7 6.4-1.2 1.5-.3 2.9-.6 4.4-1 .1 0 .2-.1.3 0 0 .1-.1.2-.2.2-1.7 2.1-3.6 4-5.5 5.9-.1.1-.1.1-.2.1-.2 0-.2.1-.4.2-.4.3-.8.6-1.1.8-.7.5-1.4 1-2.2 1.4-.9.6-1.9 1.1-2.9 1.7-.5.3-1 .5-1.5.7-.8.4-1.6.7-2.5 1-.7.2-1.3.5-2 .6-.6.2-1.2.3-1.8.4-.4.1-.8.1-1.1.2l-2.1.3c-.5.1-1 .1-1.6.2-.6.1-1.2.1-1.8.2-.5.1-1 .1-1.5.1-.2 0-.5 0-.7.1-.3.1-.7.1-1 .1-.4 0-.7.1-1.1.1-.5 0-1.1.1-1.6.1h-.1c-.4.1-.9 0-1.3.1s-.8 0-1.3.1c-.7 0-1.4.1-2.1.1-2.5 0-5.1.1-7.6 0h-1.5c-.5 0-1-.1-1.6-.1-.4 0-.9-.1-1.3-.1h-.1c-.4-.1-.8-.1-1.2-.1-.3 0-.6-.1-.9-.1-.2 0-.5 0-.7-.1-.3 0-.6-.1-.8-.1-.3 0-.6-.1-.9-.1-.3 0-.7-.1-1-.1-.4 0-.7-.1-1.1-.1-.4 0-.8-.2-1.2-.2-.9-.1-1.8-.3-2.6-.5-1-.2-2-.5-3-.9s-1.9-.7-2.8-1.2c-.5-.2-.9-.5-1.4-.7-.8-.4-1.6-.9-2.4-1.4-1.2-.8-2.4-1.6-3.5-2.5-1-.8-1.9-1.5-2.9-2.3-.6-.5-1.2-1-1.8-1.6l-.2-.2c-.1 0-.3-.1-.4-.3z"/><path d="M8.5 16.4c.1.3.3.4.5.6.3.4.6.8 1 1.1.3.3.6.7 1 1 .1.1.3.3.3.5-2.1-.4-4.3-.9-6.4-1.4 0-.1.1-.1.1-.1 1-.6 2.1-1.1 3.3-1.7h.2z" fill="#fff"/></svg>
+      <p>Mouth</p>
+    </div>
+
+    {% elsif icon == "Eyes" %}
+
+    <div class="fd-product__howTo-icon">
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 99.7 54" xml:space="preserve"><style>.fd13{fill:#48484b}</style><path d="M89.3 27.7zm-.1.1c0-.1 0-.1 0 0 0-.1 0-.1 0 0zm0 0zm-.1.1c0-.1 0-.1 0 0zm8.6-9.7c-.3 0-.5 0-.8.1-.7.1-1.4-.1-2.2-.1h-.1c-.4-.1-.9-.1-1.3-.2s-.8-.1-1.3-.2c-.9-.2-1.7-.4-2.6-.7-.7-.2-1.3-.5-1.9-.9-.3-.1-.5-.3-.7-.5-.1-.1-.1-.2 0-.3.2-.1.3-.2.5-.3.7-.5 1.3-.9 2-1.4.2-.1.3-.2.5-.4-.3.1-.5.1-.8.1-.4.1-.8.1-1.3.1h-.2c-.5.1-.9.1-1.4 0h-.8l.4.4c.4.4.4.9.1 1.3-.3.3-.9.4-1.3 0-.9-.9-1.9-1.7-2.8-2.4-.1-.1-.1-.1-.2-.1s-.2 0-.4-.1c-.5-.2-1-.3-1.5-.5l-2.4-.9c-1.2-.5-2.5-.9-3.7-1.4-.7-.2-1.4-.5-2.2-.7-.9-.3-1.9-.5-2.8-.8-1.1-.3-2.2-.5-3.2-.7-.8-.2-1.6-.3-2.3-.4-.6-.1-1.3-.2-1.9-.2-.6 0-1.2-.1-1.8-.1h-.1c-.6.1-1.1.1-1.6.1h-4.2c-.5.1-1 0-1.5.1s-1 .1-1.5.1c-.6 0-1.1.1-1.7.2-.5 0-1 .1-1.5.2-.8.1-1.5.2-2.3.4l-2.7.6c-1.4.3-2.8.7-4.2 1.1-1 .3-2.1.7-3.1 1.1l-2.1.9c-.7.3-1.4.6-2.1 1-.7.3-1.3.7-1.9 1.1-1 .6-1.9 1.2-2.9 1.9-1 .8-2 1.5-3 2.4-.6.5-1.2 1-1.7 1.6-.1.1-.3.2-.4.4-.1.1-.3.2-.3.4.1 0 .2-.1.2-.2l-11.1 14c-.2.3-.5.6-.7.9-.9 1.2-1.7 2.5-2.5 3.8.2 0 .4 0 .5.1 4.6 1.9 9.3 3.5 14 4.9 4.8 1.3 9.6 2.4 14.4 3.2 2 .3 4 .5 6 .7 1.8.2 3.7.2 5.5.3 2.1 0 4.1 0 6.2-.2.5 0 1-.1 1.5-.2h.2c1.2-.1 2.4-.3 3.6-.5 2.8-.5 5.5-1.3 8.2-2.3 5.3-2.1 9.9-5.1 13.9-9.1 1.3-1.4 2.5-2.8 3.6-4.4l.8.4.6-1 4.9-5.3.6.1.1-.1c.3 0 .6 0 .8-.2.4-.3.8-.7 1.2-1 .5-.5 1-1.1 1.4-1.6.3-.4.7-.8 1-1.2.6-.8 1.2-1.6 1.8-2.5l.6-.9h-.1zM85.4 32.4z" fill="#f0f0f0"/><path class="fd13" d="M85.4 32.4c-.5.6-.9 1.2-1.4 1.8-3.2 4-7.1 7.3-11.6 9.8-3.7 2.1-7.7 3.5-11.8 4.5-1.7.4-3.5.7-5.3.9-1.3.1-2.6.3-3.9.3-1.5.1-2.9.1-4.4.1-1.5 0-3.1-.1-4.6-.2-1.2-.1-2.4-.2-3.5-.3-1.2-.1-2.4-.3-3.6-.5-1.5-.2-3-.5-4.5-.8-2.8-.5-5.6-1.2-8.3-1.9C17.3 44.7 12.1 43 7.1 41l-2.7-1.2c-.2-.1-.2-.1-.1-.3.7-1.7 1.7-3.3 2.8-4.8 1-1.5 2.1-2.8 3.3-4.1.1-.1.2-.2.2-.4 0-.1.1-.1.1-.2 1.3-1.6 2.6-3.1 4-4.6 1.7-1.7 3.4-3.3 5.3-4.8.1 0 .1-.1.1-.1.1 0 .1-.1.2-.1s.2-.1.2-.2c1.6-1.3 3.4-2.4 5.2-3.3C30.3 14.5 35 13 39.8 12c1.9-.4 3.8-.6 5.7-.8l4.2-.3c2.3-.1 4.6 0 6.9.3 1.6.2 3.1.4 4.6.7 2.8.5 5.6 1.3 8.3 2.2 1.9.7 3.8 1.4 5.8 2.1 1.9.7 3.9 1.3 5.9 1.4.9.1 1.7 0 2.6-.1.5-.1 1-.1 1.4-.2-.5.4-1 .8-1.5 1.1-.5.4-1 .7-1.6 1 .1.2.3.3.5.4.7.4 1.4.8 2.1 1 2.7 1 5.4 1.3 8.3 1.2h.3c-.1.1-.1.2-.2.3-.4.6-.9 1.3-1.3 1.9-.3.4-.6.8-.9 1.3L89.7 27c-.2.2-.3.4-.5.5l-.1.1-.3.3c-.5.5-.9.9-1.4 1.2-.2.1-.3.2-.6.2.2.2.1.3 0 .5l-.9 1.5c-.1.2-.3.4-.4.6-.1.4-.1.5-.1.5zM6.5 38.9c.1.1.3.1.4.2 4.6 1.9 9.3 3.5 14 4.9 4.8 1.3 9.6 2.4 14.4 3.2 2 .3 4 .5 6 .7 1.8.2 3.7.2 5.5.3 2.1 0 4.1 0 6.2-.2 1.8-.1 3.5-.4 5.3-.7 2.8-.5 5.5-1.3 8.2-2.3 5.3-2.1 9.9-5.1 13.9-9.1 1.7-1.7 3.1-3.6 4.4-5.6.1-.2.1-.3 0-.5-.7-1.2-1.6-2.2-2.6-3.2-1.6-1.6-3.4-2.9-5.3-4-2.9-1.7-6.1-3-9.3-3.9-1.9-.5-3.8-.9-5.8-1.2-1.3-.2-2.5-.4-3.8-.5-.8-.1-1.7-.1-2.5-.2-.5 0-.9 0-1.4-.1 3.7 1.4 6.6 3.8 8.5 7.3 1.9 3.5 2.4 7.2 1.6 11.1C62.7 42 56.7 47 49.6 47.4c-6.7.3-12.9-3.6-15.4-10-1.5-3.9-1.5-7.8 0-11.7 1.6-3.9 4.3-6.7 8-8.5h-.3c-.5.1-1 .1-1.6.2-2.2.4-4.4.8-6.6 1.4-4.7 1.3-9.1 3.1-13.2 5.7C16 27.3 12.1 30.8 8.9 35c-.9 1.2-1.7 2.5-2.4 3.9zm29.1-7.5c0 7.3 5.9 13 12.9 13.1 7.3.1 13.2-5.9 13.2-13.1 0-7.3-5.9-13-12.9-13.1-7 0-13.1 5.6-13.2 13.1z"/><path class="fd13" d="M85.3 13.7l.4.4c.4.4.4.9.1 1.3-.3.3-.9.4-1.3 0-.9-.9-1.9-1.7-2.8-2.4-.1-.1-.1-.1-.2-.1 0-.1-.1-.1-.1-.2-3.6-3-7.4-5.4-11.6-7.2-2-.9-4.1-1.6-6.3-2-.9-.2-1.8-.3-2.7-.4-1.1-.1-2.1-.3-3.2-.4-.9-.1-1.9-.2-2.8-.2-1.9-.1-3.7-.2-5.6-.1-1.7 0-3.5.2-5.2.4-4.3.5-8.5 1.5-12.6 2.8-1.9.5-3.6 1.4-5.2 2.4-2.4 1.4-4.5 3.1-6.6 4.9-3.4 2.9-6.4 6.2-9.3 9.6-1.2 1.5-2.5 3-3.6 4.5-.3.4-.7.5-1.1.3-.5-.2-.6-.8-.3-1.3.2-.3.5-.6.7-.9 2.6-3.3 5.3-6.4 8.2-9.4 2.3-2.3 4.7-4.6 7.4-6.6 1.9-1.5 3.9-2.8 6-3.9 1.6-.8 3.3-1.4 5-1.9 2.4-.7 4.8-1.3 7.2-1.7 1.7-.3 3.3-.5 5-.7 2.6-.3 5.1-.3 7.7-.3 1.8.1 3.5.2 5.3.4 1.7.2 3.5.4 5.2.7 2 .3 4 .9 5.9 1.6 3.2 1.2 6.2 2.8 9 4.7 2.5 1.7 5 3.5 7.2 5.5.1.1.2.1.2.2zM9.8 48.1c.2 0 .3.1.5.1 2.3 1.1 4.5 2.1 6.8 3.2.3.2.7.3 1 .5.4.2.5.6.4 1-.1.4-.5.6-.9.6-.2 0-.3-.1-.4-.2-2.2-1-4.3-2-6.5-3-.4-.2-.8-.4-1.3-.6-.4-.2-.5-.5-.5-.9.1-.4.4-.7.9-.7zm10.5-27.7zm28.4 16c-2.7 0-4.8-2-5.1-4.6-.1-1 .1-2 .5-2.9.1-.2.1-.2.3-.1 1.8.6 3.7-.5 4-2.4 0-.2 0-.2.3-.2 2.4 0 4.4 1.6 5 4 .6 2.8-1 5.4-3.8 6.1-.4.1-.8.2-1.2.1z"/></svg>
+      <p>Eyes</p>
+    </div>
+
+    {% elsif icon == "Scalp" %}
+
+    <div class="fd-product__howTo-icon">
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 48.3 49" xml:space="preserve"><style>.fd14{fill:#48484b}</style><path d="M46.8 33.8c-.2-.4-.6-.8-.9-1.2-.1-.2-.3-.3-.4-.4l-.1-.1c-.1-.2-.2-.3-.3-.4-.3-.3-.5-.6-.8-.9-.2-.3-.4-.6-.5-1-.1-.3-.2-.6-.3-1 0-.2-.1-.4-.1-.7v-.8c0-.2.1-.5.1-.7.1-.4.2-.9.3-1.3.2-.6.4-1.2.5-1.8.1-.4.2-.8.2-1.2 0-.2.1-.5.1-.7 0-.3.1-.6.1-.8 0-.3 0-.6.1-.9v-2.1c0-.3 0-.6-.1-1 0-.2 0-.4-.1-.7 0-.3-.1-.6-.1-.9-.1-.4-.1-.8-.2-1.1-.2-.8-.4-1.5-.7-2.3-.2-.6-.4-1.2-.7-1.7-.2-.5-.5-1-.8-1.5-.3-.5-.6-1-.9-1.4-.4-.5-.7-1-1.2-1.5l-.9-.9c-.1-.1-.2-.1-.3-.2-.2-.2-.4-.4-.7-.6-.3-.2-.5-.4-.8-.6-.5-.4-1.1-.8-1.7-1.1-.2-.1-.5-.2-.7-.3-.5-.2-.9-.4-1.4-.5-.3-.1-.6-.1-.9-.2-.3 0-.6-.1-.8-.1h-.6c-.2 0-.6-.1-1-.2-.5-.1-.9-.3-1.4-.4-.3-.1-.7-.2-1-.2-.3-.1-.6-.1-1-.2-.2 0-.4-.1-.6-.1-.2 0-.4 0-.6-.1-.3 0-.6 0-.8-.1h-1.4c-.4 0-.7 0-1.1.1-.2 0-.4 0-.6.1-.3 0-.6.1-.8.1-.5.1-1.1.2-1.6.4-.6.2-1.2.4-1.8.7l-.6.3c-.4.3-.6.4-.9.6l-1.2.9c-.2.1-.4.3-.5.5l-.1.1c.1-.1.3-.1.4-.2l-2.8 3c-.1 0-.1.1-.1.2s-.1.1-.1.2c-.3.5-.6 1-.8 1.5-.3.6-.5 1.3-.8 1.9-.2.6-.5 1.1-.8 1.7-.2.4-.4.9-.6 1.3l-.9 1.8-1.5 3c-.2.5-.5 1-.7 1.5-.2.5-.4.9-.6 1.4-.2.5-.4 1.1-.5 1.6-.1.5-.2.9-.3 1.4v.7c0 .3 0 .6.1.8 0 .3.1.6.1.8.1.4.2.7.3 1 .1.3.2.5.4.8.1.2.2.3.3.5.2.3.4.6.6 1l1.2 1.8.6 1.2c.1.3.3.7.4 1 .1.3.1.5.1.8v.9c0 .2-.1.5-.2.7-.2.6-.4 1.1-.5 1.7 0 .1 0 .2-.1.3 0 .2-.1.4-.1.6.1.1.1.1 0 .1v.1c.1.1.1.1 0 .2v2.1c0 .2 0 .4.1.6 0 .1.1.2.2.3.2.2.5.3.7.4.4.2.8.3 1.2.3h1.1c.3 0 .5 0 .8-.1.2 0 .3 0 .4.2.2.2.4.4.5.6.2.3.5.5.7.8.2.2.4.4.6.7l.7.7.6.6c.3.3.6.6.9.8.2.2.4.4.7.6.4.3.7.6 1.1.8.4.2.7.4 1.1.6.3.1.7.2 1 .2.3 0 .6-.1.9-.2.5-.1 1-.2 1.5-.4.6-.2 1.1-.3 1.7-.5.5-.2 1-.3 1.4-.5.3-.1.5-.2.8-.3.3-.1.6-.2.9-.4.2-.1.5-.2.7-.3l.6-.3c.2-.1.3-.2.5-.3.1-.1.2-.2.2-.3 0 0 0-.1.1-.1v.1c0 .3 0 .7-.1 1-.1.5-.2.9-.4 1.3-.1.2-.3.4-.5.5-.1 0-.1.1-.2.2v.2c0 .1.1.1.1.1.2.1.4.1.6.2h.6c.2 0 .4-.1.6-.1.4-.1.8-.3 1.2-.5l.9-.6c.4-.3.7-.7.9-1.1.4-.7.8-1.3 1.1-2 .2-.3.3-.6.5-1 .3-.4.5-.8.9-1.1.2-.2.4-.3.7-.5.3-.2.7-.3 1-.4.3-.1.6-.1.9-.2.2 0 .4 0 .6-.1h.6c.3 0 .7 0 1-.1.2 0 .5-.1.7-.1.5-.1 1-.3 1.4-.6.6-.3 1.1-.7 1.6-1.2l.6-.6c.2-.2.4-.5.6-.8.4-.6.8-1.2 1-1.8.2-.5.4-1 .5-1.5.5-.5.5-.8.4-1.1z" fill="#f0f0f0"/><path class="fd14" d="M14.2 3.6c.1-.1.3-.1.4-.2 1.2-.6 2.4-1 3.7-1.2 1.2-.2 2.5-.3 3.7-.3 1.8.1 3.6.4 5.3.9.5.1 1 .2 1.5.4h.1c1.6 0 3 .4 4.4 1.1 1.1.5 2 1.2 2.9 2 1.8 1.6 3.2 3.4 4.3 5.5.8 1.6 1.4 3.3 1.8 5.1.1.7.2 1.3.3 2 .1 1.1.1 2.1.1 3.2-.1 1.7-.4 3.3-.8 4.9-.1.5-.3 1-.4 1.5-.1.6-.2 1.2-.2 1.8 0 .9.3 1.7.8 2.4.2.3.5.6.7.9.1.2.3.3.4.5.1.1.1.3 0 .4-.1.3-.5.3-.7.1-.4-.5-.8-.9-1.1-1.4-.5-.7-.8-1.5-.9-2.3-.1-.5-.1-1.1 0-1.6.1-.8.3-1.6.6-2.4.3-1.1.5-2.1.7-3.2.2-1.3.2-2.5.2-3.8-.2-3.5-1.2-6.7-3.1-9.6-1.1-1.6-2.3-3-3.9-4.1-.9-.7-2-1.3-3.1-1.7-.6-.2-1.3-.4-2-.4h-1c-.7-.1-1.4-.3-2.1-.5-1-.3-1.9-.4-2.9-.6-.9-.1-1.8-.2-2.7-.2-1.6 0-3.2.3-4.7.9-1.7.6-3.1 1.5-4.4 2.8-.1 0-.1.1-.1.2l-.8.8c-1 1.2-1.8 2.5-2.3 3.9-.7 1.7-1.4 3.4-2.2 5-.8 1.6-1.5 3.1-2.3 4.7-.4.9-.9 1.8-1.2 2.7-.3.7-.5 1.4-.6 2.1-.2 1.3-.1 2.5.4 3.6.3.7.6 1.3 1 1.9.1.6.6 1.2 1 1.9s.8 1.4 1 2.1c.2.6.3 1.3.3 1.9 0 .5-.1.9-.3 1.3-.3.8-.4 1.5-.5 2.3-.1.8-.1 1.5 0 2.3 0 .2.1.5.1.7 0 .2-.1.5-.3.5-.2 0-.4-.1-.5-.3-.1-.3-.1-.6-.1-.8 0-.6-.1-1.1 0-1.7.1-1.1.2-2.2.6-3.2.2-.5.3-1.1.2-1.6 0-.5-.2-1-.4-1.4-.3-.7-.7-1.4-1.1-2-.4-.6-.7-1.1-1.1-1.7-.5-.8-1-1.7-1.2-2.6-.2-.9-.3-1.8-.2-2.7.1-1.1.4-2.2.8-3.2.4-1.2.9-2.2 1.4-3.2.8-1.7 1.7-3.3 2.5-5 .6-1.4 1.3-2.8 1.8-4.2.6-1.8 1.7-3.3 3-4.7.9-.9 1.9-1.7 3.1-2.4 0 0 .1 0 .1-.1-.1.1-.1.1 0 0 0 .1 0 0 0 0z"/><path class="fd14" d="M7.4 38.6s0 .1 0 0c-.2 1-.2 2-.2 2.9 0 .6.1 1.1.3 1.7l.3.6c.1.1.2.2.4.2s.4.2.3.5c0 .2-.2.4-.4.4-.3 0-.5-.1-.7-.2-.2-.2-.3-.3-.5-.6-.2-.4-.4-.9-.5-1.4-.1-.7-.2-1.5-.1-2.2 0-.9.1-1.7.3-2.5 0-.2.2-.4.4-.4s.4.1.4.3c0 .2-.1.4-.1.6.1 0 .1.1.1.1zM15.7 19c-.1.1-.1.3-.2.4-.1.2-.2.3-.4.3-.4 0-.8 0-1.2.1-.8.1-1.5.3-2.2.6-1.1.5-1.9 1.4-2.4 2.6-.2.5-.3 1.1-.4 1.7-.1.9-.1 1.8-.1 2.6v.9c0 .2 0 .4.1.6l.3 1.2v.1s0 .1.1.1.2 0 .3-.1c.5-.1 1-.1 1.6-.2.2 0 .4.1.5.3.1.3-.1.5-.4.5-.3 0-.5 0-.8.1-.3 0-.6.1-.9.1-.1 0-.1 0-.1.1.2.5.3 1 .5 1.5.1.3.3.6.4.9 0 .1.1.1.1.1.2 0 .4 0 .6-.1.2 0 .3-.1.5-.2.3-.1.5.1.6.3 0 .2-.1.4-.3.5-.2.1-.5.2-.8.2-.2 0-.4.1-.5 0-.1 0-.1 0-.1.1v.9c0 .5.1.9.1 1.4 0 .4.1.8.2 1.2v.3c-.1.2-.2.3-.4.3s-.4-.1-.4-.3c0-.2-.1-.3-.1-.5-.2-1.1-.3-2.3-.3-3.5v-.3c0-.2 0-.3-.1-.5-.1-.4-.3-.7-.4-1.1-.6-1-.9-2.1-1.1-3.2 0-.2-.1-.4-.1-.6v-3.2c.1-.9.2-1.9.6-2.8.6-1.6 1.8-2.6 3.3-3.2.6-.2 1.3-.4 2-.4.3 0 .6-.1.9-.1.1 0 .1 0 .2-.1.5-.9.9-1.8 1.4-2.7 1.2-2.4 2.5-4.7 3.7-7.1l.3-.3c.4-.2.9-.4 1.3-.6.1 0 .2-.1.3 0 .3 0 .4.3.3.6 0 .1 0 .1-.1.2l-5.7 10.8c-.2.3-.2.6-.2 1 .1.7.4 1.3.8 1.8s.9.9 1.4 1.3c.8.5 1.6 1 2.5 1.3 1.2.5 2.4.9 3.7 1.2.9.2 1.7.4 2.6.6.9.2 1.6.5 2.3 1.2.5.5.9 1.2 1.1 1.9.2.7.3 1.4.3 2.1 0 1.3-.3 2.5-.6 3.7-.3.8-.6 1.6-1 2.3-.1.2-.3.5-.5.7-.3.4-.5.8-.7 1.3-.3.7-.6 1.5-.7 2.3-.1.8-.1 1.6.1 2.4 0 .1.1.2.1.3.1.2 0 .5-.2.5-.2.1-.5 0-.5-.3l-.3-1.2c-.2-2.1.4-4 1.6-5.7.7-.9 1.1-1.9 1.4-2.9.2-.8.4-1.5.5-2.3.1-.7.1-1.4 0-2.1-.1-.4-.1-.8-.3-1.2-.4-1-1.2-1.7-2.2-2l-1.2-.3c-1.7-.4-3.5-.8-5.1-1.5-.9-.4-1.8-.8-2.6-1.3-.7-.5-1.4-1-1.9-1.6-.5-.5-.8-1.1-1-1.8-.1-.5-.1-1.1 0-1.6-.2-.3-.1-.5-.1-.6.1 0 .1 0 0 0 .2-.2.3-.5.4-.7 0 0-.2.3-.4.7.1-.1.1-.1 0 0zm.5-.8c1.6-3 3.2-6 4.7-8.9-.1 0-.1.1-.2.1-1.2 2.2-2.3 4.5-3.5 6.7-.3.7-.7 1.3-1 2 0 0-.1.1 0 .1z"/><path class="fd14" d="M21.8 19.3c0 .1 0 .3.1.4.1.4.4.7.6 1 .4.4.8.8 1.2 1.1.8.5 1.6 1 2.4 1.4 1.3.6 2.6 1 4 1.4.8.2 1.6.7 2.2 1.2.9.8 1.6 1.8 2.1 2.8.4.9.7 1.9.9 2.9.1 1 .1 1.9 0 2.9-.2 1.8-.8 3.5-1.7 5.1-.4.6-.8 1.3-1.2 1.8-.1.1-.2.2-.4.2-.3 0-.5-.3-.4-.6 0-.1.1-.1.1-.2.8-1.1 1.5-2.3 2-3.6.3-.9.6-1.8.7-2.7.1-.8.1-1.7 0-2.5-.2-1.6-.7-3.1-1.6-4.4-.5-.7-1-1.2-1.7-1.7-.4-.3-.9-.4-1.4-.6-1.4-.4-2.8-.9-4.2-1.6-.9-.4-1.8-.9-2.5-1.5-.5-.4-1-.9-1.4-1.4-.3-.4-.4-.8-.5-1.2V19c0-.3.2-.4.5-.4 0 .2.2.4.2.7zm-1.4 14.8c-.8 0-1.6 0-2.4-.1h-.1c-.2 0-.4-.2-.3-.5 0-.2.2-.4.5-.4s.7.1 1 .1c.8 0 1.6.1 2.3 0 .5 0 1-.1 1.5-.2l1.2-.3c.1-.1.3-.1.4-.2.2-.1.5-.1.6.1.1.2.1.5-.1.6-.4.3-.7.4-1.2.5l-1.5.3c-.7 0-1.3.1-1.9.1zm.6-5.2h1.1c.5 0 .9.1 1.4.1.2 0 .5.1.7.1.2 0 .3.2.3.4s-.1.4-.3.4h-.3c-.9-.2-1.8-.2-2.7-.3-.8 0-1.5 0-2.3.1-.4 0-.9.1-1.3.1h-.2c-.2 0-.4-.2-.4-.4s.1-.4.3-.5c.2 0 .4-.1.6-.1.6-.1 1.2-.1 1.8-.1.5.2.8.2 1.3.2zm-6.8 8.8v.9c0 .2-.2.4-.4.4s-.4-.2-.4-.4v-.5c0-.8-.1-1.7-.2-2.5-.1-.6-.2-1.1-.4-1.7-.1-.1-.1-.2-.2-.4s-.1-.5.1-.6c.2-.1.5-.1.6.2.2.3.3.6.4.9.2.6.3 1.3.4 1.9 0 .5 0 1.1.1 1.8zm-6.8.9v-.1c.1.1.1.1 0 .1zm8.8-20.4c0-.1 0-.1.1-.2.3-.7.7-1.3 1-2 1.2-2.2 2.3-4.5 3.5-6.7 0-.1.1-.1.2-.1-1.7 3-3.2 6-4.8 9zm-.4.7c.1-.3.3-.6.4-.7-.2.3-.3.5-.4.7zm0 0c0 .1 0 .1 0 0 0 .1 0 .1 0 0z"/></svg>
+      <p>Scalp</p>
+    </div>
+
+    {% elsif icon == "Hair" %}
+
+    <div class="fd-product__howTo-icon">
+      <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 48.3 49" xml:space="preserve"><style>.fd14{fill:#48484b}</style><path d="M46.8 33.8c-.2-.4-.6-.8-.9-1.2-.1-.2-.3-.3-.4-.4l-.1-.1c-.1-.2-.2-.3-.3-.4-.3-.3-.5-.6-.8-.9-.2-.3-.4-.6-.5-1-.1-.3-.2-.6-.3-1 0-.2-.1-.4-.1-.7v-.8c0-.2.1-.5.1-.7.1-.4.2-.9.3-1.3.2-.6.4-1.2.5-1.8.1-.4.2-.8.2-1.2 0-.2.1-.5.1-.7 0-.3.1-.6.1-.8 0-.3 0-.6.1-.9v-2.1c0-.3 0-.6-.1-1 0-.2 0-.4-.1-.7 0-.3-.1-.6-.1-.9-.1-.4-.1-.8-.2-1.1-.2-.8-.4-1.5-.7-2.3-.2-.6-.4-1.2-.7-1.7-.2-.5-.5-1-.8-1.5-.3-.5-.6-1-.9-1.4-.4-.5-.7-1-1.2-1.5l-.9-.9c-.1-.1-.2-.1-.3-.2-.2-.2-.4-.4-.7-.6-.3-.2-.5-.4-.8-.6-.5-.4-1.1-.8-1.7-1.1-.2-.1-.5-.2-.7-.3-.5-.2-.9-.4-1.4-.5-.3-.1-.6-.1-.9-.2-.3 0-.6-.1-.8-.1h-.6c-.2 0-.6-.1-1-.2-.5-.1-.9-.3-1.4-.4-.3-.1-.7-.2-1-.2-.3-.1-.6-.1-1-.2-.2 0-.4-.1-.6-.1-.2 0-.4 0-.6-.1-.3 0-.6 0-.8-.1h-1.4c-.4 0-.7 0-1.1.1-.2 0-.4 0-.6.1-.3 0-.6.1-.8.1-.5.1-1.1.2-1.6.4-.6.2-1.2.4-1.8.7l-.6.3c-.4.3-.6.4-.9.6l-1.2.9c-.2.1-.4.3-.5.5l-.1.1c.1-.1.3-.1.4-.2l-2.8 3c-.1 0-.1.1-.1.2s-.1.1-.1.2c-.3.5-.6 1-.8 1.5-.3.6-.5 1.3-.8 1.9-.2.6-.5 1.1-.8 1.7-.2.4-.4.9-.6 1.3l-.9 1.8-1.5 3c-.2.5-.5 1-.7 1.5-.2.5-.4.9-.6 1.4-.2.5-.4 1.1-.5 1.6-.1.5-.2.9-.3 1.4v.7c0 .3 0 .6.1.8 0 .3.1.6.1.8.1.4.2.7.3 1 .1.3.2.5.4.8.1.2.2.3.3.5.2.3.4.6.6 1l1.2 1.8.6 1.2c.1.3.3.7.4 1 .1.3.1.5.1.8v.9c0 .2-.1.5-.2.7-.2.6-.4 1.1-.5 1.7 0 .1 0 .2-.1.3 0 .2-.1.4-.1.6.1.1.1.1 0 .1v.1c.1.1.1.1 0 .2v2.1c0 .2 0 .4.1.6 0 .1.1.2.2.3.2.2.5.3.7.4.4.2.8.3 1.2.3h1.1c.3 0 .5 0 .8-.1.2 0 .3 0 .4.2.2.2.4.4.5.6.2.3.5.5.7.8.2.2.4.4.6.7l.7.7.6.6c.3.3.6.6.9.8.2.2.4.4.7.6.4.3.7.6 1.1.8.4.2.7.4 1.1.6.3.1.7.2 1 .2.3 0 .6-.1.9-.2.5-.1 1-.2 1.5-.4.6-.2 1.1-.3 1.7-.5.5-.2 1-.3 1.4-.5.3-.1.5-.2.8-.3.3-.1.6-.2.9-.4.2-.1.5-.2.7-.3l.6-.3c.2-.1.3-.2.5-.3.1-.1.2-.2.2-.3 0 0 0-.1.1-.1v.1c0 .3 0 .7-.1 1-.1.5-.2.9-.4 1.3-.1.2-.3.4-.5.5-.1 0-.1.1-.2.2v.2c0 .1.1.1.1.1.2.1.4.1.6.2h.6c.2 0 .4-.1.6-.1.4-.1.8-.3 1.2-.5l.9-.6c.4-.3.7-.7.9-1.1.4-.7.8-1.3 1.1-2 .2-.3.3-.6.5-1 .3-.4.5-.8.9-1.1.2-.2.4-.3.7-.5.3-.2.7-.3 1-.4.3-.1.6-.1.9-.2.2 0 .4 0 .6-.1h.6c.3 0 .7 0 1-.1.2 0 .5-.1.7-.1.5-.1 1-.3 1.4-.6.6-.3 1.1-.7 1.6-1.2l.6-.6c.2-.2.4-.5.6-.8.4-.6.8-1.2 1-1.8.2-.5.4-1 .5-1.5.5-.5.5-.8.4-1.1z" fill="#f0f0f0"/><path class="fd14" d="M14.2 3.6c.1-.1.3-.1.4-.2 1.2-.6 2.4-1 3.7-1.2 1.2-.2 2.5-.3 3.7-.3 1.8.1 3.6.4 5.3.9.5.1 1 .2 1.5.4h.1c1.6 0 3 .4 4.4 1.1 1.1.5 2 1.2 2.9 2 1.8 1.6 3.2 3.4 4.3 5.5.8 1.6 1.4 3.3 1.8 5.1.1.7.2 1.3.3 2 .1 1.1.1 2.1.1 3.2-.1 1.7-.4 3.3-.8 4.9-.1.5-.3 1-.4 1.5-.1.6-.2 1.2-.2 1.8 0 .9.3 1.7.8 2.4.2.3.5.6.7.9.1.2.3.3.4.5.1.1.1.3 0 .4-.1.3-.5.3-.7.1-.4-.5-.8-.9-1.1-1.4-.5-.7-.8-1.5-.9-2.3-.1-.5-.1-1.1 0-1.6.1-.8.3-1.6.6-2.4.3-1.1.5-2.1.7-3.2.2-1.3.2-2.5.2-3.8-.2-3.5-1.2-6.7-3.1-9.6-1.1-1.6-2.3-3-3.9-4.1-.9-.7-2-1.3-3.1-1.7-.6-.2-1.3-.4-2-.4h-1c-.7-.1-1.4-.3-2.1-.5-1-.3-1.9-.4-2.9-.6-.9-.1-1.8-.2-2.7-.2-1.6 0-3.2.3-4.7.9-1.7.6-3.1 1.5-4.4 2.8-.1 0-.1.1-.1.2l-.8.8c-1 1.2-1.8 2.5-2.3 3.9-.7 1.7-1.4 3.4-2.2 5-.8 1.6-1.5 3.1-2.3 4.7-.4.9-.9 1.8-1.2 2.7-.3.7-.5 1.4-.6 2.1-.2 1.3-.1 2.5.4 3.6.3.7.6 1.3 1 1.9.1.6.6 1.2 1 1.9s.8 1.4 1 2.1c.2.6.3 1.3.3 1.9 0 .5-.1.9-.3 1.3-.3.8-.4 1.5-.5 2.3-.1.8-.1 1.5 0 2.3 0 .2.1.5.1.7 0 .2-.1.5-.3.5-.2 0-.4-.1-.5-.3-.1-.3-.1-.6-.1-.8 0-.6-.1-1.1 0-1.7.1-1.1.2-2.2.6-3.2.2-.5.3-1.1.2-1.6 0-.5-.2-1-.4-1.4-.3-.7-.7-1.4-1.1-2-.4-.6-.7-1.1-1.1-1.7-.5-.8-1-1.7-1.2-2.6-.2-.9-.3-1.8-.2-2.7.1-1.1.4-2.2.8-3.2.4-1.2.9-2.2 1.4-3.2.8-1.7 1.7-3.3 2.5-5 .6-1.4 1.3-2.8 1.8-4.2.6-1.8 1.7-3.3 3-4.7.9-.9 1.9-1.7 3.1-2.4 0 0 .1 0 .1-.1-.1.1-.1.1 0 0 0 .1 0 0 0 0z"/><path class="fd14" d="M7.4 38.6s0 .1 0 0c-.2 1-.2 2-.2 2.9 0 .6.1 1.1.3 1.7l.3.6c.1.1.2.2.4.2s.4.2.3.5c0 .2-.2.4-.4.4-.3 0-.5-.1-.7-.2-.2-.2-.3-.3-.5-.6-.2-.4-.4-.9-.5-1.4-.1-.7-.2-1.5-.1-2.2 0-.9.1-1.7.3-2.5 0-.2.2-.4.4-.4s.4.1.4.3c0 .2-.1.4-.1.6.1 0 .1.1.1.1zM15.7 19c-.1.1-.1.3-.2.4-.1.2-.2.3-.4.3-.4 0-.8 0-1.2.1-.8.1-1.5.3-2.2.6-1.1.5-1.9 1.4-2.4 2.6-.2.5-.3 1.1-.4 1.7-.1.9-.1 1.8-.1 2.6v.9c0 .2 0 .4.1.6l.3 1.2v.1s0 .1.1.1.2 0 .3-.1c.5-.1 1-.1 1.6-.2.2 0 .4.1.5.3.1.3-.1.5-.4.5-.3 0-.5 0-.8.1-.3 0-.6.1-.9.1-.1 0-.1 0-.1.1.2.5.3 1 .5 1.5.1.3.3.6.4.9 0 .1.1.1.1.1.2 0 .4 0 .6-.1.2 0 .3-.1.5-.2.3-.1.5.1.6.3 0 .2-.1.4-.3.5-.2.1-.5.2-.8.2-.2 0-.4.1-.5 0-.1 0-.1 0-.1.1v.9c0 .5.1.9.1 1.4 0 .4.1.8.2 1.2v.3c-.1.2-.2.3-.4.3s-.4-.1-.4-.3c0-.2-.1-.3-.1-.5-.2-1.1-.3-2.3-.3-3.5v-.3c0-.2 0-.3-.1-.5-.1-.4-.3-.7-.4-1.1-.6-1-.9-2.1-1.1-3.2 0-.2-.1-.4-.1-.6v-3.2c.1-.9.2-1.9.6-2.8.6-1.6 1.8-2.6 3.3-3.2.6-.2 1.3-.4 2-.4.3 0 .6-.1.9-.1.1 0 .1 0 .2-.1.5-.9.9-1.8 1.4-2.7 1.2-2.4 2.5-4.7 3.7-7.1l.3-.3c.4-.2.9-.4 1.3-.6.1 0 .2-.1.3 0 .3 0 .4.3.3.6 0 .1 0 .1-.1.2l-5.7 10.8c-.2.3-.2.6-.2 1 .1.7.4 1.3.8 1.8s.9.9 1.4 1.3c.8.5 1.6 1 2.5 1.3 1.2.5 2.4.9 3.7 1.2.9.2 1.7.4 2.6.6.9.2 1.6.5 2.3 1.2.5.5.9 1.2 1.1 1.9.2.7.3 1.4.3 2.1 0 1.3-.3 2.5-.6 3.7-.3.8-.6 1.6-1 2.3-.1.2-.3.5-.5.7-.3.4-.5.8-.7 1.3-.3.7-.6 1.5-.7 2.3-.1.8-.1 1.6.1 2.4 0 .1.1.2.1.3.1.2 0 .5-.2.5-.2.1-.5 0-.5-.3l-.3-1.2c-.2-2.1.4-4 1.6-5.7.7-.9 1.1-1.9 1.4-2.9.2-.8.4-1.5.5-2.3.1-.7.1-1.4 0-2.1-.1-.4-.1-.8-.3-1.2-.4-1-1.2-1.7-2.2-2l-1.2-.3c-1.7-.4-3.5-.8-5.1-1.5-.9-.4-1.8-.8-2.6-1.3-.7-.5-1.4-1-1.9-1.6-.5-.5-.8-1.1-1-1.8-.1-.5-.1-1.1 0-1.6-.2-.3-.1-.5-.1-.6.1 0 .1 0 0 0 .2-.2.3-.5.4-.7 0 0-.2.3-.4.7.1-.1.1-.1 0 0zm.5-.8c1.6-3 3.2-6 4.7-8.9-.1 0-.1.1-.2.1-1.2 2.2-2.3 4.5-3.5 6.7-.3.7-.7 1.3-1 2 0 0-.1.1 0 .1z"/><path class="fd14" d="M21.8 19.3c0 .1 0 .3.1.4.1.4.4.7.6 1 .4.4.8.8 1.2 1.1.8.5 1.6 1 2.4 1.4 1.3.6 2.6 1 4 1.4.8.2 1.6.7 2.2 1.2.9.8 1.6 1.8 2.1 2.8.4.9.7 1.9.9 2.9.1 1 .1 1.9 0 2.9-.2 1.8-.8 3.5-1.7 5.1-.4.6-.8 1.3-1.2 1.8-.1.1-.2.2-.4.2-.3 0-.5-.3-.4-.6 0-.1.1-.1.1-.2.8-1.1 1.5-2.3 2-3.6.3-.9.6-1.8.7-2.7.1-.8.1-1.7 0-2.5-.2-1.6-.7-3.1-1.6-4.4-.5-.7-1-1.2-1.7-1.7-.4-.3-.9-.4-1.4-.6-1.4-.4-2.8-.9-4.2-1.6-.9-.4-1.8-.9-2.5-1.5-.5-.4-1-.9-1.4-1.4-.3-.4-.4-.8-.5-1.2V19c0-.3.2-.4.5-.4 0 .2.2.4.2.7zm-1.4 14.8c-.8 0-1.6 0-2.4-.1h-.1c-.2 0-.4-.2-.3-.5 0-.2.2-.4.5-.4s.7.1 1 .1c.8 0 1.6.1 2.3 0 .5 0 1-.1 1.5-.2l1.2-.3c.1-.1.3-.1.4-.2.2-.1.5-.1.6.1.1.2.1.5-.1.6-.4.3-.7.4-1.2.5l-1.5.3c-.7 0-1.3.1-1.9.1zm.6-5.2h1.1c.5 0 .9.1 1.4.1.2 0 .5.1.7.1.2 0 .3.2.3.4s-.1.4-.3.4h-.3c-.9-.2-1.8-.2-2.7-.3-.8 0-1.5 0-2.3.1-.4 0-.9.1-1.3.1h-.2c-.2 0-.4-.2-.4-.4s.1-.4.3-.5c.2 0 .4-.1.6-.1.6-.1 1.2-.1 1.8-.1.5.2.8.2 1.3.2zm-6.8 8.8v.9c0 .2-.2.4-.4.4s-.4-.2-.4-.4v-.5c0-.8-.1-1.7-.2-2.5-.1-.6-.2-1.1-.4-1.7-.1-.1-.1-.2-.2-.4s-.1-.5.1-.6c.2-.1.5-.1.6.2.2.3.3.6.4.9.2.6.3 1.3.4 1.9 0 .5 0 1.1.1 1.8zm-6.8.9v-.1c.1.1.1.1 0 .1zm8.8-20.4c0-.1 0-.1.1-.2.3-.7.7-1.3 1-2 1.2-2.2 2.3-4.5 3.5-6.7 0-.1.1-.1.2-.1-1.7 3-3.2 6-4.8 9zm-.4.7c.1-.3.3-.6.4-.7-.2.3-.3.5-.4.7zm0 0c0 .1 0 .1 0 0 0 .1 0 .1 0 0z"/></svg>
+      <p>Hair</p>
+    </div>
+
+
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+
+{% comment %} CAPTURE HOW TO STEPS {% endcomment %}
+{% capture howToStep %}
+  {% for step in product.metafields.accentuate.how_to_steps %} 
+    <div class="fd-product__howTo-step">
+      <p class="number">{{ forloop.index }}</p>
+      <div class="line-vertical"></div>
+      <p class="info">{{ step }}</p>
+    </div>
+  {% endfor %} 
+{% endcapture %}
+
+
+<section class="fd-product__howTo">
+  <div class="fd-content-block-product fd-container-width fd-product__howTo-inner">
+    <div class="fd-product__howTo-info">
+      <div class="fd-product__howTo-icons">
+       {{ svgIcons }}
+      </div>
+        <h3>Directions for use</h3>
+        <p class="posology">{{ product.metafields.accentuate.when_to_use }}</p>
+
+        <div class="fd-product__howTo-steps">
+         
+          {{ howToStep }}
+
+        </div>
+
+        <p class="footer-info">{{ product.metafields.accentuate.footer_information }}</p>
+
+      
+    </div>
+
+
+    <div class="fd-product__howTo-video">
+      {% if product.metafields.foundry.video_url %}
+        <div class="video-frame" id="videoFrame" style="
+            position: relative;
+            padding-bottom: 56.29%;" > 
+        </div>
+      {% elsif product.metafields.foundry.media %}
+      {% assign howToImage = product.metafields.foundry.media | first %}
+      <figure>
+        <img src="{{ howToImage.src }}" alt="{{ howToImage.alt | escape }}">
+      </figure> 
+
+      {% else %}
+
+      <figure>
+        <img src="{{ 'video-placeholder.jpeg' | asset_img_url: 'master'}}" alt="product image">
+      </figure> 
+      {% endif %}
+
+ 
+    </div>
+  </div> 
+</section>
+
+<div class="fd-product__reviews fd-content-block-product fd-container-width">
+  {% comment %}Start automatically added Judge.me widget{% endcomment %}
+    {% render 'judgeme_widgets', widget_type: 'judgeme_review_widget', concierge_install: true, product: product %}
+  {% comment %}End automatically added Judge.me widget{% endcomment %}
+</div>
+
+
+<script>
+
+  var HowToUrl = {{ product.metafields.foundry.video_url.value | json }}
+  var frame = document.getElementById('videoFrame')
+  function convert_youtube(input) {
+    var pattern = /(?:http?s?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?(\S+)/g;
+    if (pattern.test(input)) {
+      var replacement = '<iframe style="pointer-events:none; position:absolute; top:0; left:0; width:100%; height:100%; " width="100%" height="100%" src="http://www.youtube.com/embed/$1?autoplay=1&mute=1&enablejsapi=1&loop=1&playlist=$1&controls=0" frameborder="0" ></iframe>';
+      var input = input.replace(pattern, replacement);
+  
+    }
+    return input;
+  } 
+
+   //function convert_vimeo(input) {
+   //  var pattern = /(?:http?s?:\/\/)?(?:www\.)?(?:vimeo\.com)\/?(\S+)/g;
+   //  if (pattern.test(input)) {
+   //  var replacement = '<iframe width="420" height="345" src="//player.vimeo.com/video/$1" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
+   //  var input = input.replace(pattern, replacement);
+   //  }
+   //  return input;
+   //}
+
+  const embed = convert_youtube(HowToUrl)
+
+  frame.innerHTML = embed
+
+</script>
+
 
 {% schema %}
   {

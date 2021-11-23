@@ -1,0 +1,121 @@
+<section class="fd-collection__bodyArea ">
+  <div class="fd-content-block fd-container-width">
+    <h3>{{ section.settings.title }}</h3>
+    <div class="glide glide-body-bioderma">
+      <div class="glide__track" data-glide-el="track">
+        <ul class="glide__slides">
+          {% for block in section.blocks %}
+            {% if block.type == 'bodyCollection' %}
+    
+              <li class="glide__slide">
+                <a href="/collections/{{block.settings.body_collection.handle}}">
+                  <figure class="fd-body-image__wrapper">
+                    <img src="{{ block.settings.body_image  | img_url: 'master' }}" alt="Collection image">
+                  </figure>
+
+                  <div class="fd-collection__body-name">
+                    <p class="fd-collection__body-title">{{ block.settings.body_collection.title }}</p>
+                  </div>
+
+                </a>
+              </li>
+          
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="glide__bullets" data-glide-el="controls[nav]">
+        {% assign bulletBody = 0 %}
+        {% for block in section.blocks %}
+          {% if block.type == 'bodyCollection' %}
+            <button class="glide__bullet" data-glide-dir="={{ bulletBody }}"></button>
+            {% assign bulletBody = bulletBody | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+      </div>
+
+
+      <div class="glide__arrows" data-glide-el="controls">
+        <button class="glide__arrow glide__arrow--left" data-glide-dir="<">
+          <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+            <g id="Group_69" data-name="Group 69" transform="translate(730 644) rotate(180)">
+              <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="#fff" stroke="#fff" stroke-width="1">
+                <rect width="58" height="58" rx="29" stroke="none"/>
+                <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+              </g>
+              <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
+            </g>
+          </svg>
+        </button>
+        <button class="glide__arrow glide__arrow--right" data-glide-dir=">">
+          <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+            <g id="Group_68" data-name="Group 68" transform="translate(-672 -586)">
+              <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="#fff" stroke="#fff" stroke-width="1">
+                <rect width="58" height="58" rx="29" stroke="none"/>
+                <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+              </g>
+              <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
+            </g>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+{% schema %}
+  {
+    "name": "Foundry range collections",
+    "class": "fd-section__range-collections",
+    "max_blocks": 12,
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Header",
+        "default": "Skin concerns & body area"
+      }
+    ],
+    "blocks": [
+      {
+        "name": "Shop by body area",
+        "type": "bodyCollection",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "body_collection",
+            "label": "Body area" 
+          },
+          {
+            "type": "image_picker",
+            "id": "body_image",
+            "label": "Body area Image"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "category": "Range Collections",
+        "name": "Foundry range collections",
+        "settings": {},
+        "blocks": [
+          {
+            "type": "bodyCollection"
+          },
+          {
+            "type": "bodyCollection"
+          },
+          {
+            "type": "bodyCollection"
+          },
+          {
+            "type": "bodyCollection"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

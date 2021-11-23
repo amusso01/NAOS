@@ -1,0 +1,146 @@
+<div id="section-{{ section.id }}" class="fd-blog" >
+  {%- if blog.articles_count == 0 -%}
+    <div class="EmptyState">
+      <div class="Container">
+        <h1 class="EmptyState__Title Heading u-h5">{{ 'blog.general.no_articles' | t: blog_title: blog.title }}</h1>
+        <a href="{{ routes.root_url }}" class="EmptyState__Action Button Button--primary">{{ 'blog.general.empty_button' | t }}</a>
+      </div>
+    </div>
+  {%- else -%}
+    <div class="fd-blog__inner">
+      
+      <header class="fd-blog__header">
+
+        {% comment %} <div class="fd-blog__header-bg" style="background-image: url({{ 'blog-institut.png' | asset_img_url: 'master' }})" ></div> {% endcomment %}
+
+      </header>
+
+
+      <div class="fd-blog__main fd-content-block fd-container-width">
+
+        <div class="fd-blog__tag">
+
+          {%- if section.settings.show_tags and blog.all_tags.size > 0 -%}
+            <ul class="fd-blog__tag-list">
+              <li class="fd-blog__tag-item">
+                <a href="/blogs/{{ blog.handle }}" class="{% if current_tags == blank %}is-active{% endif %}">{{ 'blog.general.all_tag' | t }}</a>
+              </li>
+
+              {%- for tag in blog.all_tags -%}
+                <li class="fd-blog__tag-item">
+                  <a href="/blogs/{{ blog.handle }}/tagged/{{ tag | handle }}" class="{% if current_tags contains tag %}is-active{% endif %}">{{ tag }}</a>
+                </li>
+              {%- endfor -%}
+              <li class="fd-blog__tag-item fd-blog__tag-item-last">
+                <a href="/blogs/bioderma" ">BIODERMA BLOG</a>
+              </li>
+            </ul>
+          {%- endif -%}
+        </div>
+     
+        {%- assign articles_per_page = 13 -%}
+
+
+        {%- paginate blog.articles by articles_per_page -%}
+          {% assign is_first_article_featured = false %}
+
+          {%- if current_tags == blank and blog.articles.first.image -%}
+            {%- assign is_first_article_featured = true -%}
+          {%- endif -%}
+
+          <div class="fd-blog__articles">
+            
+            {%- for article in blog.articles -%}
+              {%- if is_first_article_featured and forloop.first -%}
+                <div class="fd-blog__featured-article">
+                  <div class="fd-blog__featured-article-background" style="background-image: url({{ article.image | img_url: 'master' }})">
+                    <div class="fd-blog__featured-article-text">
+                     
+                        {%- if article.tags != empty -%}
+                            <p class="fd-blog__article-tag"><span >{{ article.tags.first }}</span><span class="vertical"> | </span>{{ blog.title }}</p>
+                        {%- endif -%}
+
+                        <h2 class="fd-blog__article-title">
+                          <a href="{{ article.url }}">{{ article.title }}</a>
+                        </h2>
+
+                        <div class="fd-blog__article-btn">
+                          <a href="{{ article.url }}" class="fd-btn">{{ 'blog.article.read_more' | t }}</a>
+                        </div>
+
+                    </div>
+                    <div class="fd-blog__svg-overlay">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="89" height="70.057" viewBox="0 0 89 70.057">
+                        <g id="Group_285" data-name="Group 285" transform="translate(-143 -563.07)">
+                          <rect id="Rectangle_223" data-name="Rectangle 223" width="89" height="70.057" transform="translate(143 563.07)" fill="#f5f9f9"/>
+                          <path id="Path_197" data-name="Path 197" d="M673.071,161.7c.154-.9.307-1.811.464-2.718q.792-4.582,1.591-9.163a.67.67,0,0,0-.234-.671q-4.188-4.041-8.362-8.1a1.67,1.67,0,0,1-.6-1.4,1.5,1.5,0,0,1,1.311-1.352q4.167-.614,8.335-1.213c1.181-.171,2.365-.325,3.542-.521a.753.753,0,0,0,.442-.389q2.606-5.212,5.184-10.44a1.613,1.613,0,0,1,1.322-1.009,1.541,1.541,0,0,1,1.587.971q1.727,3.474,3.445,6.951c.589,1.189,1.19,2.372,1.762,3.568a.625.625,0,0,0,.556.38q5.841.835,11.679,1.686a1.5,1.5,0,0,1,1.32,1.048,1.513,1.513,0,0,1-.467,1.658q-4.194,4.065-8.39,8.126a.769.769,0,0,0-.254.779q1.014,5.76,2,11.524a1.477,1.477,0,0,1-.591,1.545,1.524,1.524,0,0,1-1.723.084q-5.2-2.727-10.409-5.453a.7.7,0,0,0-.741,0q-5.2,2.738-10.411,5.451a1.527,1.527,0,0,1-2.284-.9A4.056,4.056,0,0,1,673.071,161.7Z" transform="translate(-498.712 452.514)" fill="#e9b6a9"/>
+                        </g>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+              {% else %}
+
+         
+                {%- render 'fd-article-item', article: article -%}
+            
+
+
+              {%- endif -%}
+
+            {%- endfor -%}
+            
+          </div>
+
+          {%- render 'pagination', paginate: paginate -%}
+        {%- endpaginate -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+<style>
+  #section-{{ section.id }} .ImageHero,
+  #section-{{ section.id }} .ImageHero .Heading {
+    color: #ffffff;
+  }
+
+  #section-{{ section.id }} .ImageHero .Button {
+    color: #1c1c1c;
+    border-color: #ffffff;
+  }
+
+  #section-{{ section.id }} .ImageHero .Button::before {
+    background-color: #ffffff;
+  }
+
+  {%- if settings.show_button_transition -%}
+    @media (-moz-touch-enabled: 0), (hover: hover) {
+      #section-{{ section.id }} .ImageHero .Button:hover {
+        color: #ffffff;
+      }
+    }
+  {%- endif -%}
+</style>
+
+{% schema %}
+  {
+    "name": "Blog Bioderma",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_tags",
+        "label": "Show filters",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "show_category",
+        "label": "Show article category",
+        "info": "The first article's tag is used as the main category.",
+        "default": false
+      }
+    ]
+  }
+{% endschema %}

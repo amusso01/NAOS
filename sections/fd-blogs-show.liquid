@@ -1,0 +1,48 @@
+<section class="fd-blogs-show">
+  <div class="fd-container-width">
+    <div class="fd-blogs__inner">
+      <div class="fd-blogs__grid">
+        {% for block in section.blocks %}
+          {% if block.type == 'blogs' %}
+            <article class="fd-brand-card">
+              <figure class="fd-brand__media">
+                <img src="{{ block.settings.image | img_url: 'master' }}" alt="Brand image" class="fd-brand-image">
+              </figure>
+              <div class="fd-brand-card__info" >
+                <a href="{{ block.settings.blog.url }}">Read all {{ block.settings.blog.title }}</a>
+              </div>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Foundry Blogs Show",
+    "class": "fd-section__blogs",
+    "max_blocks": 2,
+    "settings": [
+    ],
+    "blocks": [
+      {
+        "name": "Blog",
+        "type": "blogs",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "blog",
+            "id": "blog",
+            "label": "Blog"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

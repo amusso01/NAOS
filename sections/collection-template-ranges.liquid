@@ -1,0 +1,473 @@
+{%- capture collection_inner -%}
+  {%- comment -%}This is the common part to both template{%- endcomment -%}
+  {% assign collection_banner-image = collection.metafields.accentuate.collection_image | first %}
+  {%- if collection.products_count > 0 -%}
+    {%- paginate collection.products by section.settings.grid_items_per_page -%}
+      <div class="ProductListWrapper fd-content-block">
+        <div class="ProductList ProductList--grid fd-product__grid">
+          {%- for product in collection.products -%}
+
+            {% comment %} UNCOMMENT TO DISPLAY AN IMAGE LINKED TO ANOTHER COLLECTION AFTER 6 PRODUCTS {% endcomment %}
+            {% comment %} CUSTOMISE IN ACCENTUATE {% endcomment %}
+
+            {% comment %} {% if forloop.index == 7 and  paginate.current_page == 1 %}
+            <div class="fd-product__inner-2col">
+              <a href="/collections/{{ collections[collection.metafields.accentuate.collection_reference].handle }}">
+
+                <figure class="fd-product__collection-banner">
+                  <img src="{{ collection_banner-image.cloudinary_src }}" alt="{{ collection_banner-image.alt }}">
+                </figure>
+                <div class="fd-product__collection-info">
+                  <p class="fd-product__collection-banner-title">{{ collections[collection.metafields.accentuate.collection_reference].title }}</p>
+                  <p class="fd-btn">SHOP NOW</p>
+                </div>
+
+              </a>
+            </div>
+            {% endif %} {% endcomment %}
+            
+            {% comment %} UNCOMMENT TO DISPLAY AN IMAGE LINKED TO ANOTHER COLLECTION AFTER 6 PRODUCTS {% endcomment %}
+
+            <div class="fd-product__inner">
+              {%- render 'product-item', product: product, show_product_info: true, show_vendor: section.settings.show_vendor, show_labels: true -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- render 'pagination', paginate: paginate -%}
+    {%- endpaginate -%}
+  {%- else -%}
+    <div class="EmptyState">
+      <div class="Container">
+        <h1 class="EmptyState__Title Heading u-h5">{{ 'collection.general.no_products' | t }}</h1>
+        <button class="EmptyState__Action Button Button--primary" data-action="reset-tags">{{ 'collection.general.reset' | t }}</button>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- if template == 'collection.ajax' -%}
+  {%- comment -%}
+  --------------------------------------------------------------------------------------------------------------------
+  CONTENT FOR AJAX ALTERNATE TEMPLATE
+  --------------------------------------------------------------------------------------------------------------------
+  {%- endcomment -%}
+
+  {{- collection_inner -}}
+
+{%- else -%}
+  {%- comment -%}
+  --------------------------------------------------------------------------------------------------------------------
+  CONTENT FOR NORMAL TEMPLATE
+  --------------------------------------------------------------------------------------------------------------------
+  {%- endcomment -%}
+
+  {%- assign active_tags = '' -%}
+
+  {%- for tag in current_tags -%}
+    {%- assign tag_as_handle = tag | replace: '&#39;', '' | replace: '&#34;', '' | handle -%}
+    {%- assign active_tags = active_tags | append: tag_as_handle -%}
+
+    {%- unless forloop.last -%}
+      {%- assign active_tags = active_tags | append: '+' -%}
+    {%- endunless -%}
+  {%- endfor -%}
+
+  {%- capture section_settings -%}
+  {
+    "collectionUrl": {{ collection.url | default: '/collections/all' | json }},
+    "currentTags": {% if active_tags != blank %}{{ active_tags | split: '+' | json }}{% else %}[]{% endif %},
+    "sortBy": {{ collection.sort_by | default: collection.default_sort_by | json }},
+    "filterPosition": {{ section.settings.filter_position | json }}
+  }
+  {%- endcapture -%}
+
+  <section class="fd-container-width" data-section-id="{{ section.id }}" data-section-type="collection" data-section-settings='{{ section_settings }}'>
+    {%- comment -%}
+    --------------------------------------------------------------------------------------------------------------------
+    COLLECTION INFO
+    --------------------------------------------------------------------------------------------------------------------
+    {%- endcomment -%}
+
+    {% assign mobile_image_metafield = collection.metafields.additional_images.mobile | first %}
+    {% assign tablet_image_metafield = collection.metafields.additional_images.tablet | first %}
+
+
+
+    <header class="fd-collection__header fd-collection__header-ranges" style="margin-bottom:45px">
+      <div class="fd-collection__header-image fd-collection__header-image-desktop">
+        <figure class="fd-collection__header-media">
+          <img src="{{ collection.image | img_url: 'master' }}" alt="{{ collection.image.alt | escape }}">
+        </figure>
+      </div>
+
+      {% comment %} {%- if tablet_image_metafield != blank -%}
+        <div class="fd-collection__header-image fd-collection__header-image-tablet">
+          <figure class="fd-collection__header-media">
+            <img src="{{ tablet_image_metafield.cloudinary_src }}" alt="{{ collection.image.alt | escape }}">
+          </figure>
+        </div>
+      {%- endif -%} {% endcomment %}
+
+      {%- if mobile_image_metafield != blank -%}
+        <div class="fd-collection__header-image fd-collection__header-image-mobile">
+          <figure class="fd-collection__header-media">
+            <img src="{{ mobile_image_metafield.cloudinary_src }}" alt="{{ collection.image.alt | escape }}">
+          </figure>
+        </div>
+      {%- endif -%}
+
+      <!-- IMAGE END -->
+
+      <div class="fd-collection__header-text fd-content-block">
+      {% if collection.metafields.accentuate.is_title_white %}
+        <h1 class="fd_banner-title-white">{{ collection.title }}</h1>
+        <p class="fd_banner-title-white"> {{ collection.description }}</p>
+      {% else %}
+        <h1>{{ collection.title }}</h1>
+        <p>{{ collection.description }}</p>
+      {% endif %}
+      </div> 
+
+    </header>
+    {%- comment -%}
+    --------------------------------------------------------------------------------------------------------------------
+    COLLECTION TOOLBAR
+    --------------------------------------------------------------------------------------------------------------------
+    {%- endcomment -%}
+
+    {%- if collection.all_products_count > 0 -%}
+      {%- comment -%}
+      In order to provide more predictable results (for instance not showing filters by tag even if the option is checked in settings,
+      but that there are no tags for the given collection to show), we are doing some more logic here. Basically, we try to check if there
+      are tags to show by stripping internal tags (those that start by "__")
+      {%- endcomment -%}
+
+      {%- assign has_visible_tags = false -%}
+
+      {%- case section.settings.filter_mode -%}
+        {%- when 'tag' -%}
+          {%- for tag in collection.all_tags -%}
+            {%- unless tag contains '__' -%}
+              {%- assign has_visible_tags = true -%}
+              {%- break -%}
+            {%- endunless -%}
+          {%- endfor -%}
+
+        {%- when 'group' -%}
+          {%- for tag in collection.all_tags -%}
+            {%- assign tag_parts = tag | split: '_' -%}
+
+            {%- if tag_parts.size == 2 -%}
+              {%- assign has_visible_tags = true -%}
+            {%- endif -%}
+          {%- endfor -%}
+      {%- endcase -%}
+
+      {%- assign show_filters = false -%}
+      {%- assign quick_links = linklists[section.settings.filter_menu] -%}
+
+      {%- if quick_links != blank or has_visible_tags -%}
+        {%- assign show_filters = true -%}
+      {%- endif -%}
+
+      {%- capture collection_toolbar -%}
+       
+          <div class="CollectionToolbar  fd-content-block">
+              <div class="CollectionToolbar__Group">
+               
+                  <button class="CollectionToolbar__Item CollectionToolbar__Item--filter Heading {% unless current_tags %}Text--subdued{% endunless %} u-h6 {% if section.settings.filter_position != 'drawer' %}hidden-lap-and-up{% endif %}"
+                          data-action="open-drawer"
+                          data-drawer-id="collection-filter-drawer"
+                          aria-label="{{ 'collection.filter.show_filter' | t }}">
+  {{ 'collection.filter.title' | t }} {% if current_tags %}<span class="Text--subdued">({{ current_tags.size }})</span>{% endif %} {% render 'icon' with 'select-arrow' %}
+                  </button>
+            
+                  <button class="CollectionToolbar__Item CollectionToolbar__Item--sort Heading Text--subdued u-h6"
+                          aria-label="{{ 'collection.sorting.show_sort' | t }}"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                          aria-controls="collection-sort-popover">
+                    {{ 'collection.sorting.title' | t }} {% render 'icon' with 'select-arrow' %}
+                  </button>
+            
+              </div>
+          </div>
+     
+      {%- endcapture -%}
+
+      {%- comment -%}
+      --------------------------------------------------------------------------------------------------------------------
+      FILTERS AND SORT BY POPOVER
+      --------------------------------------------------------------------------------------------------------------------
+      {%- endcomment -%}
+
+      {%- if show_filters -%}
+        {%- comment -%}
+        Implementation note: the filters can be displayed in two different ways: in a sidebar menu, always visible, or in a drawer. Due to that, we are
+        setting the general code here, and then we will output it twice.
+        {%- endcomment -%}
+
+        {%- assign quick_links = linklists[section.settings.filter_menu] -%}
+
+        {%- capture filters_content -%}
+          {%- if quick_links != empty -%}
+            <div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+              <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+                {{- quick_links.title | escape -}} <span class="Collapsible__Plus"></span>
+              </button>
+
+              <div class="Collapsible__Inner">
+                <div class="Collapsible__Content">
+                  <ul class="Linklist">
+                    {%- for link in quick_links.links -%}
+                      <li class="Linklist__Item {% if link.active %}is-selected{% endif %}">
+                        <a href="{{ link.url }}" class="Link Link--primary Text--subdued {% if link.active %}is-active{% endif %}">{{ link.title | escape }}</a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- if has_visible_tags -%}
+            {%- if section.settings.filter_mode == 'tag' -%}
+              <div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+                <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+                  {{- 'collection.filter.all' | t -}} <span class="Collapsible__Plus"></span>
+                </button>
+
+                <div class="Collapsible__Inner">
+                  <div class="Collapsible__Content">
+                    <ul class="Linklist">
+                      {%- for tag in collection.all_tags -%}
+                        {%- if tag contains '__' -%}
+                          {%- continue -%}
+                        {%- endif -%}
+
+                        <li class="Linklist__Item {% if current_tags contains tag %}is-selected{% endif %}">
+                          <button type="button" class="Link Link--primary Text--subdued {% if current_tags contains tag %}is-active{% endif %}" data-tag="{{ tag | handle }}" data-action="toggle-tag">
+                            {{- tag -}}
+                          </button>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            {%- else -%}
+              {%- assign groups = '' -%}
+
+              {%- for tag in collection.all_tags -%}
+                {%- assign tag_parts = tag | split: '_' -%}
+
+                {%- if tag_parts.size != 2 -%}
+                  {%- continue -%}
+                {%- endif -%}
+
+                {%- assign groups = groups | append: tag_parts.first | append: ',' -%}
+              {% endfor %}
+
+              {%- assign color_label = 'color,colour,couleur,colore,farbe,색,色,färg,farve' | split: ',' -%}
+              {%- assign groups = groups | split: ',' | compact | uniq -%}
+
+              {%- for group in groups -%}
+                {%- assign group_downcase = group | downcase -%}
+
+
+                <div class="Collapsible Collapsible--padded Collapsible--autoExpand">
+                  <button type="button" class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+                    {{- group | escape -}} <span class="Collapsible__Plus"></span>
+                  </button>
+
+                  <div class="Collapsible__Inner">
+                    <div class="Collapsible__Content">
+                      <ul class="Linklist">
+                        {%- for tag in collection.all_tags -%}
+                          {%- assign tag_parts = tag | split: '_' -%}
+
+                          {%- if tag_parts.size != 2 or tag_parts.first != group -%}
+                            {%- continue -%}
+                          {%- endif -%}
+
+                  
+                            <li class="Linklist__Item {% if current_tags contains tag %}is-selected{% endif %}">
+                              <button type="button" class="Text--subdued Link Link--primary {% if current_tags contains tag %}is-active{% endif %}" data-tag="{{ tag | handle }}" data-action="toggle-tag">
+                                {{- tag_parts.last -}}
+                              </button>
+                            </li>
+                  
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endcapture -%}
+
+        <div id="collection-filter-drawer" class="CollectionFilters Drawer Drawer--secondary Drawer--fromRight" aria-hidden="true">
+          <header class="Drawer__Header Drawer__Header--center Drawer__Container">
+            <span class="Drawer__Title Heading u-h4">{{ 'collection.filter.all' | t }}</span>
+
+            <button class="Drawer__Close Icon-Wrapper--clickable" data-action="close-drawer" data-drawer-id="collection-filter-drawer" aria-label="{{ 'header.navigation.close_sidebar' | t }}">
+              {%- render 'icon' with 'close' -%}
+            </button>
+          </header>
+
+          <div class="Drawer__Content">
+            <div class="Drawer__Main" data-scrollable>
+              {{ filters_content }}
+            </div>
+
+            <div class="Drawer__Footer Drawer__Footer--padded" data-drawer-animated-bottom>
+              <div class="ButtonGroup">
+                <button type="button" class="ButtonGroup__Item Button Button--secondary" data-action="reset-tags" {% if current_tags == blank %}style="display: none"{% endif %}>{{ 'collection.filter.reset' | t }}</button>
+                <button type="button" class="ButtonGroup__Item ButtonGroup__Item--expand Button Button--primary" data-action="apply-tags">{{ 'collection.filter.apply' | t }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_sort_by -%}
+        <div id="collection-sort-popover" class="Popover" aria-hidden="true">
+          <header class="Popover__Header">
+            <button class="Popover__Close Icon-Wrapper--clickable" data-action="close-popover">{% render 'icon' with 'close' %}</button>
+            <span class="Popover__Title Heading u-h4">{{ 'collection.sorting.title' | t }}</span>
+          </header>
+
+          <div class="Popover__Content">
+            <div class="Popover__ValueList" data-scrollable>
+              {% assign collection_sort_by = collection.sort_by | default: collection.default_sort_by %}
+
+              {%- for option in collection.sort_options -%}
+                <button class="Popover__Value {% if option.value == collection_sort_by %}is-selected{% endif %} Heading Link Link--primary u-h6" data-value="{{ option.value }}" data-action="select-value">
+                  {{ option.name }}
+                </button>
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%}
+      --------------------------------------------------------------------------------------------------------------------
+      COLLECTION PRODUCTS
+      --------------------------------------------------------------------------------------------------------------------
+      {%- endcomment -%}
+
+      {% if section.settings.show_promobanner == true  %}
+        <section class="fd-content-block fd-promoBanner ">
+          <figure class="fd-promoBanner-media">
+            <img src="{{ section.settings.promo_banner | img_url: 'master' }}" alt="promo banner" class="fd-promoBanner-image">
+          </figure>
+        </section>
+      {% endif %}
+
+      <div class="CollectionMain ">
+  
+        {{- collection_toolbar -}}
+
+        <div class="CollectionInner">
+          <div class="CollectionInner__Products">
+            {{ collection_inner }}
+          </div>
+        </div>
+
+      </div>
+    {%- else -%}
+      <div class="EmptyState ">
+        <div class="Container">
+          <h3 class="EmptyState__Title Heading u-h5">{{ 'collection.general.empty' | t: collection_title: collection.title }}</h3>
+          <a href="{{ routes.root_url }}" class="EmptyState__Action Button Button--primary">{{ 'collection.general.empty_button' | t }}</a>
+        </div>
+      </div>
+    {%- endif -%}
+  </section>
+{%- endif -%}
+
+{%- capture hack -%}
+{%- comment -%}This is just an ugly hack to make those variables appear as part of the theme editor in the General Settings{%- endcomment -%}
+{{ settings.product_list_horizontal_spacing }},{{ settings.product_list_vertical_spacing }}
+{%- endcapture -%}
+
+{% schema %}
+  {
+    "name": "Collection page",
+    "class": "fd-collection-page",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_promobanner",
+        "label": "Show Promo Banner",
+        "default": true
+      },
+      {
+        "type": "image_picker",
+        "label": "Promo Banner",
+        "id": "promo_banner"
+      },
+      {
+        "type": "header",
+        "content": "Toolbar"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_sort_by",
+        "label": "Show sort by",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Filters"
+      },
+      {
+        "type": "select",
+        "id": "filter_position",
+        "label": "Desktop position",
+        "options": [
+          {
+            "value": "sidebar",
+            "label": "Sidebar"
+          },
+          {
+            "value": "drawer",
+            "label": "Drawer"
+          }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "select",
+        "id": "filter_mode",
+        "label": "Mode",
+        "info": "Filters by group requires specific tag formatting. [Learn more](https://help.shopify.com/manual/using-themes/themes-by-shopify/supply#product-tips-tips-specific)",
+        "options": [
+          {
+            "value": "hidden",
+            "label": "Hidden"
+          },
+          {
+            "value": "tag",
+            "label": "By tag"
+          },
+          {
+            "value": "group",
+            "label": "By group"
+          }
+        ],
+        "default": "group"
+      },
+      {
+        "type": "link_list",
+        "id": "filter_menu",
+        "label": "Quick links",
+        "info": "This menu won't show dropdown items."
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,118 @@
+<div class="ProductItem">
+  <div class="ProductItem__Wrapper">
+    {%- comment -%}
+    We are using LazySizes to efficiently choose the most appropriate image in the set. However, because internally LazySizes uses srcset, we need to make
+    sure that the image sizes we offer is not larger than the max size uploaded by the merchants.
+    {%- endcomment -%}
+
+
+    {%- if settings.product_show_secondary_image and product.media[1] != blank and use_horizontal != true -%}
+      {%- assign has_alternate_image = true -%}
+    {%- else -%}
+      {%- assign has_alternate_image = false -%}
+    {%- endif -%}
+
+
+    <div class="fd-product-item__image">
+
+
+      <a href="{{ product.url}}" class="ProductItem__ImageWrapper">
+    
+        <div class="fd-product-image__alternate">
+          {%- comment -%}
+          IMPLEMENTATION NOTE: The alternate image (not visible by default) should be the first in the DOM, as the spinner (Image__Loader element) is
+          displayed based on the immediately previously shown image.
+          {%- endcomment -%}
+
+          {%- if product.media[1] != blank -%}
+            {%- assign has_alternate_image = true -%}
+          {%- else -%}
+            {%- assign has_alternate_image = false -%}
+          {%- endif -%}
+
+          <figure class="fd-product-image__wrapper ">
+
+          {%- if has_alternate_image -%}
+            <img src="{{ product.media[1]  | img_url: 'master' }}" loading="lazy" alt="{{ product.featured_media.alt | escape }}" class="fd-product-image__image fd-product-image__image-hover">
+          {% else %}  
+            <img src="{{ product.featured_media  | img_url: 'master' }}" loading="lazy" alt="{{ product.featured_media.alt | escape }}" class="fd-product-image__image fd-product-image__image-hover">
+          {%- endif -%}
+            <img src="{{ product.featured_media  | img_url: 'master' }}" loading="lazy" alt="{{ product.featured_media.alt | escape }}" class="fd-product-image__image ">
+
+          </figure>
+
+        </div>
+      </a>
+
+    </div>
+
+    <div class="fd-product-item__description">
+      
+ 
+
+      <div class="ProductItem__LabelList">
+        {%- if product.available -%}
+          {%- if product.compare_at_price > product.price -%}
+            <span class="ProductItem__Label ProductItem__Label--onSale Heading Text--subdued">{{ 'product.labels.on_sale' | t }}</span>
+          {%- endif -%}
+        {%- else -%}
+            <span class="ProductItem__Label ProductItem__Label--soldOut Heading Text--subdued">{{ 'product.labels.sold_out' | t }}</span>
+        {%- endif -%}
+      </div>
+
+
+      {% assign productSub = false %}
+      {% if product.metafields.descriptors.subtitle != blank %}
+        {% assign productSub = true %}
+      {% endif %}
+
+
+
+      <h2 class="ProductItem__Title Heading">
+        <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
+      </h2>
+
+      {% if productSub  == true %}
+      <p class="subtitle">  {{product.metafields.descriptors.subtitle}}  </p> 
+      {% endif %}
+
+      {% comment %}Start automatically added Judge.me widget{% endcomment %}
+        {% render 'judgeme_widgets', widget_type: 'judgeme_preview_badge', concierge_install: true, product: product %}
+      {% comment %}End automatically added Judge.me widget{% endcomment %}
+
+
+      {%- if product.template_suffix != 'coming-soon' -%}
+        <div class="ProductItem__PriceList {% if show_price_on_hover %}ProductItem__PriceList--showOnHover{% endif %} Heading">
+          {%- if product.compare_at_price > product.price -%}
+            <span class="ProductItem__Price Price Price--highlight Text--subdued">{{ product.price | money_without_trailing_zeros }}</span>
+            <span class="ProductItem__Price Price Price--compareAt Text--subdued">{{ product.compare_at_price | money_without_trailing_zeros }}</span>
+          {%- elsif product.price_varies -%}
+            {%- capture formatted_min_price -%}<span>{{ product.price_min | money_without_trailing_zeros }}</span>{%- endcapture -%}
+            {%- capture formatted_max_price -%}<span>{{ product.price_max | money_without_trailing_zeros }}</span>{%- endcapture -%}
+            <span class="ProductItem__Price Price Text--subdued">{{ 'collection.product.from_price_html' | t: min_price: formatted_min_price, max_price: formatted_max_price }}</span>
+          {%- else -%}
+            <span class="ProductItem__Price Price Text--subdued">{{ product.price | money_without_trailing_zeros }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%} 
+
+    
+  
+
+
+      
+    </div>
+    
+    <form method="post" action="/cart/add" class="fd-add-to-cart__form">
+
+      <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+    
+      <input  type="submit" data-id="{{ product.variants.first.id }}" value="Add to cart" class="btn fd-add-to-cart" />
+    
+    </form>
+
+    <div class="fd-add-to-cart__modal" ></div>
+    
+  </div>
+
+</div>

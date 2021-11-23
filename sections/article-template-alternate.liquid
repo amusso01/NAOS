@@ -1,0 +1,121 @@
+{%- assign share_url = shop.url | append: article.url -%}
+{%- assign twitter_text = article.title -%}
+{%- assign pinterest_description = article.description | strip_html | truncatewords: 15 | url_param_escape -%}
+{%- assign pinterest_image = article.image | img_url: '750x' | prepend: 'https:' -%}
+
+{%- assign image_url = article.image | img_url: 'master' -%}
+
+<article class="fd-article fd-article-alternate fd-content-block fd-container-width" data-section-id="{{ section.id }}" data-section-type="article">
+
+
+  {%- if article.image  -%}
+    <header class="fd-article__header">
+
+      <div class="fd-article__header-text">
+        {%- if article.tags != empty -%}
+        <p class="fd-blog__article-tag"><span >{{ article.tags.first }}</span><span class="vertical"> | </span>{{ blog.title }} </p>
+        {%- endif -%}
+        <h1>{{ article.title }}</h1>
+        <span class="fd-date">{{ article.published_at | date: format: 'month_day_year' }}</span>
+      </div>
+      <figure class="fd-article__header-media">
+        <img class="fd-article__image" src="{{ image_url }}"  alt="{{ article.image.alt | escape }}" />
+      </figure>
+
+    </header>
+  {%- endif -%}
+
+  <div class="fd-article__wrapper">
+    <!--  MAIN EDITOR CONTENT   -->
+    <div class="fd-max-width fd-article__editor">
+
+      {{ article.content }}
+
+    </div>
+
+    <!--  IMAGE ALTERNATE GRID  -->
+    <div class="fd-article-max-width fd-article__images-alternate ">
+      {% for alternation in article.metafields.accentuate.title %}
+
+        {% assign index =  forloop.index0 %}  
+        {% assign image = article.metafields.accentuate.image[index] | first %}
+       
+        <div class="fd-article__image-alternate {% if article.metafields.accentuate.image_position[index]  == 'right' %} image-alternate-righ {% endif %}">
+          <figure class="fd-article__media">
+            <img src="{{ image.src }}" alt="{{ image.alt }}">
+          </figure>
+
+          <div class="fd-article__info">
+              <h3>{{ article.metafields.accentuate.title[index] }}</h3>
+              <p>{{ article.metafields.accentuate.text[index] }}</p>
+              <a href="{{ article.metafields.accentuate.cta[index] }}" class="fd-btn">Discover more</a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+
+    <!--  MENTIONED PRODUCT  -->
+    {% if article.metafields.accentuate.product != null  %}
+    <div class="fd-article__mentioned-products fd-article-max-width">
+      <h3>Mentioned Products</h3>
+
+      <div class="fd-article__mentioned-products-wrapper">
+        {% for product in article.metafields.accentuate.product %}
+        {% assign featproduct = all_products[product] %}
+        <div class="fd-product__inner">
+          {%- render 'product-item', product: featproduct, show_product_info: true, show_vendor: section.settings.show_vendor, show_labels: true -%}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+   
+
+    {%- capture article_footer -%}
+
+        <div class="fd-share">
+          <p class="fd-share-btn">Share</p>
+        </div>
+
+        <div class="Article__ShareButtons ShareButtons">
+          <a class="ShareButtons__Item ShareButtons__Item--facebook" href="https://www.facebook.com/sharer.php?u={{ share_url }}" target="_blank" rel="noopener">{%- render 'icon' with 'facebook' -%}</a>
+          <a class="ShareButtons__Item ShareButtons__Item--twitter" href="https://twitter.com/share?{% if twitter_text != blank %}text={{twitter_text}}&{% endif %}url={{ share_url }}" target="_blank" rel="noopener">{%- render 'icon' with 'twitter' -%}</a>
+          <a class="ShareButtons__Item ShareButtons__Item--pinterest" href="https://pinterest.com/pin/create/button/?url={{ share_url }}{% if pinterest_image != blank %}&media={{ pinterest_image }}{% endif %}&description={{ pinterest_description }}" target="_blank" rel="noopener">{%- render 'icon' with 'pinterest' -%}</a>
+        </div>
+
+    {%- endcapture -%}
+
+    {%- if article_footer != blank -%}
+      <footer class="fd-article__footer fd-article-max-width">
+        {{ article_footer }}
+      </footer>
+    {%- endif -%}
+
+
+
+  </div>
+
+  {%- if blog.next_article or blog.previous_article -%}
+    <aside class="fd-article__nav  fd-content-block">
+      <h3>More we think you’ll like</h3>
+        <div class="fd-article__nav-grid">
+          {%- if blog.next_article -%}
+           
+              {%- render 'fd-article-item', article: blog.next_article -%}
+           
+          {%- endif -%}
+
+          {%- if blog.previous_article -%}
+            
+              {%- render 'fd-article-item', article: blog.previous_article -%}
+          
+          {%- endif -%}
+        </div>
+    </aside>
+  {%- endif -%}
+
+
+
+
+</article>
