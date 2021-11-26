@@ -1154,6 +1154,22 @@ dd {
   min-height: 647px;
 }
 
+@media (max-width: 639px) {
+  .ProductItem {
+    min-height: 690px;
+  }
+}
+
+.Carousel__Cell .ProductItem {
+  min-height: auto !important;
+}
+
+@media (max-width: 639px) {
+  .Carousel__Cell .ProductItem {
+    min-height: auto !important;
+  }
+}
+
 .ProductItem__Wrapper {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -2205,7 +2221,7 @@ dd {
   height: 55px;
   border-radius: 50%;
   background-color: #FFFFFF;
-  top: 44%;
+  top: 89%;
   -webkit-transform: translateY(-50%);
           transform: translateY(-50%);
 }
@@ -2406,6 +2422,10 @@ dd {
   display: none;
 }
 
+.swym-ui-component .swym-wishlist-grid .swym-wishlist-image-wrapper {
+  height: auto !important;
+}
+
 .fd-plain-page {
   margin: 90px 0px 110px;
 }
@@ -2431,7 +2451,7 @@ dd {
      object-fit: cover;
 }
 
-@media (min-width: 641px) {
+@media (max-width: 639px) {
   .fd-collection-page .fd-collection__header-media > img {
     -o-object-position: right;
        object-position: right;
@@ -3005,8 +3025,8 @@ dd {
 @media (max-width: 639px) {
   .fd-collection-page .fd-product__grid {
     margin-top: 50px;
-    -ms-grid-columns: (minmax(160px, 165px))[auto-fill];
-        grid-template-columns: repeat(auto-fill, minmax(160px, 165px));
+    -ms-grid-columns: (minmax(145px, 145px))[auto-fill];
+        grid-template-columns: repeat(auto-fill, minmax(145px, 145px));
   }
 }
 
