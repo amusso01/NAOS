@@ -21,9 +21,11 @@
 					{% if block.settings.profile_image %}
 					<img class="vc__image" src="{{ block.settings.profile_image | img_url: '500x' }}" alt="{{ block.settings.profile_title }}">
 					{% endif %}
-					<h2 class="vc__title">{{ block.settings.profile_title }}</h2>
-					<p class="vc__text">{{ block.settings.profile_text }}</p>
-					{% if block.settings.profile_button %}<a class="Button Button--primary" href="{{ block.settings.profile_link }}">{{ block.settings.profile_button }}</a>{% endif %}
+          <div class="fd-vc-profile__info">
+            <h2 class="vc__title">{{ block.settings.profile_title }}</h2>
+            <p class="vc__text">{{ block.settings.profile_text }}</p>
+            {% if block.settings.profile_button %}<a class="Button Button--primary" href="{{ block.settings.profile_link }}">{{ block.settings.profile_button }}</a>{% endif %}
+          </div>
 				</div>
 			{% endfor %}
 	</div>
@@ -35,11 +37,11 @@
 			<h3 class="vc__title">{{ section.settings.text_image_title }}</h3>
 			<div class="vc__text-container">
 				<div class="vc__text-block">
-					<p class="vc__text-number">{{ section.settings.text_title_one }}</p>
+					<p class="fd-vc__text-number">{{ section.settings.text_title_one }}</p>
 					<p class="vc__icons-intro-text">{{ section.settings.text_text_one }}</p>
 				</div>
 				<div class="vc__text-block">
-					<p class="vc__text-number">{{ section.settings.text_title_two }}</p>
+					<p class="fd-vc__text-number">{{ section.settings.text_title_two }}</p>
 					<p class="vc__icons-intro-text">{{ section.settings.text_text_two }}</p>
 				</div>
 			</div>
