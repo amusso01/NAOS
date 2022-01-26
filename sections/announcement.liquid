@@ -6,17 +6,19 @@
           <div class="glide glide__announcement">
             <div class="glide__track" data-glide-el="track" style="height: auto;">
               <ul class="glide__slides">
-              {% for block in section.blocks %}
-                {% if block.type == 'announcement' %}
-                <p class="AnnouncementBar__Content Heading glide__slide">
-                  {%- if block.settings.link -%}
-                    <a href="{{ block.settings.link }}">{{ block.settings.announcement_content | escape }}</a>
-                  {%- else -%}
-                    {{ block.settings.announcement_content | escape }}
-                  {%- endif -%}
-                </p>
-                {% endif %}
-             {% endfor %}
+        
+                {% for block in section.blocks %}
+                  {% if block.type == 'announcement' %}
+                  <p class="AnnouncementBar__Content Heading glide__slide">
+                    {%- if block.settings.link -%}
+                      <a href="{{ block.settings.link }}">{{ block.settings.announcement_content | escape }}</a>
+                    {%- else -%}
+                      {{ block.settings.announcement_content | escape }}
+                    {%- endif -%}
+                  </p>
+                  {% endif %}
+                {% endfor %}
+   
               </ul>
             </div>
           </div>
@@ -32,10 +34,10 @@
       }
   
     </style>
-
+{% comment %} 
     <script>
       document.documentElement.style.setProperty('--announcement-bar-height', document.getElementById('shopify-section-announcement').offsetHeight + 'px');
-    </script>
+    </script> {% endcomment %}
   {%- endunless -%}
 {%- endif -%}
 
@@ -48,7 +50,7 @@
         "type": "checkbox",
         "id": "enable_bar",
         "label": "Enable bar",
-        "default": true
+        "default": false
       },
       {
         "type": "checkbox",
