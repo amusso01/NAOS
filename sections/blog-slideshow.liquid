@@ -3,81 +3,84 @@
     <div class="fd-slideshow-blog__inner">
 
 
-      <div class="glide glide-slideshow">
-      <div class="glide__track" data-glide-el="track">
-        <ul class="glide__slides">
-        
-          {% for block in section.blocks %}
-            <li class="glide__slide">
+      <div class="glide glide-blog-slideshow">
+        <div class="glide__track" data-glide-el="track">
+          <ul class="glide__slides">
+            {% if section.settings.show_carousel == false  %}
+              <li class="glide__slide"></li>
+            {% else %}
+              {% for block in section.blocks %}
+                <li class="glide__slide">
 
-            <!-- FULL SECTION SLIDE -->
+                <!-- FULL SECTION SLIDE -->
 
-              <div class="fd-blog__featured-article-background" style="background-image: url({{ block.settings.article.image | img_url: 'master' }})">
-                <div class="fd-blog__featured-article-text">
-                  
-                    {%- if article.tags != empty -%}
-                      <p class="fd-blog__article-tag"><span >{{ block.settings.article.tags.first }}</span> | Bioderma</p>
-                    {%- endif -%}
+                  <div class="fd-blog__featured-article-background" style="background-image: url({{ block.settings.article.image | img_url: 'master' }})">
+                    <div class="fd-blog__featured-article-text">
+                      
+                        {%- if article.tags != empty -%}
+                          <p class="fd-blog__article-tag"><span >{{ block.settings.article.tags.first }}</span> | Bioderma</p>
+                        {%- endif -%}
 
-                    <h2 class="fd-blog__article-title">
-                      <a href="{{ block.settings.article.url }}">{{ block.settings.article.title }}</a>
-                    </h2>
+                        <h2 class="fd-blog__article-title">
+                          <a href="{{ block.settings.article.url }}">{{ block.settings.article.title }}</a>
+                        </h2>
 
-                    <div class="fd-blog__article-btn">
-                      <a href="{{ block.settings.article.url }}" class="fd-btn">{{ 'blog.article.read_more' | t }}</a>
+                        <div class="fd-blog__article-btn">
+                          <a href="{{ block.settings.article.url }}" class="fd-btn">{{ 'blog.article.read_more' | t }}</a>
+                        </div>
+
                     </div>
+                    <div class="fd-blog__svg-overlay">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="89" height="70.057" viewBox="0 0 89 70.057">
+                        <g id="Group_285" data-name="Group 285" transform="translate(-143 -563.07)">
+                          <rect id="Rectangle_223" data-name="Rectangle 223" width="89" height="70.057" transform="translate(143 563.07)" fill="#f5f9f9"/>
+                          <path id="Path_197" data-name="Path 197" d="M673.071,161.7c.154-.9.307-1.811.464-2.718q.792-4.582,1.591-9.163a.67.67,0,0,0-.234-.671q-4.188-4.041-8.362-8.1a1.67,1.67,0,0,1-.6-1.4,1.5,1.5,0,0,1,1.311-1.352q4.167-.614,8.335-1.213c1.181-.171,2.365-.325,3.542-.521a.753.753,0,0,0,.442-.389q2.606-5.212,5.184-10.44a1.613,1.613,0,0,1,1.322-1.009,1.541,1.541,0,0,1,1.587.971q1.727,3.474,3.445,6.951c.589,1.189,1.19,2.372,1.762,3.568a.625.625,0,0,0,.556.38q5.841.835,11.679,1.686a1.5,1.5,0,0,1,1.32,1.048,1.513,1.513,0,0,1-.467,1.658q-4.194,4.065-8.39,8.126a.769.769,0,0,0-.254.779q1.014,5.76,2,11.524a1.477,1.477,0,0,1-.591,1.545,1.524,1.524,0,0,1-1.723.084q-5.2-2.727-10.409-5.453a.7.7,0,0,0-.741,0q-5.2,2.738-10.411,5.451a1.527,1.527,0,0,1-2.284-.9A4.056,4.056,0,0,1,673.071,161.7Z" transform="translate(-498.712 452.514)" fill="#e9b6a9"/>
+                        </g>
+                      </svg>
+                    </div>
+                  </div>
+              
 
-                </div>
-                <div class="fd-blog__svg-overlay">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="89" height="70.057" viewBox="0 0 89 70.057">
-                    <g id="Group_285" data-name="Group 285" transform="translate(-143 -563.07)">
-                      <rect id="Rectangle_223" data-name="Rectangle 223" width="89" height="70.057" transform="translate(143 563.07)" fill="#f5f9f9"/>
-                      <path id="Path_197" data-name="Path 197" d="M673.071,161.7c.154-.9.307-1.811.464-2.718q.792-4.582,1.591-9.163a.67.67,0,0,0-.234-.671q-4.188-4.041-8.362-8.1a1.67,1.67,0,0,1-.6-1.4,1.5,1.5,0,0,1,1.311-1.352q4.167-.614,8.335-1.213c1.181-.171,2.365-.325,3.542-.521a.753.753,0,0,0,.442-.389q2.606-5.212,5.184-10.44a1.613,1.613,0,0,1,1.322-1.009,1.541,1.541,0,0,1,1.587.971q1.727,3.474,3.445,6.951c.589,1.189,1.19,2.372,1.762,3.568a.625.625,0,0,0,.556.38q5.841.835,11.679,1.686a1.5,1.5,0,0,1,1.32,1.048,1.513,1.513,0,0,1-.467,1.658q-4.194,4.065-8.39,8.126a.769.769,0,0,0-.254.779q1.014,5.76,2,11.524a1.477,1.477,0,0,1-.591,1.545,1.524,1.524,0,0,1-1.723.084q-5.2-2.727-10.409-5.453a.7.7,0,0,0-.741,0q-5.2,2.738-10.411,5.451a1.527,1.527,0,0,1-2.284-.9A4.056,4.056,0,0,1,673.071,161.7Z" transform="translate(-498.712 452.514)" fill="#e9b6a9"/>
-                    </g>
-                  </svg>
-                </div>
-              </div>
-           
+                </li>
+              {% endfor %}
+            {% endif %}
+          </ul>
+        </div>
 
-            </li>
+        <div class="glide__bullets" data-glide-el="controls[nav]">
+          {% assign bullet = 0 %}
+          {% for block in section.blocks %}
+            <button class="glide__bullet" data-glide-dir="={{ bullet }}"></button>
+            {% assign bullet = bullet | plus: 1 %}
           {% endfor %}
-        </ul>
-      </div>
-
-      <div class="glide__bullets" data-glide-el="controls[nav]">
-        {% assign bullet = 0 %}
-        {% for block in section.blocks %}
-          <button class="glide__bullet" data-glide-dir="={{ bullet }}"></button>
-          {% assign bullet = bullet | plus: 1 %}
-        {% endfor %}
-      </div>
+        </div>
 
 
-      <div class="glide__arrows" data-glide-el="controls">
-        <button class="glide__arrow glide__arrow--left" data-glide-dir="<">
-          <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
-            <g id="Group_69" data-name="Group 69" transform="translate(730 644) rotate(180)">
-              <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="#fff" stroke="#fff" stroke-width="1">
-                <rect width="58" height="58" rx="29" stroke="none"/>
-                <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+        <div class="glide__arrows" data-glide-el="controls">
+          <button class="glide__arrow glide__arrow--left" data-glide-dir="<">
+            <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+              <g id="Group_69" data-name="Group 69" transform="translate(730 644) rotate(180)">
+                <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="#fff" stroke="#fff" stroke-width="1">
+                  <rect width="58" height="58" rx="29" stroke="none"/>
+                  <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+                </g>
+                <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
               </g>
-              <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
-            </g>
-          </svg>
-        </button>
-        <button class="glide__arrow glide__arrow--right" data-glide-dir=">">
-          <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
-            <g id="Group_68" data-name="Group 68" transform="translate(-672 -586)">
-              <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="#fff" stroke="#fff" stroke-width="1">
-                <rect width="58" height="58" rx="29" stroke="none"/>
-                <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+            </svg>
+          </button>
+          <button class="glide__arrow glide__arrow--right" data-glide-dir=">">
+            <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+              <g id="Group_68" data-name="Group 68" transform="translate(-672 -586)">
+                <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="#fff" stroke="#fff" stroke-width="1">
+                  <rect width="58" height="58" rx="29" stroke="none"/>
+                  <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+                </g>
+                <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
               </g>
-              <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
-            </g>
-          </svg>
-        </button>
+            </svg>
+          </button>
+        </div>
       </div>
-    </div>
     </div>
 
   </div>
@@ -92,6 +95,12 @@
     "class": "fd-section__carousel",
     "max_blocks": 3,
     "settings": [
+       {
+        "type": "checkbox",
+        "id": "show_carousel",
+        "label": "Show Carousel section",
+        "default": false
+      }
     ],
     "blocks": [
       {
@@ -102,6 +111,21 @@
             "type": "article",
             "id": "article",
             "label": "Slide Article"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "category": "Image",
+        "name": "Blog Slideshow",
+        "settings": {},
+        "blocks": [
+          {
+            "type": "blogSlide"
+          },
+          {
+            "type": "blogSlide"
           }
         ]
       }

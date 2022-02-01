@@ -128,14 +128,14 @@
         };
       })();
     </script>
+    
 
     {%- render 'microdata-schema' -%}
 
     {%- include 'judgeme_core' -%}
-    {%- include 'qikify-navigator' -%}
-    {%- include 'qikify-smartmenu-data' -%}
 
-    <script type="text/javascript" src="https://sdk.qikify.com/tmenu/app-v5.js?token=5bFmChWGPYOCWxaNTC8VQS3HKjLgk5GL&shop=naosuk.myshopify.com" defer="defer"></script>
+    {%- include 'qikify-navigator' -%}
+    {% include 'qikify-smartmenu' %}
 
     {%- comment -%}
     <script src="https://www.googletagmanager.com/gtag/js?id=UA-165103231-1" async></script>
@@ -148,11 +148,8 @@
     </script>
     {%- endcomment -%}
 
-    {% include 'qikify-navigator' %}
-    {% include 'qikify-smartmenu-data' %}
-    <script type="text/javascript" src="https://sdk.qikify.com/tmenu/app-v5.js?token=5bFmChWGPYOCWxaNTC8VQS3HKjLgk5GL&shop=naosuk.myshopify.com" defer="defer"></script>
     {% include 'judgeme_core' %}
-    {% include 'qikify-smartmenu' %}
+
 </head>
 
   <body class="prestige--v4 {% if template.directory %}template-{{ template.directory | handle }}{% endif %} template-{{ template.name | handle }}">
@@ -177,8 +174,9 @@
     {%- endif -%}
 
     <div class="PageContainer">
-      {%- section 'announcement' -%}
+      {%- section 'official-banner' -%}
       {%- section 'header' -%}
+      {%- section 'announcement' -%}
 
       <main id="main" role="main">
        

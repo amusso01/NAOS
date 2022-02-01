@@ -3843,7 +3843,12 @@ var _glide = _interopRequireDefault(require("@glidejs/glide"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var carouselSlideshow = function carouselSlideshow() {
-  var glideCarousel = new _glide.default('.glide-slideshow'); // Automated height on Carousel build
+  var glideCarousel = new _glide.default('.glide-slideshow', {
+    type: 'carousel',
+    perView: 1,
+    gap: 0,
+    autoplay: 4000
+  }); // Automated height on Carousel build
 
   glideCarousel.on('build.after', function () {
     glideHandleHeight();
@@ -3853,11 +3858,8 @@ var carouselSlideshow = function carouselSlideshow() {
     glideHandleHeight();
   }); // Mount!
 
-  glideCarousel.mount({
-    type: 'carousel',
-    perView: 1,
-    gap: 0
-  }); // Resize height
+  glideCarousel.mount();
+  glideCarousel.start; // Resize height
 
   function glideHandleHeight() {
     var activeSlide = document.querySelector('.glide-slideshow .glide__slide--active');
@@ -3872,6 +3874,31 @@ var carouselSlideshow = function carouselSlideshow() {
 };
 
 var _default = carouselSlideshow;
+exports.default = _default;
+},{"@glidejs/glide":"../node_modules/@glidejs/glide/dist/glide.esm.js"}],"part/carouselBlogSlideshow.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _glide = _interopRequireDefault(require("@glidejs/glide"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var carouselBlogSlideshow = function carouselBlogSlideshow() {
+  var glideCarousel = new _glide.default('.glide-blog-slideshow', {
+    type: 'carousel',
+    perView: 1,
+    gap: 0,
+    autoplay: 4000
+  }); // Mount!
+
+  glideCarousel.mount();
+};
+
+var _default = carouselBlogSlideshow;
 exports.default = _default;
 },{"@glidejs/glide":"../node_modules/@glidejs/glide/dist/glide.esm.js"}],"part/carouselCollection.js":[function(require,module,exports) {
 "use strict";
@@ -3924,7 +3951,7 @@ var carouselAnnouncement = function carouselAnnouncement() {
     type: 'carousel',
     perView: 1,
     gap: 0,
-    autoplay: 5000
+    autoplay: 3000
   }).mount();
 };
 
@@ -4799,6 +4826,8 @@ var _carouselBiodermaBody = _interopRequireDefault(require("./part/carouselBiode
 
 var _carouselSlideshow = _interopRequireDefault(require("./part/carouselSlideshow"));
 
+var _carouselBlogSlideshow = _interopRequireDefault(require("./part/carouselBlogSlideshow"));
+
 var _carouselCollection = _interopRequireDefault(require("./part/carouselCollection"));
 
 var _carouselAnnouncement = _interopRequireDefault(require("./part/carouselAnnouncement"));
@@ -4854,6 +4883,12 @@ document.addEventListener('DOMContentLoaded', function (event) {
     (0, _carouselSlideshow.default)();
   }
 
+  var hasCarouselBlogSlideshow = document.querySelector('.glide-blog-slideshow');
+
+  if (typeof hasCarouselBlogSlideshow != 'undefined' && hasCarouselBlogSlideshow != null) {
+    (0, _carouselBlogSlideshow.default)();
+  }
+
   var hasCarouselAnnouncement = document.querySelector('.glide__announcement');
 
   if (typeof hasCarouselAnnouncement != 'undefined' && hasCarouselAnnouncement != null) {
@@ -4881,7 +4916,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
     }
   }, 300);
 });
-},{"./part/addToCart":"part/addToCart.js","./part/carouselBestseller":"part/carouselBestseller.js","./part/carouselBioderma":"part/carouselBioderma.js","./part/carouselInstitut":"part/carouselInstitut.js","./part/carouselBiodermaBody":"part/carouselBiodermaBody.js","./part/carouselSlideshow":"part/carouselSlideshow.js","./part/carouselCollection":"part/carouselCollection.js","./part/carouselAnnouncement":"part/carouselAnnouncement.js","./part/benefitAccordion":"part/benefitAccordion.js","./part/sliderProduct":"part/sliderProduct.js"}],"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./part/addToCart":"part/addToCart.js","./part/carouselBestseller":"part/carouselBestseller.js","./part/carouselBioderma":"part/carouselBioderma.js","./part/carouselInstitut":"part/carouselInstitut.js","./part/carouselBiodermaBody":"part/carouselBiodermaBody.js","./part/carouselSlideshow":"part/carouselSlideshow.js","./part/carouselBlogSlideshow":"part/carouselBlogSlideshow.js","./part/carouselCollection":"part/carouselCollection.js","./part/carouselAnnouncement":"part/carouselAnnouncement.js","./part/benefitAccordion":"part/benefitAccordion.js","./part/sliderProduct":"part/sliderProduct.js"}],"../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -4909,7 +4944,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50283" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58882" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
