@@ -30,9 +30,11 @@
         <h3>{{ section.settings.title }}</h3>
         <h2>{{ section.settings.subheading }}</h2>
       </div>
+      {% if section.settings.show_button == true  %}
       <div class="fd-collection__header-btn">
         <a href="/collections/{{ collection.handle }}" class="fd-btn btn">SHOP ALL</a>
       </div>
+      {% endif %}
     </header>
 
     <div class="fd-featured-colection__grid">
@@ -43,7 +45,7 @@
       </div>
       <div class="fd-collection__gallery">
 
-      
+
         <div class="glide glide-single-collection">
           <div class="glide-product__inner">
             <div class="glide__track" data-glide-el="track">
@@ -121,6 +123,12 @@
         "type": "text",
         "id": "subheading",
         "label": "Sub Heading"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_button",
+        "label": "Show Shop Button",
+        "default": true
       }
     ],
     "blocks": [
@@ -136,7 +144,7 @@
           {
             "type": "range",
             "id": "grid_items_count",
-            "min": 4,
+            "min": 3,
             "max": 21,
             "step": 1,
             "label": "Products in the slider",
