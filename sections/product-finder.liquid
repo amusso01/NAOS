@@ -3,6 +3,7 @@
 		<div class="vc__header-inner">
 			<h1 {% if section.settings.header_color %}style="color: {{ section.settings.header_color }}"{% endif %} class="vc__header-title">{{ section.settings.header_title }}</h1>
 			<p {% if section.settings.header_color %}style="color: {{ section.settings.header_color }}"{% endif %}  class="vc__header-text">{{ section.settings.header_text }}</p>
+            <a class="fd-btn btn" href="#zoovu-assistant">Get Started</a>
 		</div>
 	</div>
 
@@ -29,6 +30,10 @@
 				</div>
 			{% endfor %}
 	</div>
+  
+  
+    <div id="zoovu-assistant"></div> 
+  
 
 	<div class="vc__image-text"  style="margin: 40px 0px 60px 0px">
 		<div class="vc__image-half" {% if section.settings.text_image_image %}style="background-image: url('{{ section.settings.text_image_image | img_url: '500x' }}');" {% endif %}>
@@ -48,45 +53,11 @@
 		</div>
 	</div>
 
-  <div id="zoovu-assistant"></div> 
 
-	<div class="vc__icons" style="margin: 60px 0px 0px 0px">
-		<div class="vc__content-section">
-			<h3 class="vc__title">{{ section.settings.icon_title }}</h3>
-			<p class="vc__icons-intro-text">{{ section.settings.icon_intro }}</p>
-		</div>
-		<div class="vc__icons-grid" style="margin-bottom:60px">
-			<div class="vc__icons-grid-item">
-				{% if section.settings.icon_image_one %}
-          <img class="vc__icons-image" src="{{ section.settings.icon_image_one | img_url: '500x' }}" alt="{{ section.settings.icon_title_one }}">
-        {% endif %}
-				<h4 class="vc__icons-title">{{ section.settings.icon_title_one }}</h4>
-				<p class="vc__icons-intro-text">{{ section.settings.icon_text_one }}</p>
-			</div>
-			<div class="vc__icons-grid-item">
-        {% if section.settings.icon_image_two %}
-          <img class="vc__icons-image" src="{{ section.settings.icon_image_two | img_url: '500x' }}" alt="{{ section.settings.icon_title_two }}">
-        {% endif %}
-				<h4 class="vc__icons-title">{{ section.settings.icon_title_two }}</h4>
-				<p class="vc__icons-intro-text">{{ section.settings.icon_text_two }}</p>
-			</div>
-			<div class="vc__icons-grid-item">
-				{% if section.settings.icon_image_three %}
-          <img class="vc__icons-image" src="{{ section.settings.icon_image_three | img_url: '500x' }}" alt="{{ section.settings.icon_title_three }}">
-        {% endif %}
-				<h4 class="vc__icons-title">{{ section.settings.icon_title_three }}</h4>
-				<p class="vc__icons-intro-text">{{ section.settings.icon_text_three }}</p>
-			</div>
-			<div class="vc__icons-grid-item">
-				{% if section.settings.icon_image_four %}
-          <img class="vc__icons-image" src="{{ section.settings.icon_image_four | img_url: '500x' }}" alt="{{ section.settings.icon_title_four }}">
-        {% endif %}
-				<h4 class="vc__icons-title">{{ section.settings.icon_title_four }}</h4>
-				<p class="vc__icons-intro-text">{{ section.settings.icon_text_four }}</p>
-			</div>
-		</div>
-		
-	</div>
+
+
+ 
+  
 </div>
 
 

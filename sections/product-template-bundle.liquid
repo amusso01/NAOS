@@ -297,7 +297,7 @@
 
 
 
-<section class="fd-product__bundle">
+{% comment %} <section class="fd-product__bundle">
   <h3>PRODUCTS IN THIS BUNDLE</h3>
   <div class="fd-content-block fd-container-width fd-product__bundle-inner">
     {% assign bundle = product.metafields.accentuate.single_product | split: '|' %}
@@ -309,7 +309,7 @@
       {%- render 'product-item-bundle', product: ref_product -%}
     {% endfor %}  
   </div> 
-</section>
+</section> {% endcomment %}
 
 <div class="fd-product__reviews fd-content-block-product fd-container-width">
   {% comment %}Start automatically added Judge.me widget{% endcomment %}

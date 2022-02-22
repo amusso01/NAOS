@@ -10,7 +10,7 @@
     <div class="fd-footer__banner__wrapper">
       {% if delivery %}
       <div class="fd-footer__banner-svg">
-        <a href="pages/delivery">
+        <a href="{{ shop.url }}/pages/delivery">
           <svg xmlns="http://www.w3.org/2000/svg" width="30.579" height="29.339" viewBox="0 0 30.579 29.339">
             <g id="Group_54" data-name="Group 54" transform="translate(-142.376 -136.307)">
               <path id="Path_91" data-name="Path 91" d="M201.791,163.106v16.37l13.96-7.063V156.873Z" transform="translate(-43.75 -14.831)" fill="none" stroke="#e9b6a9" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/>
@@ -24,8 +24,8 @@
       </div>
       {% endif %}
       {% if samples %}
-      <div class="fd-footer__banner-svg">
-        <a href="pages/free-samples-with-any-order">
+      <div class="fd-footer__banner-svg" id="test">
+        <a href="{{ shop.url }}/pages/free-samples-with-any-order">
           <svg xmlns="http://www.w3.org/2000/svg" width="17.326" height="28.194" viewBox="0 0 17.326 28.194">
             <path id="Path_99" data-name="Path 99" d="M-839.552-92.21a29.789,29.789,0,0,0-2.616-4.865,42.36,42.36,0,0,1-2.725-4.754c-.424-.937-.757-1.915-1.137-2.872-.108-.273-.234-.539-.366-.841a.874.874,0,0,0-.083.111c-.14.316-.3.625-.412.952a27.179,27.179,0,0,1-2.731,5.717c-.818,1.321-1.634,2.645-2.415,3.989a13.634,13.634,0,0,0-2.006,5.841,7.518,7.518,0,0,0,2.434,6.515,7.273,7.273,0,0,0,6.96,1.845,7.312,7.312,0,0,0,5.611-5.458A9.763,9.763,0,0,0-839.552-92.21Z" transform="translate(855.074 107.513)" fill="none" stroke="#e9b6a9" stroke-miterlimit="10" stroke-width="2"/>
           </svg>      
@@ -35,7 +35,7 @@
       {% endif %}
       {% if payments %}
       <div class="fd-footer__banner-svg">
-        <a href="pages/payments">
+        <a href="{{ shop.url }}/pages/payments">
           <svg xmlns="http://www.w3.org/2000/svg" width="21.409" height="29.089" viewBox="0 0 21.409 29.089">
             <path id="Path_100" data-name="Path 100" d="M607.92-256H609a.64.64,0,0,0,.127.036,7.6,7.6,0,0,1,2.29.537,8,8,0,0,1,4.516,4.5,8.724,8.724,0,0,1,.587,3.449c-.007,1.292.007,2.585-.008,3.877,0,.288.072.45.36.524a7.843,7.843,0,0,1,.759.267,1.1,1.1,0,0,1,.783,1.1q.005,5.224,0,10.447a1.1,1.1,0,0,1-.753,1.1,24.824,24.824,0,0,1-6.443,1.587c-.542.057-1.085.106-1.627.159h-2.259c-.445-.039-.89-.072-1.335-.118a25.491,25.491,0,0,1-6.635-1.589,1.16,1.16,0,0,1-.855-1.219q0-1.481,0-2.962,0-3.648,0-7.3a1.157,1.157,0,0,1,.885-1.25,6.658,6.658,0,0,1,.633-.22.453.453,0,0,0,.387-.532c-.018-1.364-.006-2.728-.008-4.093a8.2,8.2,0,0,1,.911-3.941,7.9,7.9,0,0,1,4.955-4.046C606.8-255.832,607.368-255.895,607.92-256Zm5.772,12.038c.023-.044.038-.06.038-.076,0-1.471.089-2.951-.031-4.413a5.234,5.234,0,0,0-6.053-4.7,5.259,5.259,0,0,0-4.455,5.018c-.029,1.327-.009,2.656-.011,3.984,0,.052.01.1.018.193A25.14,25.14,0,0,1,613.692-243.962Zm-5.221,12a1.082,1.082,0,0,0,1.076-1.16q.012-1.642,0-3.283a.461.461,0,0,1,.2-.423,2.052,2.052,0,0,0,.871-1.987,2.175,2.175,0,0,0-1.789-1.888,2.191,2.191,0,0,0-2.4,1.314,2.113,2.113,0,0,0,.707,2.543.5.5,0,0,1,.226.466q-.012,1.628,0,3.257A1.082,1.082,0,0,0,608.471-231.963Z" transform="translate(-597.753 256.75)" fill="none" stroke="#e9b6a9" stroke-miterlimit="10" stroke-width="1.5"/>
           </svg>
@@ -45,7 +45,7 @@
       {% endif %}
       {% if recommended %}
       <div class="fd-footer__banner-svg">
-        <a href="pages/recommended-by-experts">
+        <a href="{{ shop.url }}/pages/recommended-by-experts">
           <svg xmlns="http://www.w3.org/2000/svg" width="30.064" height="30.869" viewBox="0 0 30.064 30.869">
             <path id="Path_101" data-name="Path 101" d="M732.51,295.671l-8.132,6.23c.59-1.915,1.13-3.67,1.674-5.424.417-1.347.821-2.7,1.268-4.036a.732.732,0,0,0-.305-.977c-2.307-1.722-4.589-3.479-6.877-5.226-.2-.15-.38-.316-.69-.575.41-.02.659-.044.907-.043,2.776,0,5.552-.01,8.328.024a.832.832,0,0,0,.965-.729c.905-3.053,1.859-6.092,2.855-9.326.325,1.036.6,1.9.87,2.771.677,2.2,1.367,4.39,2.011,6.6a.789.789,0,0,0,.917.687c2.776-.034,5.552-.023,8.328-.027h.961c-.3.267-.452.421-.621.55-2.308,1.764-4.611,3.536-6.938,5.276a.78.78,0,0,0-.319,1.041c.909,2.836,1.778,5.684,2.659,8.528.075.244.139.491.247.872Z" transform="translate(-717.495 -273.057)" fill="none" stroke="#e9b6a9" stroke-linecap="round" stroke-miterlimit="10" stroke-width="1.5"/>
           </svg>
@@ -161,7 +161,7 @@
             </ul>
             {% if index == 1 %}
               <div class="fd-social-footer">
-                <a target="__blank"  rel=”noopener noreferrer” href="https://www.instagram.com/biodermauk/">
+                <a target="_blank"  rel=”noopener noreferrer” href="https://www.instagram.com/biodermauk/">
 
                   <svg id="Group_276" data-name="Group 276" xmlns="http://www.w3.org/2000/svg" width="28.726" height="28.728" viewBox="0 0 28.726 28.728">
                     <g id="Group_43" data-name="Group 43" transform="translate(0 0)">
@@ -173,7 +173,7 @@
 
                 </a>
 
-                <a target="__blank"  rel=”noopener noreferrer” href="https://www.facebook.com/BIODERMAItalia/?brand_redir=453190791462931">
+                <a target="_blank"  rel=”noopener noreferrer” href="https://en-gb.facebook.com/BiodermaUK/">
 
                   <svg id="Group_277" data-name="Group 277" xmlns="http://www.w3.org/2000/svg" width="28.726" height="28.728" viewBox="0 0 28.726 28.728">
                     <path id="Path_83" data-name="Path 83" d="M607.547,336.7a14.364,14.364,0,1,0,14.363,14.363A14.364,14.364,0,0,0,607.547,336.7Zm3.147,12.98c-.034.317-.093.631-.121.948-.015.162-.084.2-.232.195-.576-.007-1.153,0-1.759,0v7.034h-2.894V350.83h-1.405v-2.343h1.39c0-.1.012-.18.012-.26,0-.6,0-1.2,0-1.8a2.433,2.433,0,0,1,2.436-2.579c.848-.045,1.7-.025,2.55-.035a1.216,1.216,0,0,1,.122.017v2.433h-1.44a.667.667,0,0,0-.759.748c0,.471,0,.942,0,1.445h2.216C610.771,348.889,610.739,349.287,610.695,349.684Z" transform="translate(-593.184 -336.704)" fill="#043f4d"/>
@@ -183,7 +183,7 @@
               </div>
             {% elsif index == 2 %}
               <div class="fd-social-footer">
-                <a target="__blank"  rel=”noopener noreferrer” href="https://www.facebook.com/esthedermuk/">
+                <a target="_blank"  rel=”noopener noreferrer” href="https://www.instagram.com/esthedermuk/">
 
                   <svg id="Group_276" data-name="Group 276" xmlns="http://www.w3.org/2000/svg" width="28.726" height="28.728" viewBox="0 0 28.726 28.728">
                     <g id="Group_43" data-name="Group 43" transform="translate(0 0)">
@@ -195,7 +195,7 @@
 
                 </a>
 
-                <a target="__blank"  rel=”noopener noreferrer” href="https://www.instagram.com/esthedermuk/">
+                <a target="_blank"  rel=”noopener noreferrer” href="https://www.facebook.com/esthedermuk/">
 
                   <svg id="Group_277" data-name="Group 277" xmlns="http://www.w3.org/2000/svg" width="28.726" height="28.728" viewBox="0 0 28.726 28.728">
                     <path id="Path_83" data-name="Path 83" d="M607.547,336.7a14.364,14.364,0,1,0,14.363,14.363A14.364,14.364,0,0,0,607.547,336.7Zm3.147,12.98c-.034.317-.093.631-.121.948-.015.162-.084.2-.232.195-.576-.007-1.153,0-1.759,0v7.034h-2.894V350.83h-1.405v-2.343h1.39c0-.1.012-.18.012-.26,0-.6,0-1.2,0-1.8a2.433,2.433,0,0,1,2.436-2.579c.848-.045,1.7-.025,2.55-.035a1.216,1.216,0,0,1,.122.017v2.433h-1.44a.667.667,0,0,0-.759.748c0,.471,0,.942,0,1.445h2.216C610.771,348.889,610.739,349.287,610.695,349.684Z" transform="translate(-593.184 -336.704)" fill="#043f4d"/>

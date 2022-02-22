@@ -28,6 +28,8 @@
     {% render 'social-meta-tags' %}
 
     {{ content_for_header }}
+  {% include 'qikify-apps' %}
+
 
     <link rel="stylesheet" href="{{ 'theme.scss.css' | asset_url }}">
 
@@ -53,11 +55,12 @@
     </script>
 
     {% render 'microdata-schema' %}
-    {% include 'qikify-navigator' %}
+    
     
 
     
-    {% include 'qikify-smartmenu' %}
+    
+  
 </head>
 
   <body class="prestige--v4 template-gift-card">

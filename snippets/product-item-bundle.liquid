@@ -5,16 +5,14 @@
     sure that the image sizes we offer is not larger than the max size uploaded by the merchants.
     {%- endcomment -%}
 
-
     {%- if settings.product_show_secondary_image and product.media[1] != blank and use_horizontal != true -%}
       {%- assign has_alternate_image = true -%}
     {%- else -%}
       {%- assign has_alternate_image = false -%}
     {%- endif -%}
 
-
     <div class="fd-product-item__image">
-{% comment %} 
+  
       {% if product.metafields.foundry_digital.badge_image  != blank %}
        <div class="fd-overlay-badge" >
         {% assign imageBadge = product.metafields.foundry_digital.badge_image %}
@@ -22,7 +20,7 @@
         <img src="{{ imageBadge  | img_url: "74X"  }}" alt="product badge awward">
 
       </div>
-      {% endif %} {% endcomment %}
+      {% endif %} 
 
       <a href="{{ product.url}}" class="ProductItem__ImageWrapper">
     
@@ -67,7 +65,7 @@
       </div>
 
 
-      {% comment %} {% if product.metafields.my_fields.color_tag.value == "I’M NEW" %}
+      {% if product.metafields.my_fields.color_tag.value == "I’M NEW" %}
         {% assign colorTag = "blu" %}
       {% elsif product.metafields.my_fields.color_tag.value == "BESTSELLER"  %}  
         {% assign colorTag = "red" %}
@@ -75,7 +73,7 @@
         {% assign colorTag = "yellow" %}
       {% else %}
         {% assign colorTag = false %}
-      {% endif %} {% endcomment %}
+      {% endif %} 
 
       {% assign productSub = false %}
       {% if product.metafields.descriptors.subtitle != blank %}
@@ -85,10 +83,10 @@
 
     
 
-{% comment %} 
+
       {% if colorTag != false %}
       <p class="metafield {% if colorTag == 'yellow' %} metafield-yellow {% endif %} {% if colorTag == 'red' %} metafield-red {% endif %} {% if colorTag == 'blu' %} metafield-blu {% endif %}"> {{ product.metafields.my_fields.color_tag.value }}</p>
-      {% endif %} {% endcomment %}
+      {% endif %} 
       <h2 class="ProductItem__Title Heading">
         <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
       </h2>
@@ -103,7 +101,7 @@
       
     </div>
     
-    {% comment %} <form method="post" action="/cart/add" class="fd-add-to-cart__form">
+   <form method="post" action="/cart/add" class="fd-add-to-cart__form">
 
       <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
     
@@ -111,7 +109,7 @@
     
     </form>
 
-    <div class="fd-add-to-cart__modal" ></div> {% endcomment %}
+    <div class="fd-add-to-cart__modal" ></div> 
     
   </div>
 
