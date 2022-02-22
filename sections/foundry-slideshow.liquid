@@ -113,15 +113,19 @@
 
                       </div>
                     </div>
+                  
                     <div class="slide-container__half-image">
+                      
                       <figure class="slide-container__half-media">
                         <img src="{{ block.settings.imageHalf | img_url: 'master' }}" alt="product image">
                       </figure>
+                     {% if block.settings.imageOverlay != blank %}
                       <figure class="fd-media__overlay">
                         <img class="fd-image__overlay" src="{{ block.settings.imageOverlay | img_url: 'master' }}" alt="product image overlay">
                       </figure>
+                      {% endif %}
                     </div>
-
+                   
 
                   </div>
                 </div>
