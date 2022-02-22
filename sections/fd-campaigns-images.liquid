@@ -1,0 +1,94 @@
+<section class="fd-backgroundText" id="section-campaign-images" >
+  <div class="fd-content-block fd-container-width">
+    <div class="fd-backgroundText__inner fd-campaign-images__inner">
+      <h3>Sensibio Defensive</h3>
+
+       <div class="subheading">Active Soothing Cream available in 2 textures:</div>
+
+      <div class="fd-backgroundText-Images fd-campaigns-images__image"> 
+        <figure class="fd-featured-colection__media">
+        
+          <img src="{{ 'sensitive.png' | asset_img_url: 'master' }}" alt="collection image">
+          <p>Sensibio Defensive Rich</p>
+        </figure>
+        <figure class="fd-featured-colection__media">
+            <img src="{{ 'sensitive-skin.png' | asset_img_url: 'master' }}" alt="collection image">
+           <p>Sensibio Defensive</p>
+        </figure>
+      </div>
+
+     
+      <div class="content" style="margin: 0px 0px 30px 0px;">
+      97% skin defends itself better against aggressions. Sensibio Defensive is an active soothing cream that strengthens the self-defence power of sensitive skin triggered by both lifestyle aggressions and internal sensitivity. Thanks to DEFENSIVE TECHNOLOGY skin is protected, strengthened, and soothed. The light and fresh texture penetrates quickly and leaves the skin soft and supple daily.
+      </div>
+      <a href="/collections/bioderma-sensibio" class="fd-btn btn">SHOP THE COLLECTION</a>
+    </div>
+  </div>
+</section>
+
+
+
+
+{% comment %} {% schema %}
+  {
+    "name": "Background with Text",
+    "settings": [
+      {
+        "type": "color",
+        "id": "background",
+        "label": "Background Color",
+        "default": "#F5F9F9"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text",
+        "default": "#0A1F2A"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_images",
+        "label": "Show Images section",
+        "default": false
+      },
+      {
+        "type": "image_picker",
+        "id": "topImage",
+        "label": "Top Image"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "NAOS"
+      },
+      {
+        "type": "richtext",
+        "id": "subheading",
+        "label": "Sub Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "content",
+        "label": "Content"
+      },
+      {
+        "type": "text",
+        "id": "button_label",
+        "label": "Button label"
+      },
+      {
+        "type": "url",
+        "id": "button_link",
+        "label": "Button link"
+      }
+    ],
+    "presets": [
+      {
+        "category": "Image",
+        "name": "Background with Text",
+        "settings": {}
+      }
+    ]
+  }
+{% endschema %} {% endcomment %}
