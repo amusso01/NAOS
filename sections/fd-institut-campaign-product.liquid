@@ -1,0 +1,108 @@
+<section class="fd-institut-campaign-product" id="section-institut-campaign-product" >
+  <div class="fd-content-block fd-container-width fd-institut-campaign-product__bg">
+    {%- for block in section.blocks -%}
+      <div class="fd-institut-campaign-product__inner">
+        <h3>{{ block.settings.title }}</h3>
+
+        <figure class="fd-featured-colection__media">
+        
+          <img src="{{ block.settings.product_image | asset_img_url: 'master' }}" alt="collection image">
+          <p>{{ block.settings.subheading }}</p>
+        </figure>
+
+
+
+      
+        <div class="content fd-institut-campaign-product__textarea" style="margin: 0px 0px 30px 0px;">
+        {{ block.settings.product_text }}
+        </div>
+        <a href="{{ block.settings.button_link }}" class="fd-btn btn">{{ block.settings.button_text }}</a>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+
+
+<style>
+.fd-institut-campaign-product__bg{
+  background-color: {{ section.settings.background_color }};
+}
+</style>
+
+
+
+{% schema %}
+  {
+    "name": "Product Show",
+    "class": "shopify-section--product-show",
+    "max_blocks": 5,
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background Color",
+        "default": "#F5F9F9"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Product Info",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Title"
+          },
+          {
+            "type": "image_picker",
+            "id": "product_image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "subheading",
+            "label": "Sub-heading",
+            "default": "Subheading"
+          },
+          {
+            "type": "richtext",
+            "id": "product_text",
+            "label": "Body area text"
+          },
+          {
+            "type": "header",
+            "content": "Button"
+          },
+          {
+            "type": "text",
+            "id": "button_text",
+            "label": "Text"
+          },
+          {
+            "type": "url",
+            "id": "button_link",
+            "label": "Link"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "category": "Image",
+        "name": "Product Show",
+        "settings": {},
+        "blocks": [
+          {
+            "type": "image"
+          },
+          {
+            "type": "image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,169 @@
+{%- for block in section.blocks -%}
+{%- assign collection = collections[block.settings.collection] -%}
+
+{% capture slider %}
+  {%- for product in collection.products limit: block.settings.grid_items_count -%}
+  
+    <li class="glide__slide"> 
+        {%- render 'product-item', product: product-%}
+    </li>
+ 
+  {%- endfor -%}
+{% endcapture %}
+
+
+{% capture fdThumb %}
+   {%- for product in collection.products limit: block.settings.grid_items_count -%}
+
+  <button class="glide__bullet"  data-glide-dir="= {{ forloop.index0 }}"></button>
+    
+  {%- endfor -%}
+{% endcapture %}
+
+
+{%- endfor -%}
+
+<section class="fd-featured-collection">
+  <div class="fd-content-block fd-container-width">
+    <header class="fd-featured-collection__header">
+      <div class="fd-collection__header-info">
+        <h3>{{ section.settings.title }}</h3>
+        <h2>{{ section.settings.subheading }}</h2>
+      </div>
+      {% if section.settings.show_button == true  %}
+      <div class="fd-collection__header-btn">
+        <a href="/collections/{{ collection.handle }}" class="fd-btn btn">SHOP ALL</a>
+      </div>
+      {% endif %}
+    </header>
+
+    <div class="fd-featured-colection__grid">
+      <div class="fd-collection__image">
+        <figure class="fd-featured-colection__media">
+          <img src="{{ section.settings.collectionImage | img_url: 'master' }}" alt="collection image">
+        </figure>
+      </div>
+      <div class="fd-collection__gallery">
+
+
+        <div class="glide glide-single-collection">
+          <div class="glide-product__inner">
+            <div class="glide__track" data-glide-el="track">
+              <ul class="glide__slides">
+      
+                {{ slider }}
+      
+              </ul>
+            </div>  
+
+
+            <div class="glide__bullets" data-glide-el="controls[nav]">
+            
+              {{ fdThumb }}
+            
+            </div>
+          </div>
+        
+
+          <div class="glide__arrows" data-glide-el="controls">
+            <button class="glide__arrow glide__arrow--left" data-glide-dir="<">
+              <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+                <g id="Group_69" data-name="Group 69" transform="translate(730 644) rotate(180)">
+                  <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="transparent" stroke="transparent" stroke-width="1">
+                    <rect width="58" height="58" rx="29" stroke="none"/>
+                    <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+                  </g>
+                  <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
+                </g>
+              </svg>
+              
+            </button>
+            <button class="glide__arrow glide__arrow--right" data-glide-dir=">">
+              <svg xmlns="http://www.w3.org/2000/svg" width="58" height="58" viewBox="0 0 58 58">
+                <g id="Group_68" data-name="Group 68" transform="translate(-672 -586)">
+                  <g id="Rectangle_89" data-name="Rectangle 89" transform="translate(672 586)" fill="transparent" stroke="transparent" stroke-width="1">
+                    <rect width="58" height="58" rx="29" stroke="none"/>
+                    <rect x="0.5" y="0.5" width="57" height="57" rx="28.5" fill="none"/>
+                  </g>
+                  <path id="Path_113" data-name="Path 113" d="M0,0,5.679,5.476,0,10.472" transform="translate(698.161 609.748)" fill="none" stroke="#043f4d" stroke-linecap="round" stroke-width="2"/>
+                </g>
+              </svg>
+              
+            </button>
+          </div>
+
+      
+        </div>
+    
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+{% schema %}
+  {
+    "name": "Foundry Single Collection",
+    "class": "fd-section__collection",
+    "max_blocks": 1,
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "collectionImage",
+        "label": "Collection Image"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Featured"
+      },
+      {
+        "type": "text",
+        "id": "subheading",
+        "label": "Sub Heading"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_button",
+        "label": "Show Shop Button",
+        "default": true
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          },
+          {
+            "type": "range",
+            "id": "grid_items_count",
+            "min": 3,
+            "max": 21,
+            "step": 1,
+            "label": "Products in the slider",
+            "default": 9
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "category": "Collection",
+        "name": "Foundry Single Collection",
+        "settings": {},
+        "blocks": [
+          {
+            "type": "collection"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
