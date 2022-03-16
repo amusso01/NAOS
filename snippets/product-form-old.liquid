@@ -262,7 +262,7 @@ for size, we use it to display a size chart (if applicable)
 
       {%- if section.settings.show_price_in_button -%}
         <span class="Button__SeparatorDot"></span>
-        <span>{{ selected_variant.price | money_without_trailing_zeros }}</span>
+        <span>{{ selected_variant.price | money }}</span>
       {%- endif -%}
     {%- else -%}
       {{- 'product.form.sold_out' | t -}}

@@ -147,25 +147,25 @@
       {% comment %}End automatically added Judge.me widget{% endcomment %}
 
       <div class="fd-product__price">
-        <p class="price">{{ product.price | money_without_trailing_zeros }}</p>
-        {% if product.metafields.my_fields.free_gift_on_checkout.value == true %}
-        <p class="free-gift">
-          <span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16.027" height="17.515" viewBox="0 0 16.027 17.515">
-              <g id="Group_169" data-name="Group 169" transform="translate(-1057.07 -3214.67)">
-                <g id="Group_56" data-name="Group 56" transform="translate(1057.82 3215.434)">
-                  <rect id="Rectangle_59" data-name="Rectangle 59" width="14.527" height="2.817" transform="translate(0 4.07)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
-                  <rect id="Rectangle_60" data-name="Rectangle 60" width="12.723" height="9.113" transform="translate(0.903 6.887)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
-                  <line id="Line_1" data-name="Line 1" y2="11.93" transform="translate(7.264 4.07)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
-                  <path id="Path_97" data-name="Path 97" d="M1210.159,301.991a2.725,2.725,0,0,1,1.876-1.575,1.213,1.213,0,0,1,1.322.546,1.491,1.491,0,0,1-.4,1.475,5.806,5.806,0,0,1-2.569,1.815c-.658.234-.851.257-.733-.484A6.327,6.327,0,0,1,1210.159,301.991Z" transform="translate(-1202.36 -300.394)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
-                  <path id="Path_98" data-name="Path 98" d="M1184.467,312.7a2.23,2.23,0,0,1-1.51-1.319.992.992,0,0,1,.275-1.138,1.22,1.22,0,0,1,1.243.137,4.752,4.752,0,0,1,1.79,1.849c.272.5.315.656-.3.654A5.179,5.179,0,0,1,1184.467,312.7Z" transform="translate(-1179.191 -308.826)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
+        <p class="price">{{ product.price | money }}</p>
+
+          <p class="free-gift">
+            <span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16.027" height="17.515" viewBox="0 0 16.027 17.515">
+                <g id="Group_169" data-name="Group 169" transform="translate(-1057.07 -3214.67)">
+                  <g id="Group_56" data-name="Group 56" transform="translate(1057.82 3215.434)">
+                    <rect id="Rectangle_59" data-name="Rectangle 59" width="14.527" height="2.817" transform="translate(0 4.07)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
+                    <rect id="Rectangle_60" data-name="Rectangle 60" width="12.723" height="9.113" transform="translate(0.903 6.887)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
+                    <line id="Line_1" data-name="Line 1" y2="11.93" transform="translate(7.264 4.07)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
+                    <path id="Path_97" data-name="Path 97" d="M1210.159,301.991a2.725,2.725,0,0,1,1.876-1.575,1.213,1.213,0,0,1,1.322.546,1.491,1.491,0,0,1-.4,1.475,5.806,5.806,0,0,1-2.569,1.815c-.658.234-.851.257-.733-.484A6.327,6.327,0,0,1,1210.159,301.991Z" transform="translate(-1202.36 -300.394)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
+                    <path id="Path_98" data-name="Path 98" d="M1184.467,312.7a2.23,2.23,0,0,1-1.51-1.319.992.992,0,0,1,.275-1.138,1.22,1.22,0,0,1,1.243.137,4.752,4.752,0,0,1,1.79,1.849c.272.5.315.656-.3.654A5.179,5.179,0,0,1,1184.467,312.7Z" transform="translate(-1179.191 -308.826)" fill="none" stroke="#e87f6b" stroke-miterlimit="10" stroke-width="1.5"/>
+                  </g>
                 </g>
-              </g>
-            </svg>            
-          </span>
-          FREE GIFT ON CHECKOUT!
-        </p>
-        {% endif %}
+              </svg>            
+            </span>
+            FREE GIFT ON CHECKOUT!
+          </p>
+  
       </div>
       <div class="fd-product__benefits">
         <h3>Product benefits:</h3>

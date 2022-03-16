@@ -402,7 +402,7 @@
                         {% comment %}Start automatically added Judge.me widget{% endcomment %}
                           {% render 'judgeme_widgets', widget_type: 'judgeme_preview_badge', concierge_install: true, product: block.settings.bestseller_product %}
                         {% comment %}End automatically added Judge.me widget{% endcomment %}
-                        <p class="price">{{ block.settings.bestseller_product.price | money_without_trailing_zeros  }}</p>
+                        <p class="price">{{ block.settings.bestseller_product.price | money  }}</p>
                       </div>
 
                     </a>

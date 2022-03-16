@@ -147,7 +147,7 @@
       {% comment %}End automatically added Judge.me widget{% endcomment %}
 
       <div class="fd-product__price">
-        <p class="price">{{ product.price | money_without_trailing_zeros }}</p>
+        <p class="price">{{ product.price | money }}</p>
         {% if product.metafields.my_fields.free_gift_on_checkout.value == true %}
         <p class="free-gift">
           <span>
