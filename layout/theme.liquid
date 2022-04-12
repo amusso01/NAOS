@@ -135,11 +135,14 @@
     {%- include 'judgeme_core' -%}
 
     {%- include 'qikify-navigator' -%}
-    {% include 'qikify-smartmenu' %}
-
     {% if  template contains "product-finder"%}
       <script type="text/javascript" src=https://tiger-cdn.zoovu.com/advisor-fe-web/api/v1/advisors/PtKxRFtP/js-loader?locale=en-GB></script>
     {% endif %}
+    {% if  template == "index"%}
+      <script type="text/javascript" src=https://tiger-cdn.zoovu.com/advisor-fe-web/api/v1/advisors/PtKxRFtP/js-loader?locale=en-GB></script>
+    {% endif %}
+
+  <script src="//cdn.codeblackbelt.com/js/modules/frequently-bought-together/main.min.js?shop=naosuk.myshopify.com" defer></script>
 
     {%- comment -%}
     <script src="https://www.googletagmanager.com/gtag/js?id=UA-165103231-1" async></script>
@@ -152,7 +155,7 @@
     </script>
     {%- endcomment -%}
 
-    {% include 'judgeme_core' %}
+    
 
     <!-- Hotjar Tracking Code for https://www.naos-store.co.uk/ -->
   <script>
@@ -166,7 +169,12 @@
       })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
   </script>
 
+
+  {% render 'qikify-apps' %}
+
+{% render 'digismoothie-giftbox' %}
 </head>
+
 
   <body class="prestige--v4 {% if template.directory %}template-{{ template.directory | handle }}{% endif %} template-{{ template.name | handle }}">
 
@@ -299,7 +307,17 @@
 
 
 
-  
+    <style>
+      @media screen and (min-width: 1140px){
+      .jdgm_widg_mobile {
+        display: none !important;
+      }}
+       @media screen and (max-width: 1140px){
+      .jdgm_widg_desktop {
+        display: none !important;
+      }}
+
+    </style>
 
   </body>
 </html>

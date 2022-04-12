@@ -15,76 +15,84 @@
               {%- endif -%}
       
               <li class="glide__slide">
-                <a href="/products/{{block.settings.bestseller_product.handle}}">
-      
-                  {% comment %} <figure class="fd-product-image__wrapper">
-                    <img src="{{ block.settings.bestseller_product.featured_image.src  | img_url: 'master' }}" alt="product image">
-                  </figure> {% endcomment %}
 
-                  <div class="fd-product-image__alternate">
-                    {%- comment -%}
-                    IMPLEMENTATION NOTE: The alternate image (not visible by default) should be the first in the DOM, as the spinner (Image__Loader element) is
-                    displayed based on the immediately previously shown image.
-                    {%- endcomment -%}
+                <div class="ProductItem">
+                  <div class="ProductItem__Wrapper">
+                    <div class="fd-product-item__image">
+                      <a href="/products/{{block.settings.bestseller_product.handle}}">
+            
+                        {% comment %} <figure class="fd-product-image__wrapper">
+                          <img src="{{ block.settings.bestseller_product.featured_image.src  | img_url: 'master' }}" alt="product image">
+                        </figure> {% endcomment %}
 
-                    {%- if  block.settings.bestseller_product.media[1] != blank -%}
-                      {%- assign has_alternate_image = true -%}
-                    {%- else -%}
-                      {%- assign has_alternate_image = false -%}
-                    {%- endif -%}
+                        <div class="fd-product-image__alternate">
+                          {%- comment -%}
+                          IMPLEMENTATION NOTE: The alternate image (not visible by default) should be the first in the DOM, as the spinner (Image__Loader element) is
+                          displayed based on the immediately previously shown image.
+                          {%- endcomment -%}
 
-                    <figure class="fd-product-image__wrapper ">
+                          {%- if  block.settings.bestseller_product.media[1] != blank -%}
+                            {%- assign has_alternate_image = true -%}
+                          {%- else -%}
+                            {%- assign has_alternate_image = false -%}
+                          {%- endif -%}
 
-                    {%- if has_alternate_image -%}
-                      <img src="{{ block.settings.bestseller_product.media[1]  | img_url: 'master' }}" loading="lazy" alt="product image" class="fd-product-image__image fd-product-image__image-hover">
-                    {% else %}  
-                      <img src="{{ block.settings.bestseller_product.featured_image.src   | img_url: 'master' }}" loading="lazy" alt="product image" class="fd-product-image__image fd-product-image__image-hover">
-                    {%- endif -%}
-                      <img src="{{ block.settings.bestseller_product.featured_image.src  | img_url: 'master' }}" loading="lazy" alt="product image" class="fd-product-image__image ">
+                          <figure class="fd-product-image__wrapper ">
 
-                    </figure>
+                          {%- if has_alternate_image -%}
+                            <img src="{{ block.settings.bestseller_product.media[1]  | img_url: 'master' }}" loading="lazy" alt="product image" class="fd-product-image__image fd-product-image__image-hover">
+                          {% else %}  
+                            <img src="{{ block.settings.bestseller_product.featured_image.src   | img_url: 'master' }}" loading="lazy" alt="product image" class="fd-product-image__image fd-product-image__image-hover">
+                          {%- endif -%}
+                            <img src="{{ block.settings.bestseller_product.featured_image.src  | img_url: 'master' }}" loading="lazy" alt="product image" class="fd-product-image__image ">
 
+                          </figure>
+
+                        </div>
+                      </a>
+                    </div>
+                    <div class="fd-product-item__description">
+                      {% assign colorTag = false %}
+
+                      {% if block.settings.bestseller_product.metafields.my_fields.color_tag.value == "I’M NEW" %}
+                        {% assign colorTag = "blu" %}
+                      {% elsif block.settings.bestseller_product.metafields.my_fields.color_tag.value == "BESTSELLER"  %}  
+                        {% assign colorTag = "red" %}
+                      {% elsif block.settings.bestseller_product.metafields.my_fields.color_tag.value == "EXCLUSIVE"  %}  
+                        {% assign colorTag = "yellow" %}
+                      {% else %}
+                        {% assign colorTag = false %}
+                      {% endif %}
+              
+
+                      <div class="fd-collection__product-info">
+                      
+                        <p class="metafield {% if colorTag == 'yellow' %} metafield-yellow {% endif %} {% if colorTag == 'red' %} metafield-red {% endif %} {% if colorTag == 'blu' %} metafield-blu {% endif %}"> {{ block.settings.bestseller_product.metafields.my_fields.color_tag.value }}</p>
+                      
+                        <p class="title">{{ block.settings.bestseller_product.title }}</p>
+                        {% comment %}Start automatically added Judge.me widget{% endcomment %}
+                          {% render 'judgeme_widgets', widget_type: 'judgeme_preview_badge', concierge_install: true, product: block.settings.bestseller_product %}
+                        {% comment %}End automatically added Judge.me widget{% endcomment %}
+                        <p class="price">{{ block.settings.bestseller_product.price | money  }}</p>
+                      </div>
+
+                    </div>
+                 
+                    <form method="post" action="/cart/add" class="fd-add-to-cart__form">
+
+                      <input type="hidden" name="id" value="{{ block.settings.bestseller_product.variants.first.id }}" />
+                    
+                      <input  type="submit" data-id="{{ block.settings.bestseller_product.variants.first.id }}" value="Add to cart" class="btn fd-add-to-cart" />
+                    
+                    </form>
                   </div>
-
-                  {% assign colorTag = false %}
-
-                  {% if block.settings.bestseller_product.metafields.my_fields.color_tag.value == "I’M NEW" %}
-                    {% assign colorTag = "blu" %}
-                  {% elsif block.settings.bestseller_product.metafields.my_fields.color_tag.value == "BESTSELLER"  %}  
-                    {% assign colorTag = "red" %}
-                  {% elsif block.settings.bestseller_product.metafields.my_fields.color_tag.value == "EXCLUSIVE"  %}  
-                    {% assign colorTag = "yellow" %}
-                  {% else %}
-                    {% assign colorTag = false %}
-                  {% endif %}
-        
-
-                  <div class="fd-collection__product-info">
-                   
-                    <p class="metafield {% if colorTag == 'yellow' %} metafield-yellow {% endif %} {% if colorTag == 'red' %} metafield-red {% endif %} {% if colorTag == 'blu' %} metafield-blu {% endif %}"> {{ block.settings.bestseller_product.metafields.my_fields.color_tag.value }}</p>
-                   
-                    <p class="title">{{ block.settings.bestseller_product.title }}</p>
-                    {% comment %}Start automatically added Judge.me widget{% endcomment %}
-                      {% render 'judgeme_widgets', widget_type: 'judgeme_preview_badge', concierge_install: true, product: block.settings.bestseller_product %}
-                    {% comment %}End automatically added Judge.me widget{% endcomment %}
-                    <p class="price">{{ block.settings.bestseller_product.price | money  }}</p>
-                  </div>
-
-                </a>
-
-                <form method="post" action="/cart/add" class="fd-add-to-cart__form">
-
-                  <input type="hidden" name="id" value="{{ block.settings.bestseller_product.variants.first.id }}" />
-                
-                  <input  type="submit" data-id="{{ block.settings.bestseller_product.variants.first.id }}" value="Add to cart" class="btn fd-add-to-cart" />
-                
-                </form>
+                </div>
 
                 <div class="fd-add-to-cart__modal" id="fdAddToModal" >
                    
                 </div>
 
-                </li>
+              </li>
             
             {% endif %}
           {% endfor %}

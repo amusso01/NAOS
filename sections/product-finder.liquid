@@ -1,11 +1,20 @@
 <div class="vc">
-	<div class="vc__header" {% if section.settings.header_image %}style="background-image: url('{{ section.settings.header_image | img_url: '1000x'}}');"{% endif %}>
+	<div class="vc__header" {% if section.settings.header_image %}style="background-image: url('{{ section.settings.header_image | img_url: 'master'}}');"{% endif %}>
 		<div class="vc__header-inner">
 			<h1 {% if section.settings.header_color %}style="color: {{ section.settings.header_color }}"{% endif %} class="vc__header-title">{{ section.settings.header_title }}</h1>
 			<p {% if section.settings.header_color %}style="color: {{ section.settings.header_color }}"{% endif %}  class="vc__header-text">{{ section.settings.header_text }}</p>
             <a class="fd-btn btn" href="#zoovu-assistant">Get Started</a>
 		</div>
 	</div>
+  {% comment %} MOBILE HEADER {% endcomment %}
+  <div class="vc__header vc__header__mobile" style="background-image: url('{{ section.settings.header_image_mobile | img_url: 'master'}}');">
+		<div class="vc__header-inner">
+			<h1 {% if section.settings.header_color %}style="color: {{ section.settings.header_color }}"{% endif %} class="vc__header-title">{{ section.settings.header_title }}</h1>
+			<p {% if section.settings.header_color %}style="color: {{ section.settings.header_color }}"{% endif %}  class="vc__header-text">{{ section.settings.header_text }}</p>
+            <a class="fd-btn btn" href="#zoovu-assistant">Get Started</a>
+		</div>
+	</div>
+{% comment %} END MOBILE HEADER {% endcomment %}
 
   {% if section.settings.intro_text != blank %}
 	<div class="vc__content-container">
@@ -107,6 +116,11 @@
         "type": "image_picker",
         "id": "header_image",
         "label": "Header Image"
+      },
+      {
+        "type": "image_picker",
+        "id": "header_image_mobile",
+        "label": "Header Image Mobile"
       },
       {
         "type": "text",
