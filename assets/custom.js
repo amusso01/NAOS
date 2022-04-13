@@ -22,3 +22,57 @@
  *   bubbles: true
  * }));
  */
+
+
+// FDRY added to add item to cart
+
+document.addEventListener('product:added', function(event) {
+
+
+  const addData = {
+    'id': parseInt(42542311473371),
+    'quantity': 1
+  };
+
+  let cart = $.getJSON('/cart.js');
+  cart.done(function(){
+    cart = cart.responseJSON;
+    let items = cart.items;
+    const hasGift = items.find(el => el.variant_id === addData.id);
+
+    if(hasGift === undefined){
+      addIt()
+    }
+    
+  })
+
+ 
+
+
+
+  function addIt(){
+    fetch('/cart/add.js', {
+      body: JSON.stringify(addData),
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With':'xmlhttprequest' /* XMLHttpRequest is ok too, it's case insensitive */
+      },
+      method: 'POST'
+    }).then(function(response) {
+
+      return response.json();
+    }).then(function(json) {
+      /* we have JSON */
+  
+      document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', {
+        bubbles: true
+      }));
+  
+    }).catch(function(err) {
+      /* uh oh, we have error. */
+      console.error(err)
+    })
+  }
+ 
+});

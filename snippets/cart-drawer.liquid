@@ -37,11 +37,23 @@
       {%- if cart.item_count == 0 -%}
         <p class="Cart__Empty Heading u-h5">{{ 'cart.general.empty' | t }}</p>
       {%- else -%}
+      
         <div class="Drawer__Container">
           <input type="hidden" name="attributes[collection_mobile_items_per_row]" value="">
           <input type="hidden" name="attributes[collection_desktop_items_per_row]" value="">
 
           {% render 'cart-items' %}
+
+          <div class="fdry-free-gift">
+            <h3>FREE GIFT WITH ALL ORDERS</h3>
+            <p>SENSIBIO 20ml MICELLAR WATER SAMPLE</p>
+            <div class="fdry-free-gift__bg">
+              <figure>
+                <img src="{{ 'micellar.png' | asset_img_url: '200x' }}" alt="Micellar water 20ml Free gift">
+              </figure>
+            </div>
+            
+          </div>
         </div>
       {%- endif -%}
     </div>

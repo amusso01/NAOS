@@ -1,5 +1,6 @@
 {%- assign for_drawer = true -%}
 
+
 {%- if template == 'cart' or template == 'cart.ajax' -%}
   {%- assign for_drawer = false -%}
 {%- endif -%}
@@ -15,11 +16,16 @@
   {%- endunless -%}
 
   {%- for line_item in cart.items -%}
-    {%- if for_drawer -%}
-      <div class="CartItemWrapper">
-    {%- endif -%}
+    {%- assign is_gift = false -%}
+    {% if line_item.id == 42542311473371 %}
+      {%- assign is_gift = true -%}
+    {% endif %}
 
-    <div class="CartItem">
+    {%- if for_drawer -%}
+      <div class="CartItemWrapper" {% if is_gift %} style="visibility:hidden;pointer-events:none;position:absolute;left:-400px;" {% endif %}>
+    {%- endif -%}
+    
+    <div class="CartItem" >
       <div class="CartItem__ImageWrapper AspectRatio">
         <div class="AspectRatio" style="--aspect-ratio: {{ line_item.image.aspect_ratio }}">
           <img class="CartItem__Image" src="{{ line_item.image | img_url: '240x' }}" alt="{{ line_item.image.alt | escape }}">
