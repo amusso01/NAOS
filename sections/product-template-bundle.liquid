@@ -15,6 +15,7 @@
   }
 {%- endcapture -%}
 
+
 {% assign colorTag = false %}
 
 {% if product.metafields.my_fields.color_tag.value == "I’M NEW" %}
@@ -145,9 +146,8 @@
       {% render 'judgeme_widgets', widget_type: 'judgeme_preview_badge', concierge_install: true, product: product %}
       {% comment %}End automatically added Judge.me widget{% endcomment %}
 
-{% comment %} FREE GIFT {% endcomment %}
       <div class="fd-product__price">
-        <p class="price">{{ product.price | money }}</p>
+        <p class="price">{{ product.price | money_without_trailing_zeros }}</p>
         {% if product.metafields.my_fields.free_gift_on_checkout.value == true %}
         <p class="free-gift">
           <span>
