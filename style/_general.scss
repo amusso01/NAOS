@@ -1,0 +1,163 @@
+// =========================== GENERAL =================================
+
+html {
+  font-family: $font-family;
+  // Make everything look a little nicer in webkit
+  -webkit-font-smoothing: antialiased;
+  font-weight: 400;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  color: $color-dark;
+}
+body {
+  overflow-x: hidden;
+  color: $color-dark;
+}
+
+/**
+ * Paragraphs, and various text elements.
+ */
+ p,
+ li,
+ code,
+ pre,
+ ul,
+ li,
+ ol {
+   font-size: 16px;
+   line-height: 25px;
+ }
+ ul {
+   list-style-position: inside;
+ }
+ 
+ em,
+ i,
+ q,
+ dfn {
+   font-style: italic;
+ }
+ 
+ sub,
+ sup {
+   font-size: 75%;
+   line-height: 0;
+   position: relative;
+   vertical-align: baseline;
+ }
+ 
+ sup {
+   top: -0.5em;
+ }
+ 
+ sub {
+   bottom: -0.25em;
+ }
+ 
+ /**
+ * Links
+ */
+a {
+  text-decoration: none;
+  font-size: 16px;
+  color: $color-aqua;
+  line-height: 25px;
+  &:hover{
+    color: $color-aqua;
+  }
+}
+/*
+ * Headings
+ */
+ .h1,
+ .h2,
+ .h3,
+ .h4,
+ .h5,
+ .h6,
+ h1,
+ h2,
+ h3,
+ h4,
+ h5,
+ h6 {
+   margin: 0px;
+   line-height: 1.1;
+ }
+ 
+
+ /* PRESETS
+/––––––––––––––––––––––––*/
+
+
+
+%cover {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.fd-content-block {
+  padding: 0 30px;
+  @include media(">phone",) {
+    padding: 0 45px;
+  }
+  @include media(">tablet"){
+    padding: 0 60px;
+  }   
+}
+
+.fd-content-block-product {
+  padding: 0 30px;
+  @include media(">phone",) {
+    padding: 0 95px;
+  }
+  @include media(">tablet"){
+    padding: 0 130px;
+  }   
+}
+
+.fd-container-width{
+  @include media(">desktop"){
+    max-width: 1520px;
+    margin-left: auto;
+    margin-right: auto;
+  }   
+}
+
+.fd-max-width{
+  @include media('>tablet'){
+    max-width: 870px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.fd-article-max-width{
+  @include media('>tablet'){
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.line{
+  max-width: 1120px;
+  height: 2px;
+  background-color: #C7D5D5;
+  margin: 45px auto;
+}
+
+#shopify-section-announcement{
+  // #section-announcement{
+  //   background: $color-dark;
+  // }
+  .AnnouncementBar__Content{
+    font-size: 15px;
+  }
+  .AnnouncementBar__Wrapper{
+    padding: 10px 15px;
+  }
+}

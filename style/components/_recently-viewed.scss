@@ -1,0 +1,27 @@
+#shopify-section-recently-viewed-products{
+  .SectionHeader__Heading{
+    color: $color-dark;
+    font-size:25px;
+    margin-bottom: 43px;
+  }
+  .ProductItem__Info{
+    text-align: left;
+    margin-top: 13px;
+    margin-bottom: 20px;
+    .ProductItem__Title{
+      a{
+        margin-top: 20px;
+        color: $color-dark;
+        font-size: 15px;
+        margin-bottom: 12px;
+      }
+    }
+    .jdgm-star, .jdgm-prev-badge__text{font-size: 14px;}
+    .ProductItem__Price{
+      font-size: 15px;
+      color: $color-dark;
+      font-weight: 700;
+      margin-top: 13px;
+    }
+  }
+}

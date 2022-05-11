@@ -1,0 +1,28 @@
+.fdry-free-gift{
+  padding: 20px 0;
+  border-top: 1px solid #043F4D;
+  >h3{
+    font-weight: 900;
+    font-size: 13px;
+  }
+  >p{
+    padding-top: 3px;
+    font-weight: 900;
+    font-size: 13px;
+    padding-bottom: 10px;
+  }
+  .fdry-free-gift__bg{
+    background-color: $color-grey;
+  }
+  figure{
+    position: relative;
+    height: 230px;
+    width: 150px;
+    margin: auto;
+    >img{
+      @extend %cover;
+
+      object-fit: cover;
+    }
+  }
+}

@@ -1,0 +1,51 @@
+// MIXINS
+// animated underline
+@mixin animated-underline() {
+	transform: translateZ(0);
+	backface-visibility: hidden;
+	-moz-osx-font-smoothing: grayscale;
+	position: relative;
+	overflow: hidden;
+
+	&::before {
+		content: "";
+		position: absolute;
+		width: 100%;
+		height: 2px;
+		bottom: -1px;
+		left: 0;
+		background-color: currentColor;
+		visibility: hidden;
+		-webkit-transform: scaleX(0);
+		transform: scaleX(0);
+		-webkit-transition: all 0.3s;
+		transition: all 0.3s;
+	}
+}
+
+@mixin animated-underline-hover() {
+	&::before {
+		visibility: visible;
+		-webkit-transform: scaleX(1);
+		transform: scaleX(1);
+	}
+}
+
+@mixin pseudo($display: block, $pos: absolute, $content: "") {
+	content: $content;
+	display: $display;
+	position: $pos;
+}
+
+@keyframes tilt{
+  10%{transform:rotate(-20deg);}
+  20%{transform:rotate(-45deg);}
+  30%{transform:rotate(-20deg);}
+  40%{transform:rotate(0deg);}
+  50%{transform:rotate(20deg);}
+  60%{transform:rotate(45deg);}
+  70%{transform:rotate(20deg);}
+  80%{transform:rotate(0deg);}
+  90%{transform:rotate(-20deg);}
+  100%{transform:rotate(0deg);}
+}

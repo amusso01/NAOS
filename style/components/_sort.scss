@@ -1,0 +1,16 @@
+#collection-sort-popover{
+  z-index: 9999999999;
+  .Popover__Header{
+    border-bottom: 2px solid #C7D5D5;
+  }
+  .Popover__Title{
+    font-size: 16px;
+    font-weight: 600;
+    color: $color-dark;
+  }
+  .Popover__Value{
+      font-size: 15px;
+      font-weight: 300;
+      color: $color-dark;
+  }
+}

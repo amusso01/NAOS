@@ -1,0 +1,70 @@
+.fd-vc__text-number{
+  font-size: 27px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.vc__icons-grid{
+  margin-bottom: 40px;
+}
+
+.vc__profile{
+  display: flex;
+  width: 100%!important;
+  flex-wrap: wrap;
+  background-color: #F5F9F9;
+  padding: 20px!important;
+  margin-top: 60px;
+  row-gap: 40px;
+  @include media('<tablet'){
+    justify-content: center;
+    padding: 35px!important;
+  }
+  .vc__image{
+    width: 300px;
+    margin-bottom: 0px;
+    @include media('<tablet'){
+      width: 450px;
+    }
+  }
+  .vc__title{
+    text-align: left;
+    line-height: 32px;
+    @include media('<tablet'){
+      text-align: center;
+    }
+  }
+  .fd-vc-profile__info{
+    width: 65%;
+    text-align: left;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 35px 0 60px;
+    @include media('<tablet'){
+      text-align: center;
+      align-items: center;
+      padding: 0 0px 0 0px;
+    }
+    @include media('<phone'){
+      width: 100%;
+    }
+  }
+}
+
+// PRODUCT FINDER
+.vc__header .fd-btn{
+  font-size: 15px;
+  color: #FFFFFF;
+  padding: 9px 48px;
+  background-color: #0A1F2A;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  -webkit-transition: .3s;
+  transition: .3s;
+  display: inline-block;
+  margin-top: 26px;
+}
+.vc__header .fd-btn:hover{
+  background-color: #043F4D;
+}

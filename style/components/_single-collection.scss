@@ -1,0 +1,175 @@
+.fd-featured-collection{
+  margin: 50px 0 60px;
+  .fd-featured-collection__header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 23px;
+    flex-wrap: wrap;
+    @include media('<phone'){
+      margin-bottom: 43px;
+    }
+    h3,h2{
+      font-weight: 600;
+      color: $color-dark;
+      font-size: 18px;
+    }
+    h2{
+      font-weight: 500;
+    }
+    h3{
+      font-size: 25px;
+      margin-bottom: 8px;
+    }
+    .fd-btn{
+      font-size: 15px;
+      color: $color-white;
+      padding:9px 32px;
+      background-color: $color-aqua;
+      border-radius: 3px;
+      border: 2px solid $color-aqua;
+      font-weight: 500;
+      transition: .3s;
+      @include media('<phone'){
+        margin-top: 15px;
+        display: inline-block;
+      }
+      &:hover{
+        background-color: transparent;
+        color: $color-dark;
+      }
+    }
+  }
+  .fd-featured-colection__grid{
+    display: flex;
+    .fd-collection__gallery{
+      min-width: 0;
+      margin-left: 22px;
+    }
+    .fd-collection__image{
+      @include media('<tablet'){
+        display: none;
+      }
+    }
+    .fd-featured-colection__media{
+      position: relative;
+      height: 523px;
+      width: 310px;
+      margin: auto;
+      z-index: 1;
+      >img{
+        @extend %cover;
+
+        object-fit: cover;
+      }
+    }
+  }
+  .glide__slide{
+    position: relative;
+    margin-top: auto;
+  }
+  .glide__arrow{
+    position: absolute;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background-color: $color-white;
+    top: 34%;
+    transform: translateY(-50%);
+    &--left{
+      left: -25px;
+    }
+    &--right{
+      right: -25px;
+    }
+  }
+  .glide__bullets{
+    margin-top: 35px;
+    text-align: center;
+    .glide__bullet{
+      margin-right: 10px;
+      width: 30px;
+      height: 4px;
+      background-color: #C7D5D5;
+      @include media('<phone'){
+        width: 10px;
+      }
+      &:last-of-type{
+        margin-right: 0;
+      }
+      &--active{
+        background-color: #043F4D;
+      }
+    }
+  }
+
+  .fd-product-image__wrapper{
+    position: relative;
+    height: 367px;
+    width: 284px;
+    // height: 310px;
+    // width: 220px;
+    margin: auto;
+    @include media('<phone'){
+      height: 320px;
+      width: 165px;
+    }
+    >img{
+      @extend %cover;
+
+      object-fit: cover;
+      transition: opacity 0.4s;
+    }
+    &:hover{
+      .fd-product-image__image{
+        opacity: 0;
+        &-hover{
+          opacity: 1;
+        }
+      }
+    }
+  }
+  .fd-product-item__description{
+    min-height: 170px;
+  }
+
+  .ProductItem__Title{
+    a{
+      margin-top: 20px;
+      color: $color-dark;
+      font-size: 14px;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+  }
+  .jdgm-star, .jdgm-prev-badge__text{font-size: 13px;}
+  .ProductItem__Price{
+    font-size: 14px;
+    color: $color-dark;
+    font-weight: 600;
+    margin-top: 13px;
+  }
+  .subtitle{
+    font-size: 13px;
+    margin-bottom: 11px;
+    line-height: normal;
+  }
+  .fd-add-to-cart__form{
+    .fd-add-to-cart{
+      text-transform: uppercase;
+      font-size: 15px;
+      font-weight: 600;
+      border: 2px solid #C7D5D5;
+      border-radius: 3px;
+      color: $color-dark;
+      width: 100%;
+      padding: 15px;
+      transition: .3s;
+      &:hover{
+        background-color: $color-aqua;
+        color: $color-grey;
+        border-color: $color-aqua;
+      }
+    }
+  }
+}

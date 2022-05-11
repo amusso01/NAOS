@@ -1,0 +1,227 @@
+.fd-footer{
+  &__banner{
+    background-color: $color-dark;
+   
+    .fd-footer__banner-svg{
+      padding: 20px ;
+      @include media('<phone'){
+        width: 50%;
+      }
+
+      >a{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        &:hover{
+          p{
+            @include animated-underline-hover;
+          }
+
+        }
+      }
+      p{
+        font-size: 15px;
+        color: $color-white;
+        @include animated-underline;
+        text-align: center;
+      }
+      svg{
+        display: inline-block;
+        margin-bottom: 11px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+    .fd-footer__banner__wrapper{
+      max-width: 1360px;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      flex-wrap: wrap;
+      min-height:150px;
+      @include media('<phone'){
+        justify-content: space-between;
+      }
+    }
+  }
+
+  &__wrapper{
+
+    .fd-footer__brands{
+      padding-top: 38px;
+      >p{
+        font-size: 14px;
+        text-align: center;
+      }
+ 
+    .fd-footer__brands-wrapper{
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .fd-footer__brand{
+      padding: 0px 25px;
+      min-width: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      @include media ('<phone'){
+        padding: 20px 25px;
+      }
+      svg{
+        width: 200px;
+      }
+    }
+   }
+
+   .fd-footer__menus{
+     display: grid;
+     grid-template-columns: repeat(4, 1fr);
+     justify-items: start;
+     margin-top: 40px;
+     padding-top:45px ;
+     border-top: 1px solid #C7D5D5;
+     max-width: 1020px;
+     margin-left: auto;
+     margin-right: auto;
+     @include media('<tablet'){
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: 45px;
+      justify-items: start;
+     }
+     @include media('<phone'){
+      grid-template-columns: repeat(1, 1fr);
+     }
+     .fd-footer__menu{
+       position: relative;
+      >h2{
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 18px;
+      }
+      &:nth-of-type(3){
+        @include media('<phone'){
+          order: 5;
+        }
+      }
+      &:nth-of-type(2),&:first-of-type{
+        .fd-menu__list{
+          margin-bottom: 18px;
+        }
+      }
+      .fd-menu__list{
+        list-style: none;
+      }
+      .fd-menu__list-item{
+        margin-bottom: 12px;
+        a{
+          font-size: 15px;
+          color: #474847;
+          @include animated-underline;
+          &::before{
+            height: 1px;
+          }
+          &:hover{
+            @include animated-underline-hover;
+           
+          }
+        }
+      }
+      .contact-footer{
+        position: absolute;
+        bottom: -55px;
+        left: 0;
+        a{
+          font-size: 15px;
+          color: $color-dark;
+          position: relative;
+          &::after{
+            @include pseudo;
+            width: 100%;
+            height: 1px;
+            background-color: $color-dark;
+            bottom: -3px;
+            left: 0;
+          }
+          span{
+            display: inline-block;
+            margin-left: 3px;
+          }
+          svg{
+            width: 10px;
+            height: 10px;
+            path{
+              fill:#0A1F2A;
+            }
+          }
+        }
+      }
+     }
+     .fd-social-footer{
+       >a{
+         display: inline-block;
+         margin-right: 6px;
+         path{
+           transition: .3s;
+         }
+         &:hover{
+           path{
+             fill: $color-dark;
+           }
+         }
+         &:last-of-type{
+           margin-right: 0;
+         }
+       }
+     }
+   }
+
+   .fd-footer-logo{
+     padding: 5px 5px 25px;
+     border-bottom: 1px solid #C7D5D5;
+     margin-bottom: 45px;
+     max-width: 1020px;
+     margin-left: auto;
+     margin-right: auto;
+     >img{
+       margin-left: auto;
+       display: block;
+     }
+   }
+
+   .fd-payments{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 0 45px;
+    >p{
+      padding-top:15px ;
+      text-align: center;
+      font-size: 15px;
+      color: #474847;
+      a{
+        text-decoration: underline;
+        font-size: 15px;
+        color: #474847;
+      }
+    }
+    .fd-payments__list{
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .fd-payments__list-item{
+      padding: 0 9px;
+    }
+   }
+
+  }
+}

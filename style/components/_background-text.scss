@@ -1,0 +1,79 @@
+.fd-backgroundText{
+  margin: 30px 0 45px;
+  .fd-backgroundText__inner{
+    padding: 75px 220px 55px;
+    text-align: center;
+    @include media('<tablet'){
+      padding: 75px 130px 55px;
+    }
+    @include media('<phone'){
+      padding: 75px 30px 55px;
+    }
+    h3{
+      font-weight: 700;
+      margin-bottom: 12px;
+      font-size: 30px;
+    }
+    .subheading{
+      p{
+        font-weight: 500;
+        color: #000000;
+        margin-bottom: 14px;
+        font-size: 18px;
+      }
+    }
+    .content{
+      p{
+        font-size: 15px;
+        margin-bottom: 14px;
+      }
+    }
+    .fd-btn{
+      font-size: 15px;
+      color: $color-white;
+      padding:9px 32px;
+      background-color: $color-aqua;
+      border-radius: 3px;
+      border: 2px solid $color-aqua;
+      font-weight: 500;
+      transition: .3s;
+      display: inline-block;
+      margin-left: auto;
+      margin-right: auto;
+      &:hover{
+        background-color: transparent;
+        color: $color-dark;
+      }
+    }
+  }
+}
+
+// BACKGROUDN WITH 2 IMAGES
+.fd-campaign-images__inner{
+  .subheading{
+    font-weight: 600;
+    font-size: 18px;
+    margin-top: 30px;
+  }
+  .fd-campaigns-images__image{
+    display: flex;
+    justify-content: center;
+    margin: 20px 0px 35px;
+    column-gap: 75px;
+    flex-wrap: wrap;
+    @include media('<phone'){
+      column-gap: 0px;
+      row-gap: 45px;
+
+    }
+    figure{
+      @include media('<phone'){
+       margin-bottom: 20px;
+      }
+      p{
+        margin-top: 5px;
+        font-weight: 600;
+      }
+    }
+  }
+}

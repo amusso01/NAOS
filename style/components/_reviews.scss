@@ -1,0 +1,58 @@
+.fd-product__reviews{
+  .jdgm-rev-widg{
+    border: none;
+  }
+  .jdgm-rev-widg__header{
+    .jdgm-rev-widg__title{
+      font-size: 30px ;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .jdgm-widget-actions-wrapper{
+      &:first-of-type{
+        display: none;
+      }
+      .jdgm-write-rev-link{
+        border: 2px solid #C7D5D5;
+        padding: 11px 60px;
+        text-transform: uppercase;
+        font-size: 15px;
+        color: $color-dark;
+        border-radius: 3px;
+        transition: .3s;
+        letter-spacing: 1px;
+        &:hover{
+          background-color: $color-aqua;
+          color: $color-white;
+          border: 2px solid $color-aqua;
+        }
+      }
+    }
+    .jdgm-sort-dropdown-wrapper{
+      display: none;
+    }
+    .jdgm-rev-widg__summary , .jdgm-star{
+      font-size: 13px;
+    }
+  }
+  .jdgm-rev__buyer-badge{
+    background-color: #C7D5D5;
+    color: $color-dark;
+    border-radius: 3px;
+  }
+  .jdgm-rev__buyer-badge:before{
+    font-size: 15px;
+    margin-top: 10px;
+  }
+  .jdgm-rev__icon{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.8em;
+    height: 3.8em;
+    &::after{
+      background-color: #C7D5D5;
+      color: $color-dark;
+    }
+  }
+}

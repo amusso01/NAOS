@@ -90,7 +90,33 @@
 }
           </style>
         
-   
+            <script>
+        
+                
+              function removeItem(){
+
+                let cart = $.getJSON('/cart.js');
+                  cart.done(function(){
+                  cart = cart.responseJSON;
+                  let items = cart.items;
+                  if(items.length === 2){
+                    console.log('no item')
+                    fetch('/cart/clear.js', {
+                        credentials: 'same-origin',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'X-Requested-With':'xmlhttprequest' /* XMLHttpRequest is ok too, it's case insensitive */
+                        },
+                        method: 'POST'
+                    })
+                  }
+                })
+              }
+                //$(".CartItem__Remove").click(function(){       
+                //window.location.reload();
+                  
+                //});
+            </script>
             <div  class="CartItem__QuantitySelector {% for tags in line_item.product.tags %}
       
             {% if tags contains 'upsell_collection' %}
@@ -100,7 +126,7 @@
               <div class="QuantitySelector">
                 {%- assign quantity_minus_one = line_item.quantity | minus: 1 -%}
               
-                <a onClick="window.location.reload()" class="QuantitySelector__Button Link Link--primary" title="{{ 'cart.items.set_quantity' | t: new_quantity: quantity_minus_one }}" href="{{ routes.cart_change_url }}?quantity={{ quantity_minus_one }}&id={{ line_item.key }}" data-quantity="{{ quantity_minus_one }}" data-line-id="{{ line_item.key }}" data-action="update-item-quantity">
+                <a onClick="removeItem()" class="QuantitySelector__Button Link Link--primary fdry-removeFreeGift" title="{{ 'cart.items.set_quantity' | t: new_quantity: quantity_minus_one }}" href="{{ routes.cart_change_url }}?quantity={{ quantity_minus_one }}&id={{ line_item.key }}" data-quantity="{{ quantity_minus_one }}" data-line-id="{{ line_item.key }}" data-action="update-item-quantity">
                   {%- render 'icon' with 'minus' -%}
                 </a>
 
@@ -114,17 +140,8 @@
               </div>
             </div>
       
-          <a onClick="window.location.reload()" href="{{ routes.cart_change_url }}?quantity=0&id={{ line_item.key }}" class="CartItem__Remove Link Link--underline Link--underlineShort" data-quantity="0" data-line-id="{{ line_item.key }}" data-action="remove-item">{{ 'cart.items.remove' | t }}</a>
-            <script>
-             
-                $(".CartItem__Remove").click(function(){       
-                  console.log('test')  
-                window.location.reload();
-           
-
-                  
-                });
-            </script>
+          <a onClick="removeItem()" href="{{ routes.cart_change_url }}?quantity=0&id={{ line_item.key }}" class="CartItem__Remove fdry-removeFreeGift Link Link--underline Link--underlineShort" data-quantity="0" data-line-id="{{ line_item.key }}" data-action="remove-item">{{ 'cart.items.remove' | t }}</a>
+        
           </div>
         {%- endcapture -%}
 

@@ -1,0 +1,33 @@
+// =============== RESPONSIVE ================
+
+$breakpoints:(
+  'phone': 640px,
+  'slideshow': 800px,
+  'tablet-land': 920px,
+  'tablet': 1140px,
+  'desktop': 1360px,
+  'wideScreen': 1490px
+  ) !default;
+  
+  @import './../node_modules/include-media/dist/include-media';
+  // EXAMPLE
+  // @include media(">phone", "<=tablet") {
+    //   width: 50%;
+    //   }
+
+
+// =============== TYPOGRAPHY ================
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+
+
+// =============== RESPONSIVE ================
+
+$color-dark: #0A1F2A;
+$color-aqua: #043F4D;
+$color-grey: #F5F9F9;
+$color-tagNew: #C0E2D3;
+$color-tagBest: #F4CBB5;
+$color-tagExcl:  #FDE566;
+$color-white:  #FFFFFF;
+
+$font-family: 'Quicksand', sans-serif;

@@ -3,6 +3,5 @@ config.yml
 .DS_Store
 .DS_Store?
 foundry.scss
-style/
 scripts/
 node_modules

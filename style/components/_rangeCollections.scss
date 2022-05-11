@@ -1,0 +1,88 @@
+.fd-section__range-collections{
+  .fd-collection__bodyArea{
+    padding: 5px 0 96px;
+    margin: 88px 0 94px;
+    position: relative;
+    h3{
+      $color-dark: #0A1F2A;
+      font-size:25px;
+      text-align: center;
+      margin-bottom: 43px;
+      font-weight: 600;
+      >span{
+        display: block;
+        font-size:18px ;
+      }
+    }
+    .glide__arrow{
+      position: absolute;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background-color: $color-white;
+      top: 34%;
+      transform: translateY(-50%);
+      &--left{
+        left: -25px;
+      }
+      &--right{
+        right: -25px;
+      }
+    }
+    .fd-body-image__wrapper{
+      position: relative;
+      height: 300px;
+      width: 280px;
+      margin: auto;
+      z-index: 1;
+      >img{
+        @extend %cover;
+
+        object-fit: cover;
+      }
+    }
+    .glide__slide{
+      position: relative;
+      >a{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        .fd-collection__body-title{
+          font-size: 18px;
+          font-weight: 600;
+          margin-top: 17px;
+          color: $color-dark;
+        }
+      }
+    }
+    .glide__bullets{
+      position: absolute;
+      width: 150%;
+      height: 100%;
+      background-color: $color-grey;
+      top: 35%;
+      left: -25%;
+      z-index: -1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      .glide__bullet{
+        margin-right: 10px;
+        width: 30px;
+        height: 4px;
+        background-color: #C7D5D5;
+        margin-bottom: 60px;
+        @include media('<phone'){
+          width: 10px;
+        }
+        &:last-of-type{
+          margin-right: 0;
+        }
+        &--active{
+          background-color: #043F4D;
+        }
+      }
+    }
+  }
+}

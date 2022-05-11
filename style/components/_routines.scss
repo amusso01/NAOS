@@ -1,0 +1,84 @@
+.fd-routines{
+  margin-top: 10px;
+  margin-bottom: 80px;
+  padding: 66px 50px;
+  h3{
+    color: #0A1F2A;
+    font-size: 25px;
+    text-align: center;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .subtitleMain{
+    color: #0A1F2A;
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 45px;
+    font-weight: 500;
+  }
+  &__inner{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-auto-flow: row dense;
+    row-gap: 90px;
+    column-gap: 22px;
+    max-width: 100%;
+    @include media('<desktop'){
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    h4{
+      color: #474847;
+      font-weight: 600;
+      font-size: 21px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+  }
+  .fd-product-item__description{
+    min-height: auto;
+  }
+  .ProductItem__Title{
+    a{
+      margin-top: 20px;
+      color: $color-dark;
+      font-size: 14px;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+  }
+  .jdgm-star, .jdgm-prev-badge__text{font-size: 13px;}
+  .ProductItem__Price{
+    font-size: 14px;
+    color: $color-dark;
+    font-weight: 600;
+    margin-top: 13px;
+  }
+  .subtitle{
+    font-size: 13px;
+    margin-bottom: 11px;
+    line-height: normal;
+    text-align: left;
+  }
+  .fd-add-to-cart__form{
+    .fd-add-to-cart{
+      text-transform: uppercase;
+      font-size: 15px;
+      font-weight: 600;
+      border: 2px solid #C7D5D5;
+      border-radius: 3px;
+      color: $color-dark;
+      width: 100%;
+      padding: 15px;
+      transition: .3s;
+      margin-top: 8px;
+      &:hover{
+        background-color: $color-aqua;
+        color: $color-grey;
+        border-color: $color-aqua;
+      }
+    }
+    .swym-button-bar{
+      display: none;
+    }
+  }
+}

@@ -76,3 +76,4 @@ document.addEventListener('product:added', function(event) {
   }
  
 });
+

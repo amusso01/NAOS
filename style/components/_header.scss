@@ -1,0 +1,13 @@
+.Header__MainNav{
+  .HorizontalList__Item{
+    .Heading{
+      color: $color-dark;
+    }
+  }
+}
+
+.DropdownMenu{
+  &::before{
+    background: $color-dark;
+  }
+}

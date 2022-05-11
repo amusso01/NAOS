@@ -1,0 +1,478 @@
+.fd-collection-page{
+
+  .fd-collection__header{
+    position: relative;
+  }
+  .fd-collection__header-media{
+    position: relative;
+    height: 322px;
+    width: 100%;
+
+    >img{
+      @extend %cover;
+
+      object-fit: cover;
+      @include media('<phone'){
+        object-position: right;
+      }
+    }
+  }
+  
+  .fd-collection__header-image{
+    &-desktop{
+      display: block;
+      // @include media('>phone'){
+      //   display: block;
+      // }
+    }
+    // &-tablet{
+    //   display: none;
+    //   @include media(">phone" , "<=tablet"){
+    //     display: block;
+    //   }
+    // }
+    // &-mobile{
+    //   display: none;
+    //   @include media('<=phone'){
+    //     display: block;
+    //   }
+    // }
+  }
+
+  .fd-collection__header-text{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width:50vw;
+    @include media(">=wideScreen"){
+      width: 40vw;
+    }
+    @include media(">phone" , "<=tablet"){
+      width:60vw;
+    }
+    @include media('<=phone'){
+      position: relative;
+      top: 0;
+      width: 100%;
+      transform: translateY(0);
+      padding-top: 22px;
+      padding-bottom: 22px;
+      background-color: #f5f9f9;
+      margin-bottom: 20px;
+    }
+    h1{
+      text-align: center;
+      font-size: 45px;
+      margin-bottom: 18px;
+      &.fd_banner-title-white{
+        color: $color-white;
+        @include media('<=phone'){
+          color: inherit;
+        }
+      }
+    }
+    p{
+      text-align: center;
+      line-height: 27px;
+      font-weight: 500;
+    }
+  }
+
+  // PROMO
+  .fd-promoBanner{
+    margin: 43px 0;
+    figure{
+      position: relative;
+      height: 70px;
+      width: 100%;
+    }
+    .fd-promoBanner-image{
+      @extend %cover;
+
+      object-fit: cover;
+    }
+    @include media('<phone'){
+      display: none;
+    }
+  }
+
+  // BESTSELLERS
+  .fd-collection__bestsellers{
+    margin: 20px 0 60px;
+    h3{
+      color: $color-dark;
+      font-size:25px;
+      text-align: center;
+      margin-bottom: 43px;
+      font-weight: 600;
+    }
+    .fd-product-image__wrapper{
+      position: relative;
+      // height: 374px;
+      // width: 264px;
+      height: 310px;
+      width: 220px;
+      margin: auto;
+      >img{
+        @extend %cover;
+
+        object-fit: cover;
+      }
+    }
+    .fd-collection__product-info{
+      margin-top: 13px;
+      margin-bottom: 20px;
+      position: relative;
+      .metafield{
+        padding: 6.5px 10px;
+        font-size: 13px;
+        font-weight: 600;
+        display: inline;
+        border-radius: 3px;
+        color: $color-dark;
+        &-yellow{background-color: $color-tagExcl;}
+        &-blu{background-color: $color-tagNew;}
+        &-red{background-color: $color-tagBest;}
+      }
+      .title{
+        margin-top: 20px;
+        color: $color-dark;
+        font-size: 14px;
+        margin-bottom: 4px;
+        font-weight: 600;
+      }
+      .jdgm-star, .jdgm-prev-badge__text{font-size: 14px;}
+      .price{
+        font-size: 14px;
+        color: $color-dark;
+        font-weight: 600;
+        margin-top: 13px;
+      }
+    }
+    .glide__slide{
+      position: relative;
+      margin-top: auto;
+    }
+    .glide__arrow{
+      position: absolute;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background-color: $color-white;
+      top: 34%;
+      transform: translateY(-50%);
+      &--left{
+        left: -25px;
+      }
+      &--right{
+        right: -25px;
+      }
+    }
+    .glide__bullets{
+      margin-top: 35px;
+      text-align: center;
+      .glide__bullet{
+        margin-right: 10px;
+        width: 30px;
+        height: 4px;
+        background-color: #C7D5D5;
+        @include media('<phone'){
+          width: 10px;
+        }
+        &:last-of-type{
+          margin-right: 0;
+        }
+        &--active{
+          background-color: #043F4D;
+        }
+      }
+    }
+    .fd-add-to-cart__form{
+      .fd-add-to-cart{
+        text-transform: uppercase;
+        font-size: 15px;
+        font-weight: 600;
+        border: 2px solid #C7D5D5;
+        border-radius: 3px;
+        color: $color-dark;
+        width: 100%;
+        padding: 15px;
+        transition: .3s;
+        &:hover{
+          background-color: $color-aqua;
+          color: $color-grey;
+          border-color: $color-aqua;
+        }
+      }
+    }
+  }
+
+  // RANGES
+  .fd-collection__ranges{
+    background-color: #F5F9F9;
+    padding: 75px 0 96px;
+    margin: 60px 0 94px;
+    h3{
+      $color-dark: #0A1F2A;
+      font-size:25px;
+      text-align: center;
+      margin-bottom: 43px;
+      font-weight: 600;
+      >span{
+        display: block;
+        font-size:18px ;
+      }
+    }
+    .glide__arrow{
+      position: absolute;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background-color: $color-white;
+      top: 34%;
+      transform: translateY(-50%);
+      &--left{
+        left: -25px;
+      }
+      &--right{
+        right: -25px;
+      }
+    }
+    .fd-range-image__wrapper{
+      position: relative;
+      height: 126px;
+      width: 126px;
+      margin: auto;
+      >img{
+        @extend %cover;
+
+        object-fit: cover;
+      }
+    }
+    .glide__slide{
+      position: relative;
+      >a{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        .fd-collection__ranges-title{
+          font-size: 15px;
+          font-weight: 700;
+          margin-top: 14px;
+        }
+      }
+    }
+  }
+
+
+  // BODY COLLECTIONS
+  .fd-collection__bodyArea{
+    padding: 5px 0 96px;
+    margin: 40px 0 94px;
+    position: relative;
+    h3{
+      $color-dark: #0A1F2A;
+      font-size:25px;
+      text-align: center;
+      margin-bottom: 43px;
+      font-weight: 600;
+      >span{
+        display: block;
+        font-size:18px ;
+      }
+    }
+    .glide__arrow{
+      position: absolute;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background-color: $color-white;
+      top: 34%;
+      transform: translateY(-50%);
+      &--left{
+        left: -25px;
+      }
+      &--right{
+        right: -25px;
+      }
+    }
+    .fd-body-image__wrapper{
+      position: relative;
+      height: 300px;
+      width: 280px;
+      margin: auto;
+      z-index: 1;
+      >img{
+        @extend %cover;
+
+        object-fit: cover;
+      }
+    }
+    .glide__slide{
+      position: relative;
+      >a{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        .fd-collection__body-title{
+          font-size: 18px;
+          font-weight: 700;
+          margin-top: 17px;
+        }
+      }
+    }
+    .glide__bullets{
+      position: absolute;
+      width: 150%;
+      height: 100%;
+      background-color: $color-grey;
+      top: 35%;
+      left: -25%;
+      z-index: -1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      .glide__bullet{
+        margin-right: 10px;
+        width: 30px;
+        height: 4px;
+        background-color: #C7D5D5;
+        margin-bottom: 60px;
+        @include media('<phone'){
+          width: 10px;
+        }
+        &:last-of-type{
+          margin-right: 0;
+        }
+        &--active{
+          background-color: #043F4D;
+        }
+      }
+    }
+  }
+
+  //  TOOLBAR
+  .CollectionToolbar{
+    box-shadow: none;
+    .CollectionToolbar__Group{
+      display: flex;
+      margin-left: auto;
+      @include media('<phone'){
+        display: block;
+      }
+    }
+    .CollectionToolbar__Item{
+      width: 232px;
+      font-size: 15px;
+      font-weight: 600;
+      border: 2px solid #C7D5D5;
+      border-radius: 3px;
+      color: $color-dark;
+      padding: 15px;
+      transition: .3s;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      @include media('<phone'){
+        margin-right: auto;
+        margin-left: auto;
+      }
+      &:hover{
+        background-color: $color-aqua;
+        color: $color-grey;
+        border-color: $color-aqua;
+      }
+      &:first-of-type{
+        border-top-left-radius:0px;
+        border-bottom-left-radius:0px;
+        @include media('<phone'){
+          margin-bottom: 12px;
+          border-top-left-radius:3px;
+          border-bottom-left-radius:3px;
+        }
+      }
+      &:last-of-type{
+        border-top-right-radius:0px;
+        border-bottom-right-radius:0px;
+        border-right: 0px;
+        @include media('<phone'){
+          border-top-left-radius:3px;
+          border-bottom-left-radius:3px;
+          border-right: 2px solid #C7D5D5;
+        }
+      }
+      svg{
+        width: 12px;
+        height: 8px;
+        polyline{
+          stroke:#C7D5D5;
+        }
+      }
+    }
+  }
+
+  // DRAWER
+  .Drawer__Header{
+    border-bottom: 2px solid #C7D5D5;
+    .Drawer__Title{
+      font-size: 16px;
+      font-weight: 600;
+      color: $color-dark;
+    }
+  }
+  .Drawer__Main{
+    .Collapsible__Button{
+      font-size: 15px;
+      font-weight: 600;
+      color: $color-dark;
+    }
+    .Text--subdued{
+      font-size: 15px;
+      font-weight: 300;
+      color: $color-dark;
+    }
+    border-bottom: 2px solid #C7D5D5;
+  }
+  #collection-filter-drawer{
+    z-index: 9999999999;
+  }
+
+  // PRODUCT GRID
+  .CollectionMain {
+    >h3{
+      $color-dark: #0A1F2A;
+      font-size:25px;
+      text-align: center;
+      margin-bottom: 32px;
+      font-weight: 600;
+    }
+  }
+  .ProductListWrapper{
+    display: flex;
+    width: 100%;
+  }
+  .fd-product__grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(284px, 1fr));
+    grid-auto-flow: row dense;
+    row-gap: 52px;
+    column-gap: 22px;
+    align-items: end;
+    padding: 0 0px;
+    margin: auto;
+    max-width: 100%;
+    @include media('<desktop'){
+      grid-template-columns: repeat(auto-fill, minmax(190px, 284px));
+    }
+    @include media('<phone'){
+      margin-top: 50px;
+      grid-template-columns: repeat(auto-fill, minmax(145px, 145px));
+    }
+ 
+  }
+  
+}

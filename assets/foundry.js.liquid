@@ -4846,7 +4846,9 @@ var _sliderProduct = _interopRequireDefault(require("./part/sliderProduct"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import clearCart from './part/clearCart'
 document.addEventListener('DOMContentLoaded', function (event) {
+  // clearCart()
   // ADD TO CART
   var hasAddToCart = document.querySelector('.fd-add-to-cart__form');
 
@@ -4952,7 +4954,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56368" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50788" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

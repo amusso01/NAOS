@@ -1,0 +1,16 @@
+.fd-section__promoBanner{
+  margin: 30px auto 15px;
+  figure{
+    position: relative;
+    height: 70px;
+    width: 100%;
+  }
+  .fd-promoBanner-image{
+    @extend %cover;
+
+    object-fit: cover;
+  }
+  @include media('<phone'){
+    display: none;
+  }
+}

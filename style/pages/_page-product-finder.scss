@@ -1,0 +1,13 @@
+.vc__header {
+  display: none;
+  @include media(">phone") {
+    display: block;
+  }
+}
+.vc__header__mobile {
+  display: none;
+  min-height: 600px;
+  @include media("<phone") {
+    display: block;
+  }
+}
